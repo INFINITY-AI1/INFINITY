@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>جلسة | INFINITY AI</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body, html {
+            width: 100%;
+            height: 100vh;
+            background: #000000;
+            font-family: 'Cairo', sans-serif;
+            overflow: hidden;
+        }
+        .bg-orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(130px);
+            opacity: 0.08;
+            z-index: 0;
+            pointer-events: none;
+        }
+        .orb-1 {
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, #d4a853 0%, transparent 70%);
+            bottom: -150px;
+            left: -100px;
+        }
+        .orb-2 {
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, #ffffff 0%, transparent 70%);
+            top: 20%;
+            right: -100px;
+        }
+        .chat-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 16px;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+        }
+        .header-left { display: flex; align-items: center; gap: 12px; }
+        .header-right { display: flex; align-items: center; gap: 6px; }
+        .back-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+        .back-btn:hover { background: rgba(255, 255, 255, 0.1); color: #fff; }
+        .session-info { display: flex; flex-direction: column; }
+        .session-title { font-size: 14px; font-weight: 700; color: #ffffff; }
+        .session-mode { font-size: 11px; color: #d4a853; font-weight: 500; }
+        .icon-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 13px;
+            transition: all 0.2s;
+        }
+        .icon-btn:hover { background: rgba(255, 255, 255, 0.1); color: #fff; }
+        .chat-area {
+            position: fixed;
+            top: 62px;
+            bottom: 90px;
+            left: 0;
+            right: 0;
+            overflow-y: auto;
+            padding: 16px;
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .chat-area::-webkit-scrollbar { width: 4px; }
+        .chat-area::-webkit-scrollbar-track { background: transparent; }
+        .chat-area::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.1); border-radius: 10px; }
+        .message {
+            display: flex;
+            gap: 10px;
+            max-width: 90%;
+            animation: fadeInUp 0.4s ease forwards;
+        }
+        .message.user { align-self: flex-end; flex-direction: row-reverse; }
+        .message.agent { align-self: flex-start; }
+        .message.system { align-self: center; max-width: 85%; }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(16px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .msg-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+        }
+        .msg-avatar.gemini { background: rgba(66, 133, 244, 0.2); color: #4285f4; border: 1px solid rgba(66, 133, 244, 0.3); }
+        .msg-avatar.deepseek { background: rgba(74, 222, 128, 0.15); color: #4ade80; border: 1px solid rgba(74, 222, 128, 0.3); }
+        .msg-avatar.kimi { background: rgba(167, 139, 250, 0.15); color: #a78bfa; border: 1px solid rgba(167, 139, 250, 0.3); }
+        .msg-avatar.user { background: rgba(212, 168, 83, 0.2); color: #d4a853; border: 1px solid rgba(212, 168, 83, 0.3); }
+        .msg-avatar.system-avatar { background: rgba(255, 255, 255, 0.06); color: rgba(255, 255, 255, 0.5); border: 1px solid rgba(255, 255, 255, 0.1); font-size: 10px; }
+        .msg-bubble {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 16px;
+            padding: 12px 16px;
+            color: rgba(255, 255, 255, 0.85);
+            font-size: 13px;
+            line-height: 1.6;
+            position: relative;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+        .message.user .msg-bubble { background: rgba(212, 168, 83, 0.1); border-color: rgba(212, 168, 83, 0.2); }
+        .message.system .msg-bubble {
+            background: rgba(255, 255, 255, 0.02);
+            border-style: dashed;
+            border-color: rgba(255, 255, 255, 0.08);
+            text-align: center;
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.45);
+        }
+        .msg-header { display: flex; align-items: center; gap: 6px; margin-bottom: 6px; }
+        .msg-model-name { font-size: 11px; font-weight: 700; color: rgba(255, 255, 255, 0.5); }
+        .msg-time { font-size: 10px; color: rgba(255, 255, 255, 0.25); }
+        .msg-typing { display: flex; gap: 4px; padding: 8px 0; }
+        .msg-typing span {
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            animation: typing 1.4s infinite ease-in-out;
+        }
+        .msg-typing span:nth-child(2) { animation-delay: 0.2s; }
+        .msg-typing span:nth-child(3) { animation-delay: 0.4s; }
+        @keyframes typing {
+            0%, 100% { opacity: 0.2; transform: translateY(0); }
+            50% { opacity: 1; transform: translateY(-4px); }
+        }
+        .input-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            padding: 10px 16px 16px;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-top: 1px solid rgba(255, 255, 255, 0.06);
+        }
+        .input-row {
+            display: flex;
+            align-items: flex-end;
+            gap: 8px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 6px 6px 6px 16px;
+            transition: all 0.3s;
+        }
+        .input-row:focus-within { border-color: rgba(212, 168, 83, 0.4); box-shadow: 0 0 20px rgba(212, 168, 83, 0.05); }
+        .chat-input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            outline: none;
+            font-family: 'Cairo', sans-serif;
+            font-size: 14px;
+            color: #ffffff;
+            resize: none;
+            min-height: 22px;
+            max-height: 100px;
+            padding: 8px 0;
+        }
+        .chat-input::placeholder { color: rgba(255, 255, 255, 0.2); }
+        .send-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            background: #ffffff;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: #000;
+            font-size: 15px;
+            flex-shrink: 0;
+            transition: all 0.3s;
+        }
+        .send-btn:hover { background: #d4a853; }
+        .send-btn:active { transform: scale(0.94); }
+        .send-btn:disabled { background: rgba(255, 255, 255, 0.08); color: rgba(255, 255, 255, 0.15); cursor: not-allowed; }
+        .meeting-status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 14px;
+            background: rgba(212, 168, 83, 0.05);
+            border: 1px solid rgba(212, 168, 83, 0.15);
+            border-radius: 12px;
+            margin-bottom: 8px;
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.5);
+            animation: fadeInUp 0.4s ease forwards;
+        }
+        .meeting-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #4ade80;
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 0.4; }
+            50% { opacity: 1; }
+        }
+        .empty-state {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            text-align: center;
+            color: rgba(255, 255, 255, 0.2);
+        }
+        .empty-state i { font-size: 50px; margin-bottom: 16px; color: rgba(212, 168, 83, 0.2); }
+        .empty-state p { font-size: 14px; }
+        .worker-status {
+            position: fixed;
+            top: 64px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 101;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 10px;
+            font-weight: 600;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s;
+        }
+        .worker-status.online { background: rgba(74, 222, 128, 0.15); color: #4ade80; border: 1px solid rgba(74, 222, 128, 0.3); }
+        .worker-status.offline { background: rgba(255, 100, 100, 0.15); color: #ff6b6b; border: 1px solid rgba(255, 100, 100, 0.3); }
+    </style>
+</head>
+<body>
+
+<div class="bg-orb orb-1"></div>
+<div class="bg-orb orb-2"></div>
+
+<div class="chat-header">
+    <div class="header-right">
+        <div class="back-btn" id="backBtn"><i class="fas fa-times"></i></div>
+        <div class="session-info">
+            <span class="session-title" id="sessionTitle">جلسة جديدة</span>
+            <span class="session-mode" id="sessionMode">...</span>
+        </div>
+    </div>
+    <div class="header-left">
+        <div class="icon-btn" id="saveBtn" title="حفظ الجلسة"><i class="fas fa-save"></i></div>
+        <div class="icon-btn" id="endSessionBtn" title="إنهاء الجلسة"><i class="fas fa-door-open"></i></div>
+    </div>
+</div>
+
+<div class="worker-status online" id="workerStatus">
+    <i class="fas fa-server"></i> <span id="workerStatusText">Worker متصل</span>
+</div>
+
+<div class="chat-area" id="chatArea">
+    <div class="empty-state" id="emptyState">
+        <i class="fas fa-infinity"></i>
+        <p id="emptyStateText">اكتب سؤالك لبدء الاجتماع</p>
+    </div>
+</div>
+
+<div class="input-bar">
+    <div class="input-row">
+        <textarea class="chat-input" id="chatInput" rows="1" placeholder="اكتب رسالتك..."></textarea>
+        <button class="send-btn" id="sendBtn" disabled><i class="fas fa-arrow-up"></i></button>
+    </div>
+</div>
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-app.js";
+    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-auth.js";
+    import { getFirestore, doc, getDoc, updateDoc, arrayUnion } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyBysr4ZEHTY_ojej_onmso3d09sz6uU65A",
+        authDomain: "infinity-ai-bd879.firebaseapp.com",
+        projectId: "infinity-ai-bd879",
+        storageBucket: "infinity-ai-bd879.firebasestorage.app",
+        messagingSenderId: "391390244727",
+        appId: "1:391390244727:web:7cc77f13f3ed0e4221fb72",
+        measurementId: "G-XGW87N67WZ"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    // ============ Worker ============
+    const WORKER_URL = 'https://infinityai.islamword409.workers.dev';
+
+    // ============ ترجمة ============
+    const translations = {
+        ar: {
+            sessionNew: "جلسة جديدة",
+            meetingActive: "الاجتماع قائم",
+            modelsThinking: "النماذج تتناقش...",
+            typePlaceholder: "اكتب رسالتك...",
+            emptyState: "اكتب سؤالك لبدء الاجتماع",
+            confirmEnd: "عند خروجك من الاجتماع، لن يمكنك إكماله، ولكن سيتم حفظ الأرشيف. هل أنت متأكد؟",
+            sessionSaved: "تم حفظ الجلسة في الأرشيف",
+            workerOnline: "Worker متصل",
+            workerOffline: "Worker غير متصل - وضع المحاكاة",
+            modes: {
+                simple: "⚡ بسيط وسريع",
+                critic: "🔥 ناقد شرس",
+                deep: "🧠 محلل عميق",
+                expanded: "💬 نقاش موسع",
+                brief: "📝 مختصر",
+                transparent: "👁️ شفاف"
+            },
+            models: {
+                gemini: "Gemini (قائد)",
+                deepseek: "DeepSeek (مبرمج)",
+                kimi: "Kimi (ناقد)",
+                chatgpt: "ChatGPT"
+            }
+        },
+        en: {
+            sessionNew: "New Session",
+            meetingActive: "Meeting in progress",
+            modelsThinking: "Models are discussing...",
+            typePlaceholder: "Type your message...",
+            emptyState: "Type your question to start the meeting",
+            confirmEnd: "If you leave, you cannot continue this meeting, but the archive will be saved. Are you sure?",
+            sessionSaved: "Session saved to archive",
+            workerOnline: "Worker Connected",
+            workerOffline: "Worker Offline - Simulation Mode",
+            modes: {
+                simple: "⚡ Simple & Fast",
+                critic: "🔥 Fierce Critic",
+                deep: "🧠 Deep Analyst",
+                expanded: "💬 Expanded Discussion",
+                brief: "📝 Brief",
+                transparent: "👁️ Transparent"
+            },
+            models: {
+                gemini: "Gemini (Leader)",
+                deepseek: "DeepSeek (Developer)",
+                kimi: "Kimi (Critic)",
+                chatgpt: "ChatGPT"
+            }
+        }
+    };
+
+    let currentLang = 'ar';
+    let currentMode = 'simple';
+    let currentUser = null;
+    let userData = null;
+    let sessionMessages = [];
+    let sessionId = Date.now().toString();
+    let workerOnline = false;
+
+    const params = new URLSearchParams(window.location.search);
+    currentMode = params.get('mode') || 'simple';
+    const initialPrompt = params.get('prompt') || '';
+
+    // ============ DOM ============
+    const chatArea = document.getElementById('chatArea');
+    const chatInput = document.getElementById('chatInput');
+    const sendBtn = document.getElementById('sendBtn');
+    const emptyState = document.getElementById('emptyState');
+    const sessionMode = document.getElementById('sessionMode');
+    const sessionTitle = document.getElementById('sessionTitle');
+    const workerStatus = document.getElementById('workerStatus');
+    const workerStatusText = document.getElementById('workerStatusText');
+
+    // ============ دوال ============
+    function formatTime() {
+        const now = new Date();
+        return now.toLocaleTimeString(currentLang === 'ar' ? 'ar-EG' : 'en-US', { hour: '2-digit', minute: '2-digit' });
+    }
+
+    function addMessage(type, content, modelName = '') {
+        sessionMessages.push({ type, content, modelName, time: new Date().toISOString() });
+        if (emptyState) emptyState.style.display = 'none';
+
+        const msg = document.createElement('div');
+        msg.className = `message ${type}`;
+
+        let avatarHtml = '';
+        let headerHtml = '';
+
+        if (type === 'user') {
+            avatarHtml = `<div class="msg-avatar user"><i class="fas fa-user"></i></div>`;
+        } else if (type === 'agent') {
+            const modelClass = modelName.toLowerCase().includes('gemini') ? 'gemini' :
+                              modelName.toLowerCase().includes('deepseek') ? 'deepseek' :
+                              modelName.toLowerCase().includes('kimi') ? 'kimi' : 'gemini';
+            const iconMap = { gemini: 'fa-gem', deepseek: 'fa-code', kimi: 'fa-search' };
+            const icon = iconMap[modelClass] || 'fa-robot';
+            avatarHtml = `<div class="msg-avatar ${modelClass}"><i class="fas ${icon}"></i></div>`;
+            headerHtml = `<div class="msg-header"><span class="msg-model-name">${modelName}</span><span class="msg-time">${formatTime()}</span></div>`;
+        } else if (type === 'system') {
+            avatarHtml = `<div class="msg-avatar system-avatar"><i class="fas fa-info"></i></div>`;
+        }
+
+        msg.innerHTML = `${avatarHtml}<div>${headerHtml}<div class="msg-bubble">${content}</div></div>`;
+        chatArea.appendChild(msg);
+        scrollToBottom();
+    }
+
+    function addTypingIndicator() {
+        const typing = document.createElement('div');
+        typing.className = 'message agent';
+        typing.id = 'typingIndicator';
+        typing.innerHTML = `
+            <div class="msg-avatar system-avatar"><i class="fas fa-brain"></i></div>
+            <div>
+                <div class="msg-header"><span class="msg-model-name">${translations[currentLang].modelsThinking}</span></div>
+                <div class="msg-bubble"><div class="msg-typing"><span></span><span></span><span></span></div></div>
+            </div>`;
+        chatArea.appendChild(typing);
+        scrollToBottom();
+    }
+
+    function removeTypingIndicator() {
+        const typing = document.getElementById('typingIndicator');
+        if (typing) typing.remove();
+    }
+
+    function addMeetingStatus() {
+        const existing = document.getElementById('meetingStatus');
+        if (existing) existing.remove();
+        const status = document.createElement('div');
+        status.className = 'meeting-status';
+        status.id = 'meetingStatus';
+        status.innerHTML = `<div class="meeting-dot"></div><span>${translations[currentLang].meetingActive} — ${getModeLabel()}</span>`;
+        chatArea.insertBefore(status, chatArea.firstChild);
+    }
+
+    function scrollToBottom() {
+        setTimeout(() => { chatArea.scrollTop = chatArea.scrollHeight; }, 100);
+    }
+
+    function getModeLabel() {
+        return translations[currentLang].modes[currentMode] || currentMode;
+    }
+
+    function sleep(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
+    // ============ التحقق من الـ Worker ============
+    async function checkWorkerHealth() {
+        try {
+            const response = await fetch(`${WORKER_URL}/health`);
+            const data = await response.json();
+            if (data.status === 'online') {
+                workerOnline = true;
+                workerStatus.className = 'worker-status online';
+                workerStatusText.innerText = translations[currentLang].workerOnline;
+                return true;
+            }
+        } catch (e) {
+            console.log('Worker غير متصل');
+        }
+        workerOnline = false;
+        workerStatus.className = 'worker-status offline';
+        workerStatusText.innerText = translations[currentLang].workerOffline;
+        return false;
+    }
+
+    // ============ الاتصال بالـ Worker ============
+    async function callWorker(prompt) {
+        try {
+            const response = await fetch(`${WORKER_URL}/chat`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    prompt: prompt,
+                    mode: currentMode,
+                    language: currentLang,
+                    history: sessionMessages.slice(-10).map(m => ({
+                        type: m.type,
+                        content: m.content
+                    }))
+                })
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.error || 'Error');
+            }
+
+            return await response.json();
+        } catch (error) {
+            console.error('Worker Error:', error);
+            return null;
+        }
+    }
+
+    // ============ التعامل مع الرد ============
+    async function handleAIResponse(userMessage) {
+        addMeetingStatus();
+        if (emptyState) emptyState.style.display = 'none';
+
+        addTypingIndicator();
+        const result = await callWorker(userMessage);
+        removeTypingIndicator();
+
+        if (result && result.responses) {
+            // تحديث الوضع لو الـ Worker غيره
+            if (result.mode) {
+                currentMode = result.mode;
+                sessionMode.innerText = getModeLabel();
+            }
+
+            // عرض الردود
+            for (const resp of result.responses) {
+                if (resp.success) {
+                    const modelName = translations[currentLang].models.gemini;
+                    addMessage('agent', resp.content, modelName);
+                    await sleep(400);
+                } else {
+                    addMessage('system', `⚠️ ${resp.error || 'خطأ في الرد'}`);
+                }
+            }
+
+            // إضافة ردود محاكاة لباقي النماذج لو التحليل يطلبهم
+            if (result.analysis && result.analysis.participants.length > 1) {
+                if (result.analysis.participants.includes('deepseek')) {
+                    await sleep(500);
+                    addMessage('agent', '✅ تم الاطلاع على خطة Gemini. جاهز للتنفيذ.', translations[currentLang].models.deepseek);
+                }
+                if (result.analysis.participants.includes('kimi')) {
+                    await sleep(400);
+                    addMessage('agent', '🔍 تمت المراجعة. الحل سليم وأوافق عليه.', translations[currentLang].models.kimi);
+                }
+            }
+        } else {
+            // رجوع للمحاكاة
+            addMessage('system', '⚠️ لم يتم الاتصال بالـ Worker. جاري استخدام المحاكاة...');
+            await sleep(600);
+            addMessage('agent', 
+                `[وضع المحاكاة]\n\nتحليل طلبك: "${userMessage}"\n\nهذا رد تجريبي. الـ Worker غير متصل حالياً. تحقق من الرابط أو المفتاح.`,
+                translations[currentLang].models.gemini
+            );
+        }
+    }
+
+    // ============ إرسال رسالة ============
+    async function sendMessage() {
+        const text = chatInput.value.trim();
+        if (!text) return;
+
+        addMessage('user', text);
+        chatInput.value = '';
+        sendBtn.disabled = true;
+        chatInput.style.height = 'auto';
+
+        await handleAIResponse(text);
+    }
+
+    // ============ إنهاء الجلسة ============
+    async function endSession() {
+        const confirmed = confirm(translations[currentLang].confirmEnd);
+        if (!confirmed) return;
+
+        if (currentUser && sessionMessages.length > 0) {
+            try {
+                const userRef = doc(db, "users", currentUser.uid);
+                await updateDoc(userRef, {
+                    chatSessions: arrayUnion({
+                        sessionId,
+                        mode: currentMode,
+                        messages: sessionMessages,
+                        createdAt: new Date().toISOString(),
+                        language: currentLang
+                    })
+                });
+            } catch (e) {
+                console.log('لم يتم الحفظ:', e);
+            }
+        }
+        window.location.href = 'home.html';
+    }
+
+    function updateUILanguage(lang) {
+        sessionMode.innerText = getModeLabel();
+        chatInput.placeholder = translations[lang].typePlaceholder;
+        sessionTitle.innerText = translations[lang].sessionNew;
+        document.getElementById('emptyStateText').innerText = translations[lang].emptyState;
+        workerStatusText.innerText = workerOnline ? translations[lang].workerOnline : translations[lang].workerOffline;
+    }
+
+    // ============ Firebase Auth ============
+    onAuthStateChanged(auth, async (user) => {
+        if (user) {
+            currentUser = user;
+            try {
+                const userDoc = await getDoc(doc(db, "users", user.uid));
+                if (userDoc.exists()) {
+                    userData = userDoc.data();
+                    if (userData.language) currentLang = userData.language;
+                }
+            } catch (e) {}
+            
+            updateUILanguage(currentLang);
+            sessionMode.innerText = getModeLabel();
+            
+            // التحقق من الـ Worker
+            await checkWorkerHealth();
+
+            // سؤال مبدئي
+            if (initialPrompt) {
+                setTimeout(() => {
+                    chatInput.value = initialPrompt;
+                    sendBtn.disabled = false;
+                    sendMessage();
+                }, 800);
+            }
+        } else {
+            window.location.href = 'index.html';
+        }
+    });
+
+    // ============ أحداث ============
+    chatInput.addEventListener('input', () => {
+        sendBtn.disabled = !chatInput.value.trim();
+        chatInput.style.height = 'auto';
+        chatInput.style.height = Math.min(chatInput.scrollHeight, 100) + 'px';
+    });
+
+    sendBtn.addEventListener('click', sendMessage);
+    chatInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault();
+            sendMessage();
+        }
+    });
+
+    document.getElementById('backBtn').addEventListener('click', endSession);
+    document.getElementById('endSessionBtn').addEventListener('click', endSession);
+
+    document.getElementById('saveBtn').addEventListener('click', async () => {
+        if (currentUser && sessionMessages.length > 0) {
+            try {
+                const userRef = doc(db, "users", currentUser.uid);
+                await updateDoc(userRef, {
+                    chatSessions: arrayUnion({
+                        sessionId,
+                        mode: currentMode,
+                        messages: sessionMessages,
+                        createdAt: new Date().toISOString(),
+                        language: currentLang
+                    })
+                });
+                alert(translations[currentLang].sessionSaved);
+            } catch (e) {}
+        }
+    });
+
+    sessionMode.innerText = getModeLabel();
+</script>
+</body>
+</html>
