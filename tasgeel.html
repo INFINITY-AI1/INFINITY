@@ -3,437 +3,911 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>جلسة | INFINITY AI</title>
+    <title>إنشاء حساب | INFINITY AI</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body, html { width: 100%; height: 100vh; background: #000000; font-family: 'Cairo', sans-serif; overflow: hidden; }
-        .bg-orb { position: fixed; border-radius: 50%; filter: blur(130px); opacity: 0.08; z-index: 0; pointer-events: none; }
-        .orb-1 { width: 400px; height: 400px; background: radial-gradient(circle, #d4a853 0%, transparent 70%); bottom: -150px; left: -100px; }
-        .orb-2 { width: 300px; height: 300px; background: radial-gradient(circle, #ffffff 0%, transparent 70%); top: 20%; right: -100px; }
-        .chat-header { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; background: rgba(0,0,0,0.7); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-bottom: 1px solid rgba(255,255,255,0.06); }
-        .header-left { display: flex; align-items: center; gap: 12px; }
-        .header-right { display: flex; align-items: center; gap: 6px; }
-        .back-btn { width: 36px; height: 36px; border-radius: 50%; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: center; cursor: pointer; color: rgba(255,255,255,0.7); font-size: 14px; transition: all 0.2s; }
-        .back-btn:hover { background: rgba(255,255,255,0.1); color: #fff; }
-        .session-info { display: flex; flex-direction: column; }
-        .session-title { font-size: 14px; font-weight: 700; color: #fff; }
-        .session-mode { font-size: 11px; color: #d4a853; font-weight: 500; }
-        .icon-btn { width: 36px; height: 36px; border-radius: 50%; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: center; cursor: pointer; color: rgba(255,255,255,0.6); font-size: 13px; transition: all 0.2s; }
-        .icon-btn:hover { background: rgba(255,255,255,0.1); color: #fff; }
-        .chat-area { position: fixed; top: 62px; bottom: 90px; left: 0; right: 0; overflow-y: auto; padding: 16px; z-index: 2; display: flex; flex-direction: column; gap: 12px; }
-        .chat-area::-webkit-scrollbar { width: 4px; }
-        .chat-area::-webkit-scrollbar-track { background: transparent; }
-        .chat-area::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 10px; }
-        .message { display: flex; gap: 10px; max-width: 90%; animation: fadeInUp 0.4s ease forwards; }
-        .message.user { align-self: flex-end; flex-direction: row-reverse; }
-        .message.agent { align-self: flex-start; }
-        .message.system { align-self: center; max-width: 85%; }
-        @keyframes fadeInUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
-        .msg-avatar { width: 32px; height: 32px; border-radius: 50%; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 14px; }
-        .msg-avatar.gemini { background: rgba(66,133,244,0.2); color: #4285f4; border: 1px solid rgba(66,133,244,0.3); }
-        .msg-avatar.deepseek { background: rgba(74,222,128,0.15); color: #4ade80; border: 1px solid rgba(74,222,128,0.3); }
-        .msg-avatar.kimi { background: rgba(167,139,250,0.15); color: #a78bfa; border: 1px solid rgba(167,139,250,0.3); }
-        .msg-avatar.user { background: rgba(212,168,83,0.2); color: #d4a853; border: 1px solid rgba(212,168,83,0.3); }
-        .msg-avatar.system-avatar { background: rgba(255,255,255,0.06); color: rgba(255,255,255,0.5); border: 1px solid rgba(255,255,255,0.1); font-size: 10px; }
-        .msg-bubble { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.06); border-radius: 16px; padding: 12px 16px; color: rgba(255,255,255,0.85); font-size: 13px; line-height: 1.6; white-space: pre-wrap; word-wrap: break-word; }
-        .message.user .msg-bubble { background: rgba(212,168,83,0.1); border-color: rgba(212,168,83,0.2); }
-        .message.system .msg-bubble { background: rgba(255,255,255,0.02); border-style: dashed; border-color: rgba(255,255,255,0.08); text-align: center; font-size: 11px; color: rgba(255,255,255,0.45); }
-        .msg-header { display: flex; align-items: center; gap: 6px; margin-bottom: 6px; }
-        .msg-model-name { font-size: 11px; font-weight: 700; color: rgba(255,255,255,0.5); }
-        .msg-time { font-size: 10px; color: rgba(255,255,255,0.25); }
-        .msg-typing { display: flex; gap: 4px; padding: 8px 0; }
-        .msg-typing span { width: 5px; height: 5px; border-radius: 50%; background: rgba(255,255,255,0.3); animation: typing 1.4s infinite ease-in-out; }
-        .msg-typing span:nth-child(2) { animation-delay: 0.2s; }
-        .msg-typing span:nth-child(3) { animation-delay: 0.4s; }
-        @keyframes typing { 0%,100% { opacity: 0.2; transform: translateY(0); } 50% { opacity: 1; transform: translateY(-4px); } }
-        .input-bar { position: fixed; bottom: 0; left: 0; right: 0; z-index: 100; padding: 10px 16px 16px; background: rgba(0,0,0,0.7); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-top: 1px solid rgba(255,255,255,0.06); }
-        .input-row { display: flex; align-items: flex-end; gap: 8px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; padding: 6px 6px 6px 16px; transition: all 0.3s; }
-        .input-row:focus-within { border-color: rgba(212,168,83,0.4); box-shadow: 0 0 20px rgba(212,168,83,0.05); }
-        .chat-input { flex: 1; background: transparent; border: none; outline: none; font-family: 'Cairo', sans-serif; font-size: 14px; color: #fff; resize: none; min-height: 22px; max-height: 100px; padding: 8px 0; }
-        .chat-input::placeholder { color: rgba(255,255,255,0.2); }
-        .send-btn { width: 40px; height: 40px; border-radius: 12px; background: #fff; border: none; display: flex; align-items: center; justify-content: center; cursor: pointer; color: #000; font-size: 15px; flex-shrink: 0; transition: all 0.3s; }
-        .send-btn:hover { background: #d4a853; }
-        .send-btn:active { transform: scale(0.94); }
-        .send-btn:disabled { background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.15); cursor: not-allowed; }
-        .meeting-status { display: flex; align-items: center; gap: 8px; padding: 10px 14px; background: rgba(212,168,83,0.05); border: 1px solid rgba(212,168,83,0.15); border-radius: 12px; margin-bottom: 8px; font-size: 11px; color: rgba(255,255,255,0.5); }
-        .meeting-dot { width: 6px; height: 6px; border-radius: 50%; background: #4ade80; animation: pulse 2s infinite; }
-        @keyframes pulse { 0%,100% { opacity: 0.4; } 50% { opacity: 1; } }
-        .empty-state { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; text-align: center; color: rgba(255,255,255,0.2); }
-        .empty-state i { font-size: 50px; margin-bottom: 16px; color: rgba(212,168,83,0.2); }
-        .empty-state p { font-size: 14px; }
-        .worker-status { position: fixed; top: 64px; left: 50%; transform: translateX(-50%); z-index: 101; padding: 6px 14px; border-radius: 20px; font-size: 10px; font-weight: 600; backdrop-filter: blur(10px); transition: all 0.3s; }
-        .worker-status.online { background: rgba(74,222,128,0.15); color: #4ade80; border: 1px solid rgba(74,222,128,0.3); }
-        .worker-status.offline { background: rgba(255,100,100,0.15); color: #ff6b6b; border: 1px solid rgba(255,100,100,0.3); }
-        .worker-status.error-status { background: rgba(255,165,0,0.15); color: #ffa500; border: 1px solid rgba(255,165,0,0.3); }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body, html {
+            width: 100%;
+            min-height: 100vh;
+            background-color: #0a0a0a;
+            font-family: 'Cairo', sans-serif;
+        }
+
+        .gif-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            background-image: url('islam.GIF');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            filter: brightness(0.85);
+        }
+
+        .main-wrapper {
+            position: relative;
+            z-index: 2;
+            width: 100%;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px 16px;
+            padding-top: 70px;
+            padding-bottom: 50px;
+        }
+
+        .lang-switch {
+            position: fixed;
+            top: 16px;
+            left: 16px;
+            z-index: 100;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(10px);
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            transition: all 0.25s ease;
+            font-size: 14px;
+            color: #ffffff;
+        }
+        .lang-switch:hover {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: rgba(255, 255, 255, 0.6);
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(16px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .headline {
+            font-weight: 900;
+            font-size: 24px;
+            text-align: center;
+            margin-bottom: 24px;
+            letter-spacing: 2px;
+            color: #ffffff;
+            animation: fadeInUp 0.6s ease forwards;
+            opacity: 0;
+        }
+
+        .signup-card {
+            width: 100%;
+            max-width: 440px;
+            animation: fadeInUp 0.6s ease forwards;
+            animation-delay: 0.1s;
+            opacity: 0;
+        }
+
+        .progress-steps {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 6px;
+            margin-bottom: 28px;
+        }
+        .progress-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            transition: all 0.35s ease;
+        }
+        .progress-dot.active {
+            background: #ffffff;
+            box-shadow: 0 0 12px rgba(255, 255, 255, 0.5);
+            width: 32px;
+            border-radius: 5px;
+        }
+        .progress-dot.done {
+            background: rgba(255, 255, 255, 0.5);
+        }
+        .progress-line {
+            width: 28px;
+            height: 1px;
+            background: rgba(255, 255, 255, 0.15);
+            transition: all 0.35s ease;
+        }
+        .progress-line.done {
+            background: rgba(255, 255, 255, 0.4);
+        }
+
+        .form-section {
+            display: none;
+            animation: fadeInUp 0.4s ease forwards;
+        }
+        .form-section.active {
+            display: block;
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 6px;
+            text-align: center;
+            letter-spacing: 0.5px;
+        }
+        .section-subtitle {
+            font-size: 13px;
+            color: #ffffff;
+            text-align: center;
+            margin-bottom: 24px;
+            opacity: 0.7;
+        }
+
+        .input-group {
+            margin-bottom: 14px;
+            width: 100%;
+        }
+        .input-group label {
+            display: block;
+            font-size: 12px;
+            font-weight: 600;
+            color: #ffffff;
+            margin-bottom: 6px;
+            letter-spacing: 0.3px;
+            text-transform: uppercase;
+            opacity: 0.85;
+        }
+        .input-field {
+            width: 100%;
+            padding: 13px 16px;
+            background: #ffffff;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            font-family: 'Cairo', sans-serif;
+            font-size: 14px;
+            color: #000000;
+            outline: none;
+            transition: all 0.2s ease;
+        }
+        .input-field:focus {
+            border-color: rgba(255, 255, 255, 0.6);
+            box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.08);
+        }
+        .input-field::placeholder {
+            color: #999999;
+            font-size: 13px;
+        }
+
+        select.input-field {
+            appearance: none;
+            -webkit-appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M6 8L1 3h10z' fill='%23999999'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: left 14px center;
+            padding-left: 36px;
+            cursor: pointer;
+        }
+        select.input-field option {
+            background: #ffffff;
+            color: #000000;
+        }
+
+        .row {
+            display: flex;
+            gap: 12px;
+        }
+        .row .input-group {
+            flex: 1;
+        }
+
+        .interests-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            max-height: 240px;
+            overflow-y: auto;
+            padding: 4px 2px;
+            margin-bottom: 12px;
+        }
+        .interests-grid::-webkit-scrollbar {
+            width: 4px;
+        }
+        .interests-grid::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .interests-grid::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+        }
+
+        .interest-chip {
+            padding: 10px 16px;
+            border-radius: 10px;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: rgba(255, 255, 255, 0.7);
+            white-space: nowrap;
+            user-select: none;
+        }
+        .interest-chip:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.3);
+            color: #ffffff;
+        }
+        .interest-chip.selected {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: #ffffff;
+            color: #ffffff;
+            font-weight: 600;
+        }
+
+        .other-input {
+            width: 100%;
+            padding: 12px 16px;
+            background: #ffffff;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            font-family: 'Cairo', sans-serif;
+            font-size: 13px;
+            color: #000000;
+            outline: none;
+            transition: all 0.2s;
+            margin-top: 8px;
+        }
+        .other-input:focus {
+            border-color: rgba(255, 255, 255, 0.6);
+            box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.08);
+        }
+        .other-input::placeholder {
+            color: #999999;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 24px;
+        }
+        .nav-btn {
+            flex: 1;
+            padding: 13px 0;
+            border-radius: 12px;
+            font-family: 'Cairo', sans-serif;
+            font-weight: 700;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: none;
+            letter-spacing: 0.3px;
+        }
+        .btn-back {
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #ffffff;
+        }
+        .btn-back:hover {
+            background: rgba(255, 255, 255, 0.12);
+        }
+        .btn-next, .btn-submit {
+            background: #ffffff;
+            color: #000000;
+        }
+        .btn-next:hover, .btn-submit:hover {
+            background: #e6e6e6;
+        }
+        .btn-next:active, .btn-submit:active {
+            transform: scale(0.97);
+        }
+        .btn-submit:disabled {
+            background: rgba(255, 255, 255, 0.2);
+            color: rgba(255, 255, 255, 0.4);
+            cursor: not-allowed;
+        }
+
+        .btn-submit {
+            position: relative;
+            overflow: hidden;
+        }
+        .loading-bar {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0%;
+            height: 3px;
+            background: #000000;
+            border-radius: 3px;
+            transition: width 0.05s linear;
+        }
+        .btn-submit.loading {
+            pointer-events: none;
+            transform: scale(0.98);
+            opacity: 0.7;
+        }
+
+        .login-link {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .login-link a {
+            color: #ffffff;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.2s;
+            opacity: 0.7;
+        }
+        .login-link a:hover {
+            opacity: 1;
+        }
+
+        .message-box {
+            font-size: 12px;
+            text-align: center;
+            margin-top: 12px;
+            display: none;
+            font-weight: 500;
+            padding: 10px 16px;
+            border-radius: 10px;
+            animation: fadeInUp 0.3s ease;
+            color: #ffffff;
+        }
+        .message-box.show { display: block; }
+        .message-box.error {
+            background: rgba(255, 60, 60, 0.2);
+            border: 1px solid rgba(255, 100, 100, 0.35);
+        }
+        .message-box.success {
+            background: rgba(74, 222, 128, 0.15);
+            border: 1px solid rgba(74, 222, 128, 0.35);
+        }
+
+        @media (max-width: 420px) {
+            .headline { font-size: 20px; letter-spacing: 1px; }
+            .signup-card { max-width: 100%; }
+            .section-title { font-size: 16px; }
+            .interest-chip { font-size: 12px; padding: 8px 12px; }
+            .row { flex-direction: column; gap: 0; }
+            .input-field { padding: 12px 14px; font-size: 13px; }
+        }
     </style>
 </head>
 <body>
 
-<div class="bg-orb orb-1"></div>
-<div class="bg-orb orb-2"></div>
+<div class="gif-background"></div>
 
-<div class="chat-header">
-    <div class="header-right">
-        <div class="back-btn" id="backBtn"><i class="fas fa-times"></i></div>
-        <div class="session-info">
-            <span class="session-title" id="sessionTitle">جلسة جديدة</span>
-            <span class="session-mode" id="sessionMode">...</span>
+<div class="lang-switch" id="langSwitcher">
+    <i class="fas fa-globe"></i>
+</div>
+
+<div class="main-wrapper">
+    <h1 class="headline">INFINITY AI</h1>
+
+    <div class="signup-card">
+        <div class="progress-steps" id="progressSteps">
+            <div class="progress-dot active" data-step="1"></div>
+            <div class="progress-line" data-line="1"></div>
+            <div class="progress-dot" data-step="2"></div>
+            <div class="progress-line" data-line="2"></div>
+            <div class="progress-dot" data-step="3"></div>
+        </div>
+
+        <!-- القسم 1 -->
+        <div class="form-section active" id="section1">
+            <h3 class="section-title" id="sec1Title">المعلومات الشخصية</h3>
+            <p class="section-subtitle" id="sec1Subtitle">لنعرف عنك أكثر لنقدم لك تجربة مخصصة</p>
+
+            <div class="row">
+                <div class="input-group">
+                    <label id="firstNameLabel">الاسم الأول</label>
+                    <input type="text" id="firstName" class="input-field">
+                </div>
+                <div class="input-group">
+                    <label id="lastNameLabel">الاسم الثاني</label>
+                    <input type="text" id="lastName" class="input-field">
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="input-group">
+                    <label id="ageLabel">العمر</label>
+                    <input type="number" id="age" class="input-field" min="10" max="100">
+                </div>
+                <div class="input-group">
+                    <label id="countryLabel">الدولة</label>
+                    <select id="country" class="input-field">
+                        <option value="">اختر الدولة</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label id="educationLabel">المرحلة الدراسية / الكلية</label>
+                <input type="text" id="education" class="input-field">
+            </div>
+
+            <div class="input-group">
+                <label id="jobLabel">الوظيفة</label>
+                <input type="text" id="job" class="input-field">
+            </div>
+
+            <div class="nav-buttons">
+                <button class="nav-btn btn-back" style="visibility: hidden;">رجوع</button>
+                <button class="nav-btn btn-next" id="toSection2">التالي</button>
+            </div>
+        </div>
+
+        <!-- القسم 2 -->
+        <div class="form-section" id="section2">
+            <h3 class="section-title" id="sec2Title">اختر اهتماماتك</h3>
+            <p class="section-subtitle" id="sec2Subtitle">اختر ما يعبر عنك - يمكنك اختيار أكثر من واحد</p>
+
+            <div class="interests-grid" id="interestsGrid"></div>
+            
+            <div class="input-group" id="otherInterestGroup" style="display: none;">
+                <input type="text" id="otherInterest" class="other-input">
+            </div>
+
+            <div class="nav-buttons">
+                <button class="nav-btn btn-back" id="toSection1">رجوع</button>
+                <button class="nav-btn btn-next" id="toSection3">التالي</button>
+            </div>
+        </div>
+
+        <!-- القسم 3 -->
+        <div class="form-section" id="section3">
+            <h3 class="section-title" id="sec3Title">معلومات الحساب</h3>
+            <p class="section-subtitle" id="sec3Subtitle">أنشئ حسابك للانضمام إلى INFINITY AI</p>
+
+            <div class="input-group">
+                <label id="emailLabel">البريد الإلكتروني</label>
+                <input type="email" id="email" class="input-field" dir="ltr">
+            </div>
+
+            <div class="input-group">
+                <label id="passwordLabel">كلمة المرور</label>
+                <input type="password" id="password" class="input-field">
+            </div>
+
+            <div class="input-group">
+                <label id="confirmPasswordLabel">تأكيد كلمة المرور</label>
+                <input type="password" id="confirmPassword" class="input-field">
+            </div>
+
+            <div class="message-box" id="messageBox"></div>
+
+            <div class="nav-buttons">
+                <button class="nav-btn btn-back" id="toSection2b">رجوع</button>
+                <button class="nav-btn btn-submit" id="submitBtn">إنشاء الحساب</button>
+            </div>
+
+            <div class="login-link">
+                <a id="loginLink">لديك حساب بالفعل؟ تسجيل الدخول</a>
+            </div>
         </div>
     </div>
-    <div class="header-left">
-        <div class="icon-btn" id="saveBtn" title="حفظ"><i class="fas fa-save"></i></div>
-        <div class="icon-btn" id="endSessionBtn" title="إنهاء"><i class="fas fa-door-open"></i></div>
-    </div>
 </div>
 
-<div class="worker-status online" id="workerStatus">
-    <i class="fas fa-server"></i> <span id="workerStatusText">Worker متصل</span>
-</div>
-
-<div class="chat-area" id="chatArea">
-    <div class="empty-state" id="emptyState">
-        <i class="fas fa-infinity"></i>
-        <p>اكتب سؤالك لبدء الاجتماع</p>
-    </div>
-</div>
-
-<div class="input-bar">
-    <div class="input-row">
-        <textarea class="chat-input" id="chatInput" rows="1" placeholder="اكتب رسالتك..."></textarea>
-        <button class="send-btn" id="sendBtn" disabled><i class="fas fa-arrow-up"></i></button>
-    </div>
-</div>
-
+<!-- Firebase SDKs -->
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-app.js";
-    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-auth.js";
-    import { getFirestore, doc, getDoc, updateDoc, arrayUnion } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-firestore.js";
+    import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-auth.js";
+    import { getFirestore, doc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-firestore.js";
 
-    // ============ Firebase ============
     const firebaseConfig = {
         apiKey: "AIzaSyBysr4ZEHTY_ojej_onmso3d09sz6uU65A",
         authDomain: "infinity-ai-bd879.firebaseapp.com",
         projectId: "infinity-ai-bd879",
         storageBucket: "infinity-ai-bd879.firebasestorage.app",
         messagingSenderId: "391390244727",
-        appId: "1:391390244727:web:7cc77f13f3ed0e4221fb72"
+        appId: "1:391390244727:web:7cc77f13f3ed0e4221fb72",
+        measurementId: "G-XGW87N67WZ"
     };
 
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
     const db = getFirestore(app);
 
-    // ============ Worker ============
-    const WORKER_URL = 'https://infinityai.islamword409.workers.dev';
-
-    // ============ ترجمة ============
+    // ============ الترجمة ============
     const translations = {
         ar: {
-            modelsThinking: "النماذج تتناقش...",
-            meetingActive: "الاجتماع قائم",
-            workerOnline: "Worker متصل",
-            workerOffline: "Worker غير متصل",
-            workerError: "خطأ في الاتصال بـ Worker",
-            workerStatusError: "تأكد من صحة مفاتيح API",
-            typePlaceholder: "اكتب رسالتك...",
-            emptyState: "اكتب سؤالك لبدء الاجتماع",
-            confirmEnd: "عند خروجك من الاجتماع، لن يمكنك إكماله، ولكن سيتم حفظ الأرشيف. هل أنت متأكد؟",
-            sessionSaved: "تم حفظ الجلسة في الأرشيف",
-            models: { gemini: "Gemini (قائد)", deepseek: "DeepSeek (مبرمج)", kimi: "Kimi (ناقد)" },
-            modes: { simple: "⚡ بسيط وسريع", critic: "🔥 ناقد شرس", deep: "🧠 محلل عميق", expanded: "💬 نقاش موسع", brief: "📝 مختصر", transparent: "👁️ شفاف" }
+            sec1Title: "المعلومات الشخصية",
+            sec1Subtitle: "لنعرف عنك أكثر لنقدم لك تجربة مخصصة",
+            sec2Title: "اختر اهتماماتك",
+            sec2Subtitle: "اختر ما يعبر عنك - يمكنك اختيار أكثر من واحد",
+            sec3Title: "معلومات الحساب",
+            sec3Subtitle: "أنشئ حسابك للانضمام إلى INFINITY AI",
+            firstNameLabel: "الاسم الأول",
+            lastNameLabel: "الاسم الثاني",
+            ageLabel: "العمر",
+            countryLabel: "الدولة",
+            educationLabel: "المرحلة الدراسية / الكلية",
+            jobLabel: "الوظيفة",
+            emailLabel: "البريد الإلكتروني",
+            passwordLabel: "كلمة المرور",
+            confirmPasswordLabel: "تأكيد كلمة المرور",
+            nextBtn: "التالي",
+            backBtn: "رجوع",
+            submitBtn: "إنشاء الحساب",
+            loginText: "لديك حساب بالفعل؟ تسجيل الدخول",
+            otherPlaceholder: "اكتب اهتماماتك الأخرى",
+            selectCountry: "اختر الدولة",
+            interests: [
+                { id: "software_dev", text: "تطوير البرمجيات" },
+                { id: "architecture", text: "هندسة البرمجيات" },
+                { id: "cybersecurity", text: "أمن المعلومات" },
+                { id: "databases", text: "قواعد البيانات" },
+                { id: "ui_ux", text: "تصميم واجهات المستخدم" },
+                { id: "content_writing", text: "كتابة المحتوى" },
+                { id: "data_analysis", text: "تحليل البيانات" },
+                { id: "project_mgmt", text: "إدارة المشاريع" },
+                { id: "problem_solving", text: "حل المشكلات" },
+                { id: "creativity", text: "الإبداع والابتكار" },
+                { id: "automation", text: "الأتمتة" },
+                { id: "elearning", text: "التعليم الإلكتروني" },
+                { id: "entrepreneurship", text: "ريادة الأعمال" },
+                { id: "teamwork", text: "العمل الجماعي" },
+                { id: "critical_thinking", text: "التفكير النقدي" },
+                { id: "logical_design", text: "التصميم المنطقي" },
+                { id: "research", text: "البحث العلمي" },
+                { id: "tech_blogging", text: "التدوين التقني" },
+                { id: "gaming", text: "الألعاب الإلكترونية" },
+                { id: "other", text: "أخرى" }
+            ],
+            // رسائل الخطأ - واضحة ومباشرة
+            fillRequired: "يجب إدخال الاسم الأول والثاني للمتابعة",
+            fillEmailPass: "يجب إدخال البريد الإلكتروني وكلمة المرور",
+            passwordsNotMatch: "كلمة المرور غير متطابقة - تأكد من كتابتها بشكل صحيح",
+            passwordTooShort: "كلمة المرور قصيرة جداً - يجب أن تكون 6 أحرف على الأقل",
+            invalidEmail: "صيغة البريد الإلكتروني غير صالحة - تأكد من كتابتها بشكل صحيح",
+            emailInUse: "هذا البريد الإلكتروني مسجل بالفعل - هل تريد تسجيل الدخول؟",
+            tooManyRequests: "محاولات كثيرة - انتظر قليلاً ثم حاول مرة أخرى",
+            generalError: "حدث خطأ غير متوقع - تحقق من اتصالك وحاول مرة أخرى",
+            accountCreated: "تم إنشاء الحساب بنجاح - جاري توجيهك..."
         },
         en: {
-            modelsThinking: "Models are discussing...",
-            meetingActive: "Meeting in progress",
-            workerOnline: "Worker Connected",
-            workerOffline: "Worker Offline",
-            workerError: "Worker connection error",
-            workerStatusError: "Check API keys",
-            typePlaceholder: "Type your message...",
-            emptyState: "Type your question to start the meeting",
-            confirmEnd: "If you leave, you cannot continue this meeting, but the archive will be saved. Are you sure?",
-            sessionSaved: "Session saved to archive",
-            models: { gemini: "Gemini (Leader)", deepseek: "DeepSeek (Dev)", kimi: "Kimi (Critic)" },
-            modes: { simple: "⚡ Simple & Fast", critic: "🔥 Fierce Critic", deep: "🧠 Deep Analyst", expanded: "💬 Expanded Discussion", brief: "📝 Brief", transparent: "👁️ Transparent" }
+            sec1Title: "Personal Information",
+            sec1Subtitle: "Tell us about yourself for a personalized experience",
+            sec2Title: "Choose Your Interests",
+            sec2Subtitle: "Select what represents you - you can choose more than one",
+            sec3Title: "Account Information",
+            sec3Subtitle: "Create your account to join INFINITY AI",
+            firstNameLabel: "First Name",
+            lastNameLabel: "Last Name",
+            ageLabel: "Age",
+            countryLabel: "Country",
+            educationLabel: "Education / College",
+            jobLabel: "Job Title",
+            emailLabel: "Email",
+            passwordLabel: "Password",
+            confirmPasswordLabel: "Confirm Password",
+            nextBtn: "Next",
+            backBtn: "Back",
+            submitBtn: "Create Account",
+            loginText: "Already have an account? Login",
+            otherPlaceholder: "Write your other interests",
+            selectCountry: "Select country",
+            interests: [
+                { id: "software_dev", text: "Software Development" },
+                { id: "architecture", text: "Software Architecture" },
+                { id: "cybersecurity", text: "Cybersecurity" },
+                { id: "databases", text: "Databases" },
+                { id: "ui_ux", text: "UI/UX Design" },
+                { id: "content_writing", text: "Content Writing" },
+                { id: "data_analysis", text: "Data Analysis" },
+                { id: "project_mgmt", text: "Project Management" },
+                { id: "problem_solving", text: "Problem Solving" },
+                { id: "creativity", text: "Creativity & Innovation" },
+                { id: "automation", text: "Automation" },
+                { id: "elearning", text: "E-Learning" },
+                { id: "entrepreneurship", text: "Entrepreneurship" },
+                { id: "teamwork", text: "Teamwork" },
+                { id: "critical_thinking", text: "Critical Thinking" },
+                { id: "logical_design", text: "Logical Design" },
+                { id: "research", text: "Scientific Research" },
+                { id: "tech_blogging", text: "Technical Blogging" },
+                { id: "gaming", text: "Gaming" },
+                { id: "other", text: "Other" }
+            ],
+            fillRequired: "First and last name are required to continue",
+            fillEmailPass: "Email and password are required",
+            passwordsNotMatch: "Passwords do not match - please check and try again",
+            passwordTooShort: "Password is too short - must be at least 6 characters",
+            invalidEmail: "Invalid email format - please check and try again",
+            emailInUse: "This email is already registered - would you like to login?",
+            tooManyRequests: "Too many attempts - please wait and try again",
+            generalError: "An unexpected error occurred - check your connection and try again",
+            accountCreated: "Account created successfully - redirecting..."
         }
     };
 
-    // ============ متغيرات ============
+    // ============ قائمة الدول الكاملة ============
+    const countries = {
+        ar: [
+            "أفغانستان", "ألبانيا", "الجزائر", "أندورا", "أنغولا", "الأرجنتين", "أرمينيا", "أستراليا",
+            "النمسا", "أذربيجان", "البحرين", "بنغلاديش", "بيلاروسيا", "بلجيكا", "بليز", "بنين",
+            "بوتان", "بوليفيا", "البوسنة والهرسك", "بوتسوانا", "البرازيل", "بروناي", "بلغاريا", "بوركينا فاسو",
+            "بوروندي", "كمبوديا", "الكاميرون", "كندا", "تشاد", "تشيلي", "الصين", "كولومبيا",
+            "جزر القمر", "الكونغو", "كوستاريكا", "كرواتيا", "كوبا", "قبرص", "التشيك", "الدنمارك",
+            "جيبوتي", "الإكوادور", "مصر", "السلفادور", "إريتريا", "إستونيا", "إثيوبيا", "فيجي",
+            "فنلندا", "فرنسا", "الغابون", "غامبيا", "جورجيا", "ألمانيا", "غانا", "اليونان",
+            "غواتيمالا", "غينيا", "هايتي", "هندوراس", "المجر", "آيسلندا", "الهند", "إندونيسيا",
+            "إيران", "العراق", "أيرلندا", "إيطاليا", "جامايكا", "اليابان", "الأردن", "كازاخستان",
+            "كينيا", "الكويت", "قيرغيزستان", "لاوس", "لاتفيا", "لبنان", "ليسوتو", "ليبيريا",
+            "ليبيا", "ليتوانيا", "لوكسمبورغ", "مدغشقر", "مالاوي", "ماليزيا", "المالديف", "مالي",
+            "مالطا", "موريتانيا", "موريشيوس", "المكسيك", "مولدوفا", "منغوليا", "المغرب", "موزمبيق",
+            "ميانمار", "ناميبيا", "نيبال", "هولندا", "نيوزيلندا", "نيكاراغوا", "النيجر", "نيجيريا",
+            "كوريا الشمالية", "النرويج", "عمان", "باكستان", "فلسطين", "بنما", "باراغواي", "بيرو",
+            "الفلبين", "بولندا", "البرتغال", "قطر", "رومانيا", "روسيا", "رواندا", "السعودية",
+            "السنغال", "صربيا", "سنغافورة", "سلوفاكيا", "سلوفينيا", "الصومال", "جنوب أفريقيا",
+            "كوريا الجنوبية", "إسبانيا", "سريلانكا", "السودان", "السويد", "سويسرا", "سوريا",
+            "تايوان", "طاجيكستان", "تنزانيا", "تايلاند", "توغو", "تونس", "تركيا", "تركمانستان",
+            "أوغندا", "أوكرانيا", "الإمارات", "المملكة المتحدة", "الولايات المتحدة", "أوروغواي",
+            "أوزبكستان", "فنزويلا", "فيتنام", "اليمن", "زامبيا", "زيمبابوي", "أخرى"
+        ],
+        en: [
+            "Afghanistan", "Albania", "Algeria", "Andorra", "Angola", "Argentina", "Armenia", "Australia",
+            "Austria", "Azerbaijan", "Bahrain", "Bangladesh", "Belarus", "Belgium", "Belize", "Benin",
+            "Bhutan", "Bolivia", "Bosnia", "Botswana", "Brazil", "Brunei", "Bulgaria", "Burkina Faso",
+            "Burundi", "Cambodia", "Cameroon", "Canada", "Chad", "Chile", "China", "Colombia",
+            "Comoros", "Congo", "Costa Rica", "Croatia", "Cuba", "Cyprus", "Czech Republic", "Denmark",
+            "Djibouti", "Ecuador", "Egypt", "El Salvador", "Eritrea", "Estonia", "Ethiopia", "Fiji",
+            "Finland", "France", "Gabon", "Gambia", "Georgia", "Germany", "Ghana", "Greece",
+            "Guatemala", "Guinea", "Haiti", "Honduras", "Hungary", "Iceland", "India", "Indonesia",
+            "Iran", "Iraq", "Ireland", "Italy", "Jamaica", "Japan", "Jordan", "Kazakhstan",
+            "Kenya", "Kuwait", "Kyrgyzstan", "Laos", "Latvia", "Lebanon", "Lesotho", "Liberia",
+            "Libya", "Lithuania", "Luxembourg", "Madagascar", "Malawi", "Malaysia", "Maldives", "Mali",
+            "Malta", "Mauritania", "Mauritius", "Mexico", "Moldova", "Mongolia", "Morocco", "Mozambique",
+            "Myanmar", "Namibia", "Nepal", "Netherlands", "New Zealand", "Nicaragua", "Niger", "Nigeria",
+            "North Korea", "Norway", "Oman", "Pakistan", "Palestine", "Panama", "Paraguay", "Peru",
+            "Philippines", "Poland", "Portugal", "Qatar", "Romania", "Russia", "Rwanda", "Saudi Arabia",
+            "Senegal", "Serbia", "Singapore", "Slovakia", "Slovenia", "Somalia", "South Africa",
+            "South Korea", "Spain", "Sri Lanka", "Sudan", "Sweden", "Switzerland", "Syria",
+            "Taiwan", "Tajikistan", "Tanzania", "Thailand", "Togo", "Tunisia", "Turkey", "Turkmenistan",
+            "Uganda", "Ukraine", "UAE", "United Kingdom", "United States", "Uruguay",
+            "Uzbekistan", "Venezuela", "Vietnam", "Yemen", "Zambia", "Zimbabwe", "Other"
+        ]
+    };
+
     let currentLang = 'ar';
-    let currentMode = 'simple';
-    let currentUser = null;
-    let sessionMessages = [];
-    let sessionId = Date.now().toString();
-    let workerOnline = false;
+    let currentSection = 1;
+    let selectedInterests = [];
 
-    const params = new URLSearchParams(window.location.search);
-    currentMode = params.get('mode') || 'simple';
-    const initialPrompt = params.get('prompt') || '';
+    const sections = { 1: document.getElementById('section1'), 2: document.getElementById('section2'), 3: document.getElementById('section3') };
+    const progressDots = document.querySelectorAll('.progress-dot');
+    const progressLines = document.querySelectorAll('.progress-line');
+    const interestsGrid = document.getElementById('interestsGrid');
+    const otherInterestGroup = document.getElementById('otherInterestGroup');
+    const messageBox = document.getElementById('messageBox');
+    const submitBtn = document.getElementById('submitBtn');
+    const countrySelect = document.getElementById('country');
 
-    // ============ DOM ============
-    const chatArea = document.getElementById('chatArea');
-    const chatInput = document.getElementById('chatInput');
-    const sendBtn = document.getElementById('sendBtn');
-    const emptyState = document.getElementById('emptyState');
-    const sessionMode = document.getElementById('sessionMode');
-    const sessionTitle = document.getElementById('sessionTitle');
-    const workerStatus = document.getElementById('workerStatus');
-    const workerStatusText = document.getElementById('workerStatusText');
-
-    // ============ دوال ============
-    function scrollToBottom() {
-        setTimeout(() => { chatArea.scrollTop = chatArea.scrollHeight; }, 100);
+    function showSection(num) {
+        Object.values(sections).forEach(s => s.classList.remove('active'));
+        sections[num].classList.add('active');
+        currentSection = num;
+        progressDots.forEach(dot => {
+            const step = parseInt(dot.dataset.step);
+            dot.classList.remove('active', 'done');
+            if (step < num) dot.classList.add('done');
+            if (step === num) dot.classList.add('active');
+        });
+        progressLines.forEach(line => {
+            const lineNum = parseInt(line.dataset.line);
+            line.classList.toggle('done', lineNum < num);
+        });
     }
 
-    function addMessage(type, content, modelName = '') {
-        sessionMessages.push({ type, content, modelName, time: new Date().toISOString() });
-        if (emptyState) emptyState.style.display = 'none';
+    function showMessage(type, message) {
+        messageBox.textContent = message;
+        messageBox.className = `message-box ${type} show`;
+        setTimeout(() => messageBox.classList.remove('show'), 6000);
+    }
 
-        const msg = document.createElement('div');
-        msg.className = `message ${type}`;
-        let avatarHtml = '', headerHtml = '';
-
-        if (type === 'user') {
-            avatarHtml = `<div class="msg-avatar user"><i class="fas fa-user"></i></div>`;
-        } else if (type === 'agent') {
-            const lower = modelName.toLowerCase();
-            const cls = lower.includes('gemini') ? 'gemini' : lower.includes('deepseek') ? 'deepseek' : lower.includes('kimi') ? 'kimi' : 'gemini';
-            const icon = cls === 'gemini' ? 'fa-gem' : cls === 'deepseek' ? 'fa-code' : 'fa-search';
-            avatarHtml = `<div class="msg-avatar ${cls}"><i class="fas ${icon}"></i></div>`;
-            headerHtml = `<div class="msg-header"><span class="msg-model-name">${modelName}</span></div>`;
-        } else if (type === 'system') {
-            avatarHtml = `<div class="msg-avatar system-avatar"><i class="fas fa-info"></i></div>`;
+    function addLoadingEffect(button) {
+        if (button.classList.contains('loading')) return;
+        let loadingBar = button.querySelector('.loading-bar');
+        if (!loadingBar) {
+            loadingBar = document.createElement('div');
+            loadingBar.className = 'loading-bar';
+            button.appendChild(loadingBar);
         }
-
-        msg.innerHTML = `${avatarHtml}<div>${headerHtml}<div class="msg-bubble">${content}</div></div>`;
-        chatArea.appendChild(msg);
-        scrollToBottom();
+        loadingBar.style.width = '0%';
+        button.classList.add('loading');
+        let width = 0;
+        const interval = setInterval(() => {
+            if (width >= 100) clearInterval(interval);
+            else { width = Math.min(width + 2, 100); loadingBar.style.width = width + '%'; }
+        }, 20);
+        return { stop: () => { clearInterval(interval); loadingBar.style.width = '0%'; button.classList.remove('loading'); } };
     }
 
-    function addTypingIndicator() {
-        const t = document.createElement('div');
-        t.className = 'message agent';
-        t.id = 'typingIndicator';
-        t.innerHTML = `<div class="msg-avatar system-avatar"><i class="fas fa-brain"></i></div><div><div class="msg-header"><span class="msg-model-name">${translations[currentLang].modelsThinking}</span></div><div class="msg-bubble"><div class="msg-typing"><span></span><span></span><span></span></div></div></div>`;
-        chatArea.appendChild(t);
-        scrollToBottom();
+    function buildInterests() {
+        const t = translations[currentLang];
+        interestsGrid.innerHTML = '';
+        t.interests.forEach(interest => {
+            const chip = document.createElement('div');
+            chip.className = 'interest-chip';
+            chip.textContent = interest.text;
+            chip.dataset.id = interest.id;
+            if (selectedInterests.includes(interest.id)) chip.classList.add('selected');
+            chip.addEventListener('click', () => toggleInterest(chip, interest.id));
+            interestsGrid.appendChild(chip);
+        });
     }
 
-    function removeTyping() {
-        const t = document.getElementById('typingIndicator');
-        if (t) t.remove();
-    }
-
-    function addMeetingStatus() {
-        const old = document.getElementById('meetingStatus');
-        if (old) old.remove();
-        const s = document.createElement('div');
-        s.className = 'meeting-status';
-        s.id = 'meetingStatus';
-        s.innerHTML = `<div class="meeting-dot"></div><span>${translations[currentLang].meetingActive} — ${translations[currentLang].modes[currentMode] || currentMode}</span>`;
-        chatArea.insertBefore(s, chatArea.firstChild);
-    }
-
-    function updateWorkerStatus(status, text) {
-        workerStatus.className = `worker-status ${status}`;
-        workerStatusText.innerText = text;
-    }
-
-    // ============ Worker ============
-    async function checkWorker() {
-        try {
-            const r = await fetch(`${WORKER_URL}/health`);
-            const d = await r.json();
-            if (d.status === 'online') {
-                workerOnline = true;
-                updateWorkerStatus('online', translations[currentLang].workerOnline);
-                return true;
+    function toggleInterest(chip, id) {
+        if (id === 'other') {
+            if (chip.classList.contains('selected')) {
+                chip.classList.remove('selected');
+                otherInterestGroup.style.display = 'none';
+                document.getElementById('otherInterest').value = '';
+                selectedInterests = selectedInterests.filter(i => i !== 'other');
+            } else {
+                chip.classList.add('selected');
+                otherInterestGroup.style.display = 'block';
+                selectedInterests.push('other');
             }
-        } catch(e) {}
-        workerOnline = false;
-        updateWorkerStatus('offline', translations[currentLang].workerOffline);
-        return false;
+        } else {
+            if (chip.classList.contains('selected')) {
+                chip.classList.remove('selected');
+                selectedInterests = selectedInterests.filter(i => i !== id);
+            } else {
+                chip.classList.add('selected');
+                selectedInterests.push(id);
+            }
+        }
     }
 
-    async function sendToWorker(prompt) {
+    function buildCountries() {
+        const list = countries[currentLang];
+        countrySelect.innerHTML = `<option value="">${translations[currentLang].selectCountry}</option>`;
+        list.forEach(c => {
+            const opt = document.createElement('option');
+            opt.value = c;
+            opt.textContent = c;
+            countrySelect.appendChild(opt);
+        });
+    }
+
+    function updateUILanguage(lang) {
+        const t = translations[lang];
+        document.getElementById('sec1Title').innerText = t.sec1Title;
+        document.getElementById('sec1Subtitle').innerText = t.sec1Subtitle;
+        document.getElementById('sec2Title').innerText = t.sec2Title;
+        document.getElementById('sec2Subtitle').innerText = t.sec2Subtitle;
+        document.getElementById('sec3Title').innerText = t.sec3Title;
+        document.getElementById('sec3Subtitle').innerText = t.sec3Subtitle;
+        document.getElementById('firstNameLabel').innerText = t.firstNameLabel;
+        document.getElementById('lastNameLabel').innerText = t.lastNameLabel;
+        document.getElementById('ageLabel').innerText = t.ageLabel;
+        document.getElementById('countryLabel').innerText = t.countryLabel;
+        document.getElementById('educationLabel').innerText = t.educationLabel;
+        document.getElementById('jobLabel').innerText = t.jobLabel;
+        document.getElementById('emailLabel').innerText = t.emailLabel;
+        document.getElementById('passwordLabel').innerText = t.passwordLabel;
+        document.getElementById('confirmPasswordLabel').innerText = t.confirmPasswordLabel;
+        document.getElementById('toSection2').innerText = t.nextBtn;
+        document.getElementById('toSection3').innerText = t.nextBtn;
+        document.getElementById('toSection1').innerText = t.backBtn;
+        document.getElementById('toSection2b').innerText = t.backBtn;
+        document.getElementById('submitBtn').innerText = t.submitBtn;
+        document.getElementById('loginLink').innerText = t.loginText;
+        document.getElementById('otherInterest').placeholder = t.otherPlaceholder;
+        
+        if (lang === 'ar') document.body.setAttribute('dir', 'rtl');
+        else document.body.setAttribute('dir', 'ltr');
+
+        buildInterests();
+        buildCountries();
+        if (selectedInterests.includes('other')) otherInterestGroup.style.display = 'block';
+    }
+
+    // أحداث التنقل
+    document.getElementById('toSection2').addEventListener('click', () => {
+        const firstName = document.getElementById('firstName').value.trim();
+        const lastName = document.getElementById('lastName').value.trim();
+        if (!firstName || !lastName) {
+            showMessage('error', translations[currentLang].fillRequired);
+            return;
+        }
+        messageBox.classList.remove('show');
+        showSection(2);
+    });
+    document.getElementById('toSection1').addEventListener('click', () => { messageBox.classList.remove('show'); showSection(1); });
+    document.getElementById('toSection3').addEventListener('click', () => { messageBox.classList.remove('show'); showSection(3); });
+    document.getElementById('toSection2b').addEventListener('click', () => { messageBox.classList.remove('show'); showSection(2); });
+
+    // تقديم النموذج
+    document.getElementById('submitBtn').addEventListener('click', async () => {
+        const t = translations[currentLang];
+        const email = document.getElementById('email').value.trim();
+        const password = document.getElementById('password').value.trim();
+        const confirmPassword = document.getElementById('confirmPassword').value.trim();
+        const firstName = document.getElementById('firstName').value.trim();
+        const lastName = document.getElementById('lastName').value.trim();
+        const age = document.getElementById('age').value;
+        const country = document.getElementById('country').value;
+        const education = document.getElementById('education').value.trim();
+        const job = document.getElementById('job').value.trim();
+        const otherInterest = document.getElementById('otherInterest').value.trim();
+
+        if (!email || !password) { showMessage('error', t.fillEmailPass); return; }
+        if (password !== confirmPassword) { showMessage('error', t.passwordsNotMatch); return; }
+        if (password.length < 6) { showMessage('error', t.passwordTooShort); return; }
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) { showMessage('error', t.invalidEmail); return; }
+
+        const loading = addLoadingEffect(submitBtn);
+
         try {
-            const r = await fetch(`${WORKER_URL}/chat`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    prompt,
-                    mode: currentMode,
-                    language: currentLang,
-                    history: sessionMessages.slice(-10).map(m => ({ type: m.type, content: m.content }))
-                })
+            const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+            const user = userCredential.user;
+
+            let finalInterests = [...selectedInterests];
+            if (finalInterests.includes('other') && otherInterest) {
+                finalInterests = finalInterests.filter(i => i !== 'other');
+                finalInterests.push(`other: ${otherInterest}`);
+            }
+
+            await setDoc(doc(db, "users", user.uid), {
+                firstName,
+                lastName,
+                age: age || null,
+                country: country || null,
+                education: education || null,
+                job: job || null,
+                interests: finalInterests,
+                email,
+                createdAt: serverTimestamp(),
+                chatSessions: [],
+                language: currentLang
             });
-            
-            if (!r.ok) {
-                const errText = await r.text();
-                console.error('Worker HTTP Error:', r.status, errText);
-                updateWorkerStatus('error-status', translations[currentLang].workerStatusError);
-                return null;
+
+            showMessage('success', t.accountCreated);
+            loading.stop();
+            setTimeout(() => { window.location.href = 'home.html'; }, 1200);
+
+        } catch (error) {
+            loading.stop();
+            let errorMessage = t.generalError;
+            switch (error.code) {
+                case 'auth/email-already-in-use': errorMessage = t.emailInUse; break;
+                case 'auth/invalid-email': errorMessage = t.invalidEmail; break;
+                case 'auth/too-many-requests': errorMessage = t.tooManyRequests; break;
             }
-            
-            const data = await r.json();
-            
-            // لو الـ Worker رجع error
-            if (data.error) {
-                console.error('Worker Error:', data.error, data.details);
-                updateWorkerStatus('error-status', translations[currentLang].workerStatusError);
-                return data;
-            }
-            
-            return data;
-        } catch(e) {
-            console.error('Worker Exception:', e.message);
-            updateWorkerStatus('offline', translations[currentLang].workerOffline);
-            return null;
-        }
-    }
-
-    // ============ إرسال رسالة ============
-    async function sendMessage() {
-        const text = chatInput.value.trim();
-        if (!text) return;
-
-        addMessage('user', text);
-        chatInput.value = '';
-        sendBtn.disabled = true;
-        chatInput.style.height = 'auto';
-        
-        addMeetingStatus();
-        if (emptyState) emptyState.style.display = 'none';
-
-        addTypingIndicator();
-        
-        const result = await sendToWorker(text);
-        
-        removeTyping();
-
-        if (result && result.responses && !result.error) {
-            // تحديث الوضع لو الـ Worker غيره
-            if (result.mode) {
-                currentMode = result.mode;
-                sessionMode.innerText = translations[currentLang].modes[currentMode] || currentMode;
-            }
-
-            // عرض الردود
-            for (const resp of result.responses) {
-                if (resp.success) {
-                    let modelName = translations[currentLang].models.gemini;
-                    if (resp.model === 'deepseek') modelName = translations[currentLang].models.deepseek;
-                    else if (resp.model === 'kimi') modelName = translations[currentLang].models.kimi;
-                    addMessage('agent', resp.content, modelName);
-                } else if (resp.error) {
-                    addMessage('system', `⚠️ ${resp.model}: ${resp.error}`);
-                }
-            }
-        } else if (result && result.error) {
-            // خطأ من الـ Worker
-            addMessage('system', '⚠️ ' + (currentLang === 'ar' ? 'خطأ من الخادم: ' : 'Server error: ') + (result.error || ''));
-            if (result.details) {
-                addMessage('system', '🔧 ' + result.details);
-            }
-        } else {
-            // Worker مش شغال
-            addMessage('system', '⚠️ ' + translations[currentLang].workerError);
-            addMessage('system', currentLang === 'ar' ? 
-                'تأكد من:\n1. الـ Worker منشور على Cloudflare\n2. مفاتيح API صحيحة\n3. الرابط يبدأ بـ https://' :
-                'Check:\n1. Worker is deployed\n2. API keys are valid\n3. URL starts with https://');
-        }
-    }
-
-    // ============ إنهاء الجلسة ============
-    async function endSession() {
-        if (sessionMessages.length > 0) {
-            const confirmed = confirm(translations[currentLang].confirmEnd);
-            if (!confirmed) return;
-        }
-        
-        if (currentUser && sessionMessages.length > 0) {
-            try {
-                await updateDoc(doc(db, "users", currentUser.uid), {
-                    chatSessions: arrayUnion({
-                        sessionId,
-                        mode: currentMode,
-                        messages: sessionMessages,
-                        createdAt: new Date().toISOString(),
-                        language: currentLang
-                    })
-                });
-            } catch(e) {}
-        }
-        window.location.href = 'home.html';
-    }
-
-    // ============ أحداث ============
-    chatInput.addEventListener('input', () => {
-        sendBtn.disabled = !chatInput.value.trim();
-        chatInput.style.height = 'auto';
-        chatInput.style.height = Math.min(chatInput.scrollHeight, 100) + 'px';
-    });
-
-    sendBtn.addEventListener('click', sendMessage);
-
-    chatInput.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter' && !e.shiftKey) {
-            e.preventDefault();
-            sendMessage();
+            showMessage('error', errorMessage);
         }
     });
 
-    document.getElementById('backBtn').addEventListener('click', endSession);
-    document.getElementById('endSessionBtn').addEventListener('click', endSession);
-
-    document.getElementById('saveBtn').addEventListener('click', async () => {
-        if (sessionMessages.length > 0 && currentUser) {
-            try {
-                await updateDoc(doc(db, "users", currentUser.uid), {
-                    chatSessions: arrayUnion({
-                        sessionId,
-                        mode: currentMode,
-                        messages: sessionMessages,
-                        createdAt: new Date().toISOString(),
-                        language: currentLang
-                    })
-                });
-                alert(translations[currentLang].sessionSaved);
-            } catch(e) {}
-        }
+    document.getElementById('loginLink').addEventListener('click', (e) => {
+        e.preventDefault();
+        window.location.href = 'index.html';
     });
 
-    // ============ تهيئة ============
-    onAuthStateChanged(auth, async (user) => {
-        if (user) {
-            currentUser = user;
-            try {
-                const docSnap = await getDoc(doc(db, "users", user.uid));
-                if (docSnap.exists() && docSnap.data().language) {
-                    currentLang = docSnap.data().language;
-                }
-            } catch(e) {}
-            
-            sessionMode.innerText = translations[currentLang].modes[currentMode] || currentMode;
-            chatInput.placeholder = translations[currentLang].typePlaceholder;
-            sessionTitle.innerText = currentLang === 'ar' ? 'جلسة جديدة' : 'New Session';
-            
-            await checkWorker();
-
-            // لو فيه سؤال مبدئي من home
-            if (initialPrompt) {
-                setTimeout(() => {
-                    chatInput.value = initialPrompt;
-                    sendBtn.disabled = false;
-                    sendMessage();
-                }, 800);
-            }
-        } else {
-            window.location.href = 'index.html';
-        }
+    document.getElementById('langSwitcher').addEventListener('click', () => {
+        currentLang = (currentLang === 'ar') ? 'en' : 'ar';
+        updateUILanguage(currentLang);
     });
+
+    // تهيئة
+    buildInterests();
+    buildCountries();
+    updateUILanguage('ar');
+    showSection(1);
 </script>
 </body>
 </html>
