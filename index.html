@@ -1,0 +1,955 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>ENG.ISMAIL |  INFINITY AI</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body, html {
+            width: 100%;
+            min-height: 100vh;
+            background-color: #0a0a0a;
+            font-family: 'Cairo', sans-serif;
+        }
+
+        .gif-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            background-image: url('islam.GIF');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            filter: brightness(0.9);
+        }
+
+        .main-wrapper {
+            position: relative;
+            z-index: 2;
+            width: 100%;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
+        }
+
+        .lang-switch {
+            position: fixed;
+            top: 12px;
+            left: 12px;
+            z-index: 100;
+            background: rgba(0, 0, 0, 0.6);
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            transition: all 0.2s ease;
+            font-size: 15px;
+            color: #FFE4B5;
+        }
+        .lang-switch:hover {
+            background: rgba(255, 215, 0, 0.3);
+            border-color: #FFD966;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .headline {
+            font-weight: 900;
+            font-size: 32px;
+            text-align: center;
+            margin-bottom: 28px;
+            background: linear-gradient(135deg, #FFFFFF, #FFEEBB);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.4));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            flex-wrap: wrap;
+            animation: fadeInUp 0.6s ease forwards;
+            opacity: 0;
+        }
+        
+        .infinity-icon {
+            font-size: 36px;
+            color: #ffffff;
+            filter: drop-shadow(0 0 3px rgba(255, 255, 255, 0.6));
+        }
+
+        .login-card {
+            width: 100%;
+            max-width: 340px;
+            background: transparent;
+            padding: 0;
+            animation: fadeInUp 0.6s ease forwards;
+            animation-delay: 0.1s;
+            opacity: 0;
+        }
+
+        .input-group {
+            margin-bottom: 14px;
+            width: 100%;
+        }
+        .input-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: #ddd8c5;
+            margin-bottom: 5px;
+        }
+        .input-field {
+            width: 100%;
+            padding: 12px 16px;
+            background: rgba(0, 0, 0, 0.55);
+            border: 1.5px solid rgba(255, 255, 255, 0.35);
+            border-radius: 50px;
+            font-family: 'Cairo', sans-serif;
+            font-size: 15px;
+            color: #ffffff;
+            outline: none;
+            transition: all 0.2s ease;
+        }
+        .input-field:focus {
+            border-color: #FFD966;
+            background: rgba(0, 0, 0, 0.7);
+        }
+        .input-field::placeholder {
+            color: rgba(255, 255, 255, 0.45);
+            font-size: 13px;
+        }
+
+        /* رابط نسيت كلمة المرور */
+        .forgot-password-link {
+            text-align: left;
+            margin-bottom: 6px;
+            margin-top: -6px;
+        }
+        .forgot-password-link a {
+            color: rgba(255, 217, 102, 0.8);
+            text-decoration: none;
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .forgot-password-link a:hover {
+            color: #FFD966;
+            text-decoration: underline;
+        }
+
+        .btn-login {
+            width: 100%;
+            padding: 12px 0;
+            font-size: 17px;
+            font-weight: 800;
+            color: #ffffff;
+            background: rgba(0, 0, 0, 0.6);
+            border: 2px solid rgba(255, 255, 255, 0.7);
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin-top: 6px;
+            margin-bottom: 16px;
+            position: relative;
+            overflow: hidden;
+            animation: softWave 2s infinite ease-in-out, borderPulse 2s infinite ease-in-out;
+        }
+
+        @keyframes borderPulse {
+            0% { border-color: rgba(255, 255, 255, 0.6); }
+            50% { border-color: #FFD966; box-shadow: 0 0 8px rgba(255, 217, 102, 0.4); }
+            100% { border-color: rgba(255, 255, 255, 0.6); }
+        }
+
+        @keyframes softWave {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-2px); }
+            100% { transform: translateY(0px); }
+        }
+
+        .btn-login:hover {
+            background: rgba(255, 215, 150, 0.2);
+            border-color: #FFD966;
+        }
+        .btn-login:active {
+            transform: scale(0.97);
+        }
+
+        .loading-bar {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0%;
+            height: 3px;
+            background: linear-gradient(90deg, #FFD966, #FFA559);
+            border-radius: 3px;
+            transition: width 0.05s linear;
+        }
+        .btn-login.loading {
+            pointer-events: none;
+            transform: scale(0.98);
+            animation: none;
+        }
+
+        .social-divider {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 12px 0 14px;
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 12px;
+        }
+        .social-divider::before,
+        .social-divider::after {
+            content: "";
+            flex: 1;
+            height: 1px;
+            background: rgba(255, 255, 255, 0.25);
+        }
+
+        .social-login {
+            display: flex;
+            gap: 24px;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+        .social-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: rgba(0, 0, 0, 0.55);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #f5f5f5;
+            font-size: 18px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .social-icon.google:hover {
+            background: #ffffff;
+            color: #DB4437;
+            transform: scale(1.05);
+        }
+        .social-icon.facebook:hover {
+            background: #ffffff;
+            color: #1877F2;
+            transform: scale(1.05);
+        }
+
+        .signup-link {
+            text-align: center;
+            margin-top: 8px;
+        }
+        .signup-link a {
+            color: #FFD966;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+        }
+        .signup-link a:hover {
+            color: #ffffff;
+            text-decoration: underline;
+        }
+
+        /* رسالة الخطأ والنجاح */
+        .message-box {
+            font-size: 13px;
+            text-align: center;
+            margin-top: 8px;
+            display: none;
+            font-weight: 500;
+            padding: 8px 14px;
+            border-radius: 20px;
+            animation: fadeInUp 0.3s ease;
+        }
+        .message-box.show {
+            display: block;
+        }
+        .message-box.error {
+            color: #ff6b6b;
+            background: rgba(255, 0, 0, 0.15);
+            border: 1px solid rgba(255, 100, 100, 0.4);
+        }
+        .message-box.success {
+            color: #4ade80;
+            background: rgba(74, 222, 128, 0.15);
+            border: 1px solid rgba(74, 222, 128, 0.4);
+        }
+
+        /* ============ المودال (النافذة المنبثقة) - تصميم أسود بالكامل ============ */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.92);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            font-family: 'Cairo', sans-serif;
+        }
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-content {
+            background: #000000;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            padding: 28px 22px;
+            width: 90%;
+            max-width: 360px;
+            text-align: center;
+            transform: scale(0.9);
+            transition: transform 0.2s ease;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
+        }
+        .modal-overlay.active .modal-content {
+            transform: scale(1);
+        }
+
+        .modal-icon {
+            font-size: 44px;
+            color: #ffffff;
+            margin-bottom: 14px;
+        }
+        .modal-title {
+            font-size: 19px;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 8px;
+        }
+        .modal-subtitle {
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.55);
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        /* حقل الإدخال - أبيض */
+        .modal-input {
+            width: 100%;
+            padding: 13px 18px;
+            background: #ffffff;
+            border: 1.5px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50px;
+            font-family: 'Cairo', sans-serif;
+            font-size: 15px;
+            color: #000000;
+            outline: none;
+            text-align: left;
+            direction: ltr;
+            margin-bottom: 18px;
+            transition: all 0.2s;
+        }
+        .modal-input:focus {
+            border-color: #FFD966;
+            box-shadow: 0 0 0 3px rgba(255, 217, 102, 0.2);
+        }
+        .modal-input::placeholder {
+            color: #999999;
+            font-size: 13px;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 10px;
+        }
+        .modal-btn {
+            flex: 1;
+            padding: 11px 0;
+            border-radius: 50px;
+            font-family: 'Cairo', sans-serif;
+            font-weight: 700;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: none;
+        }
+        .modal-btn.send {
+            background: #ffffff;
+            color: #000000;
+        }
+        .modal-btn.send:hover {
+            background: #FFD966;
+        }
+        .modal-btn.send:active {
+            transform: scale(0.96);
+        }
+        .modal-btn.send:disabled {
+            background: #333333;
+            color: #777777;
+            cursor: not-allowed;
+        }
+        .modal-btn.cancel {
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            color: #ffffff;
+        }
+        .modal-btn.cancel:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.7);
+        }
+
+        /* رسالة داخل المودال */
+        .modal-message {
+            font-size: 13px;
+            margin-top: 14px;
+            display: none;
+            padding: 10px 14px;
+            border-radius: 12px;
+            line-height: 1.5;
+        }
+        .modal-message.show {
+            display: block;
+        }
+        .modal-message.error {
+            color: #ff6b6b;
+            background: rgba(255, 70, 70, 0.12);
+            border: 1px solid rgba(255, 100, 100, 0.3);
+        }
+        .modal-message.success {
+            color: #4ade80;
+            background: rgba(74, 222, 128, 0.1);
+            border: 1px solid rgba(74, 222, 128, 0.3);
+        }
+
+        /* رسالة spam - تظهر بعد النجاح */
+        .spam-note {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.45);
+            margin-top: 14px;
+            display: none;
+            line-height: 1.5;
+            padding: 10px 14px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 12px;
+            border: 1px dashed rgba(255, 255, 255, 0.15);
+        }
+        .spam-note.show {
+            display: block;
+        }
+        .spam-note i {
+            margin-left: 6px;
+            color: #FFD966;
+        }
+
+        @media (max-width: 400px) {
+            .headline { font-size: 28px; }
+            .infinity-icon { font-size: 30px; }
+            .login-card { max-width: 300px; }
+            .btn-login { font-size: 15px; padding: 10px 0; }
+            .modal-content { padding: 22px 16px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="gif-background"></div>
+
+<div class="lang-switch" id="langSwitcher">
+    <i class="fas fa-globe"></i>
+</div>
+
+<div class="main-wrapper">
+    <h1 class="headline">
+        <span> INFINITY AI</span>
+        <i class="fas fa-infinity infinity-icon"></i>
+    </h1>
+
+    <div class="login-card">
+        <div class="input-group">
+            <label id="emailLabel">البريد الإلكتروني</label>
+            <input type="email" id="emailInput" class="input-field" placeholder="">
+        </div>
+        
+        <div class="input-group">
+            <label id="passwordLabel">كلمة المرور</label>
+            <input type="password" id="passwordInput" class="input-field" placeholder="••••••••">
+        </div>
+
+        <!-- رابط نسيت كلمة المرور -->
+        <div class="forgot-password-link">
+            <a id="forgotPasswordLink">نسيت كلمة المرور؟</a>
+        </div>
+
+        <!-- رسالة الخطأ / النجاح -->
+        <div class="message-box" id="messageBox"></div>
+
+        <button class="btn-login" id="loginBtn">تسجيل الدخول</button>
+
+        <div class="social-divider" id="orText">أو</div>
+
+        <div class="social-login">
+            <div class="social-icon google" id="googleBtn">
+                <i class="fab fa-google"></i>
+            </div>
+            <div class="social-icon facebook" id="facebookBtn">
+                <i class="fab fa-facebook-f"></i>
+            </div>
+        </div>
+
+        <div class="signup-link">
+            <a id="signupLink">إنشاء حساب جديد</a>
+        </div>
+    </div>
+</div>
+
+<!-- ============ مودال نسيت كلمة المرور - تصميم أسود ============ -->
+<div class="modal-overlay" id="forgotPasswordModal">
+    <div class="modal-content">
+        <i class="fas fa-lock modal-icon"></i>
+        <h3 class="modal-title" id="modalTitle">نسيت كلمة المرور؟</h3>
+        <p class="modal-subtitle" id="modalSubtitle">أدخل بريدك الإلكتروني المسجل وسنرسل لك رابط إعادة تعيين كلمة المرور</p>
+        
+        <input type="email" class="modal-input" id="resetEmailInput" placeholder="example@email.com" dir="ltr">
+        
+        <!-- رسالة الخطأ / النجاح داخل المودال -->
+        <div class="modal-message" id="modalMessage"></div>
+        
+        <!-- رسالة تفقد السبام - تظهر بعد النجاح -->
+        <div class="spam-note" id="spamNote">
+            <i class="fas fa-info-circle"></i>
+            <span id="spamNoteText">إذا لم تجد رسالة إعادة التعيين، تفقد مجلد الرسائل غير المرغوب فيها (Spam)</span>
+        </div>
+        
+        <div class="modal-buttons">
+            <button class="modal-btn cancel" id="cancelResetBtn">إلغاء</button>
+            <button class="modal-btn send" id="sendResetBtn">إرسال الرابط</button>
+        </div>
+    </div>
+</div>
+
+<!-- Firebase SDKs -->
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-app.js";
+    import { 
+        getAuth, 
+        signInWithEmailAndPassword, 
+        sendPasswordResetEmail,
+        GoogleAuthProvider, 
+        FacebookAuthProvider, 
+        signInWithPopup 
+    } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-auth.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyBysr4ZEHTY_ojej_onmso3d09sz6uU65A",
+        authDomain: "infinity-ai-bd879.firebaseapp.com",
+        projectId: "infinity-ai-bd879",
+        storageBucket: "infinity-ai-bd879.firebasestorage.app",
+        messagingSenderId: "391390244727",
+        appId: "1:391390244727:web:7cc77f13f3ed0e4221fb72",
+        measurementId: "G-XGW87N67WZ"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const googleProvider = new GoogleAuthProvider();
+    const facebookProvider = new FacebookAuthProvider();
+
+    // ============ عناصر DOM ============
+    const emailLabel = document.getElementById('emailLabel');
+    const passwordLabel = document.getElementById('passwordLabel');
+    const loginBtnText = document.getElementById('loginBtn');
+    const orSpan = document.getElementById('orText');
+    const signupLink = document.getElementById('signupLink');
+    const forgotPasswordLink = document.getElementById('forgotPasswordLink');
+    const langToggle = document.getElementById('langSwitcher');
+    const messageBox = document.getElementById('messageBox');
+    
+    // المودال
+    const modal = document.getElementById('forgotPasswordModal');
+    const modalTitle = document.getElementById('modalTitle');
+    const modalSubtitle = document.getElementById('modalSubtitle');
+    const resetEmailInput = document.getElementById('resetEmailInput');
+    const modalMessage = document.getElementById('modalMessage');
+    const sendResetBtn = document.getElementById('sendResetBtn');
+    const cancelResetBtn = document.getElementById('cancelResetBtn');
+    const spamNote = document.getElementById('spamNote');
+    const spamNoteText = document.getElementById('spamNoteText');
+
+    // ============ الترجمة ============
+    const translations = {
+        ar: {
+            emailLabel: "البريد الإلكتروني",
+            passwordLabel: "كلمة المرور",
+            loginBtn: "تسجيل الدخول",
+            orText: "أو",
+            signupText: "إنشاء حساب جديد",
+            forgotPasswordText: "نسيت كلمة المرور؟",
+            modalTitle: "نسيت كلمة المرور؟",
+            modalSubtitle: "أدخل بريدك الإلكتروني المسجل وسنرسل لك رابط إعادة تعيين كلمة المرور",
+            sendBtn: "إرسال الرابط",
+            cancelBtn: "إلغاء",
+            resetPlaceholder: "example@email.com",
+            spamNoteText: "إذا لم تجد رسالة إعادة التعيين، تفقد مجلد الرسائل غير المرغوب فيها (Spam)",
+            // رسائل الخطأ والنجاح
+            fillFields: "الرجاء إدخال البريد الإلكتروني وكلمة المرور",
+            invalidCredentials: "البريد الإلكتروني أو كلمة المرور غير صحيحة",
+            invalidEmail: "صيغة البريد الإلكتروني غير صالحة",
+            userDisabled: "تم تعطيل هذا الحساب",
+            generalError: "حدث خطأ، حاول مرة أخرى",
+            resetEmailSent: "تم إرسال رابط إعادة التعيين إلى بريدك الإلكتروني ✓",
+            resetError: "حدث خطأ في إرسال رابط التعيين",
+            userNotFound: "لا يوجد حساب بهذا البريد الإلكتروني",
+            enterEmailForReset: "الرجاء إدخال البريد الإلكتروني",
+            tooManyRequests: "طلبات كثيرة جداً، حاول لاحقاً",
+            sending: "جاري الإرسال...",
+            sent: "تم الإرسال ✓"
+        },
+        en: {
+            emailLabel: "Email",
+            passwordLabel: "Password",
+            loginBtn: "LOGIN",
+            orText: "OR",
+            signupText: "Create new account",
+            forgotPasswordText: "Forgot password?",
+            modalTitle: "Forgot Password?",
+            modalSubtitle: "Enter your registered email and we'll send you a password reset link",
+            sendBtn: "Send Link",
+            cancelBtn: "Cancel",
+            resetPlaceholder: "example@email.com",
+            spamNoteText: "If you don't see the reset email, check your spam/junk folder",
+            // Messages
+            fillFields: "Please enter email and password",
+            invalidCredentials: "Invalid email or password",
+            invalidEmail: "Invalid email format",
+            userDisabled: "This account has been disabled",
+            generalError: "An error occurred, please try again",
+            resetEmailSent: "Password reset link sent to your email ✓",
+            resetError: "Error sending reset link",
+            userNotFound: "No account found with this email",
+            enterEmailForReset: "Please enter your email",
+            tooManyRequests: "Too many requests, try again later",
+            sending: "Sending...",
+            sent: "Sent ✓"
+        }
+    };
+
+    let currentLang = 'ar';
+
+    function updateUILanguage(lang) {
+        const t = translations[lang];
+        emailLabel.innerText = t.emailLabel;
+        passwordLabel.innerText = t.passwordLabel;
+        loginBtnText.innerText = t.loginBtn;
+        orSpan.innerText = t.orText;
+        signupLink.innerText = t.signupText;
+        forgotPasswordLink.innerText = t.forgotPasswordText;
+        modalTitle.innerText = t.modalTitle;
+        modalSubtitle.innerText = t.modalSubtitle;
+        sendResetBtn.innerText = t.sendBtn;
+        cancelResetBtn.innerText = t.cancelBtn;
+        resetEmailInput.placeholder = t.resetPlaceholder;
+        spamNoteText.innerText = t.spamNoteText;
+        
+        if (lang === 'ar') {
+            document.body.setAttribute('dir', 'rtl');
+        } else {
+            document.body.setAttribute('dir', 'ltr');
+        }
+    }
+
+    langToggle.addEventListener('click', () => {
+        currentLang = (currentLang === 'ar') ? 'en' : 'ar';
+        updateUILanguage(currentLang);
+    });
+    
+    // ============ دوال مساعدة ============
+    function showMessage(type, message) {
+        messageBox.textContent = message;
+        messageBox.className = `message-box ${type} show`;
+        setTimeout(() => {
+            messageBox.classList.remove('show');
+        }, 6000);
+    }
+
+    function hideMessage() {
+        messageBox.classList.remove('show');
+    }
+
+    function showModalMessage(type, message) {
+        modalMessage.textContent = message;
+        modalMessage.className = `modal-message ${type} show`;
+        setTimeout(() => {
+            modalMessage.classList.remove('show');
+        }, 6000);
+    }
+
+    function hideModalMessage() {
+        modalMessage.classList.remove('show');
+    }
+
+    function addLoadingEffect(button) {
+        if (button.classList.contains('loading')) return;
+        
+        let loadingBar = button.querySelector('.loading-bar');
+        if (!loadingBar) {
+            loadingBar = document.createElement('div');
+            loadingBar.className = 'loading-bar';
+            button.appendChild(loadingBar);
+        }
+        
+        loadingBar.style.width = '0%';
+        button.classList.add('loading');
+        
+        let width = 0;
+        const interval = setInterval(() => {
+            if (width >= 100) {
+                clearInterval(interval);
+            } else {
+                width = Math.min(width + 2.5, 100);
+                loadingBar.style.width = width + '%';
+            }
+        }, 18);
+
+        return {
+            stop: () => {
+                clearInterval(interval);
+                loadingBar.style.width = '0%';
+                button.classList.remove('loading');
+            }
+        };
+    }
+
+    function redirectToHome() {
+        window.location.href = 'home.html';
+    }
+
+    // ============ فتح وغلق المودال ============
+    function openModal() {
+        hideModalMessage();
+        spamNote.classList.remove('show');
+        resetEmailInput.value = '';
+        modal.classList.add('active');
+        sendResetBtn.disabled = false;
+        sendResetBtn.style.opacity = '1';
+        sendResetBtn.textContent = translations[currentLang].sendBtn;
+        // لو المستخدم كاتب إيميل في حقل تسجيل الدخول، ننقله للمودال
+        const loginEmail = document.getElementById('emailInput').value.trim();
+        if (loginEmail) {
+            resetEmailInput.value = loginEmail;
+        }
+        setTimeout(() => {
+            resetEmailInput.focus();
+        }, 300);
+    }
+
+    function closeModal() {
+        modal.classList.remove('active');
+        hideModalMessage();
+        spamNote.classList.remove('show');
+    }
+
+    // ============ إرسال رابط إعادة تعيين كلمة المرور ============
+    async function handlePasswordReset() {
+        hideModalMessage();
+        spamNote.classList.remove('show');
+        
+        const email = resetEmailInput.value.trim();
+        const t = translations[currentLang];
+        
+        if (!email) {
+            showModalMessage('error', t.enterEmailForReset);
+            return;
+        }
+
+        // تعطيل الزر أثناء الإرسال
+        sendResetBtn.disabled = true;
+        sendResetBtn.style.opacity = '0.6';
+        sendResetBtn.textContent = t.sending;
+
+        try {
+            await sendPasswordResetEmail(auth, email);
+            
+            // نجاح - إظهار رسالة + إظهار ملاحظة السبام
+            showModalMessage('success', t.resetEmailSent);
+            sendResetBtn.textContent = t.sent;
+            
+            // إظهار رسالة تفقد السبام
+            spamNote.classList.add('show');
+            
+            // استعادة الزر بعد فترة
+            setTimeout(() => {
+                sendResetBtn.disabled = false;
+                sendResetBtn.style.opacity = '1';
+                sendResetBtn.textContent = t.sendBtn;
+            }, 4000);
+            
+        } catch (error) {
+            // استعادة حالة الزر
+            sendResetBtn.disabled = false;
+            sendResetBtn.style.opacity = '1';
+            sendResetBtn.textContent = t.sendBtn;
+            
+            let errorMessage = t.resetError;
+            switch (error.code) {
+                case 'auth/invalid-email':
+                    errorMessage = t.invalidEmail;
+                    break;
+                case 'auth/user-not-found':
+                    errorMessage = t.userNotFound;
+                    break;
+                case 'auth/too-many-requests':
+                    errorMessage = t.tooManyRequests;
+                    break;
+            }
+            showModalMessage('error', errorMessage);
+        }
+    }
+
+    // ============ أحداث المودال ============
+    forgotPasswordLink.addEventListener('click', (e) => {
+        e.preventDefault();
+        openModal();
+    });
+
+    cancelResetBtn.addEventListener('click', closeModal);
+
+    // غلق المودال بالضغط خارج المحتوى
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+            closeModal();
+        }
+    });
+
+    // زر إرسال رابط التعيين
+    sendResetBtn.addEventListener('click', handlePasswordReset);
+
+    // دعم Enter في حقل الإيميل داخل المودال
+    resetEmailInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+            handlePasswordReset();
+        }
+    });
+
+    // ============ تسجيل الدخول بالبريد ============
+    document.getElementById('loginBtn').addEventListener('click', async () => {
+        hideMessage();
+        
+        const email = document.getElementById('emailInput').value.trim();
+        const password = document.getElementById('passwordInput').value.trim();
+        const t = translations[currentLang];
+        
+        if (!email || !password) {
+            showMessage('error', t.fillFields);
+            return;
+        }
+
+        const loading = addLoadingEffect(document.getElementById('loginBtn'));
+
+        try {
+            const userCredential = await signInWithEmailAndPassword(auth, email, password);
+            console.log('تم تسجيل الدخول:', userCredential.user);
+            redirectToHome();
+        } catch (error) {
+            loading.stop();
+            let errorMessage = t.generalError;
+            switch (error.code) {
+                case 'auth/invalid-credential':
+                case 'auth/user-not-found':
+                case 'auth/wrong-password':
+                    errorMessage = t.invalidCredentials;
+                    break;
+                case 'auth/invalid-email':
+                    errorMessage = t.invalidEmail;
+                    break;
+                case 'auth/user-disabled':
+                    errorMessage = t.userDisabled;
+                    break;
+            }
+            showMessage('error', errorMessage);
+        }
+    });
+
+    // ============ تسجيل الدخول بـ Google ============
+    document.getElementById('googleBtn').addEventListener('click', async () => {
+        hideMessage();
+        try {
+            const result = await signInWithPopup(auth, googleProvider);
+            console.log('تم تسجيل الدخول بـ Google:', result.user);
+            redirectToHome();
+        } catch (error) {
+            if (error.code !== 'auth/cancelled-popup-request' && error.code !== 'auth/popup-closed-by-user') {
+                showMessage('error', translations[currentLang].generalError);
+            }
+        }
+    });
+
+    // ============ تسجيل الدخول بـ Facebook ============
+    document.getElementById('facebookBtn').addEventListener('click', async () => {
+        hideMessage();
+        try {
+            const result = await signInWithPopup(auth, facebookProvider);
+            console.log('تم تسجيل الدخول بـ Facebook:', result.user);
+            redirectToHome();
+        } catch (error) {
+            if (error.code !== 'auth/cancelled-popup-request' && error.code !== 'auth/popup-closed-by-user') {
+                showMessage('error', translations[currentLang].generalError);
+            }
+        }
+    });
+
+    // ============ التوجيه لصفحة التسجيل ============
+    document.getElementById('signupLink').addEventListener('click', (e) => {
+        e.preventDefault();
+        window.location.href = 'tasgeel.html';
+    });
+    
+    // ============ دعم زر Enter في حقل كلمة المرور ============
+    document.getElementById('passwordInput').addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+            document.getElementById('loginBtn').click();
+        }
+    });
+
+    // ============ دعم Escape لغلق المودال ============
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && modal.classList.contains('active')) {
+            closeModal();
+        }
+    });
+
+    updateUILanguage('ar');
+</script>
+</body>
+</html>
