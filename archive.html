@@ -1,0 +1,881 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>الأرشيف | INFINITY AI</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body, html {
+            width: 100%;
+            min-height: 100vh;
+            background: #000000;
+            font-family: 'Cairo', sans-serif;
+            overflow-x: hidden;
+        }
+
+        /* ============ خلفية ============ */
+        .bg-orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(140px);
+            opacity: 0.08;
+            z-index: 0;
+            pointer-events: none;
+        }
+        .orb-1 {
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, #d4a853 0%, transparent 70%);
+            top: -100px;
+            right: -100px;
+        }
+        .orb-2 {
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, #ffffff 0%, transparent 70%);
+            bottom: -80px;
+            left: -80px;
+        }
+        .bg-grid {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+            background-image: 
+                linear-gradient(rgba(255,255,255,0.012) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.012) 1px, transparent 1px);
+            background-size: 50px 50px;
+        }
+
+        /* ============ شريط علوي ============ */
+        .top-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 20px;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .top-bar-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .top-bar-right {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .back-btn {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 15px;
+            transition: all 0.2s;
+        }
+        .back-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+        }
+
+        .page-title {
+            font-size: 18px;
+            font-weight: 800;
+            color: #ffffff;
+            letter-spacing: 0.5px;
+        }
+        .page-subtitle {
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        .icon-btn {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+        .icon-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+        }
+        .icon-btn.delete-all {
+            color: rgba(255, 100, 100, 0.6);
+        }
+        .icon-btn.delete-all:hover {
+            background: rgba(255, 70, 70, 0.15);
+            color: #ff6b6b;
+            border-color: rgba(255, 100, 100, 0.3);
+        }
+
+        /* ============ المحتوى ============ */
+        .main-wrapper {
+            position: relative;
+            z-index: 2;
+            width: 100%;
+            min-height: 100vh;
+            padding: 90px 20px 40px;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(16px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ============ فلتر ============ */
+        .filter-row {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            animation: fadeInUp 0.5s ease forwards;
+            opacity: 0;
+        }
+        .filter-chip {
+            padding: 8px 14px;
+            border-radius: 50px;
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            color: rgba(255, 255, 255, 0.5);
+            white-space: nowrap;
+        }
+        .filter-chip:hover {
+            background: rgba(255, 255, 255, 0.06);
+            color: #fff;
+        }
+        .filter-chip.active {
+            background: rgba(212, 168, 83, 0.1);
+            border-color: rgba(212, 168, 83, 0.35);
+            color: #d4a853;
+            font-weight: 600;
+        }
+
+        /* ============ قائمة الجلسات ============ */
+        .sessions-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .session-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 14px;
+            padding: 16px;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            animation: fadeInUp 0.5s ease forwards;
+            opacity: 0;
+            position: relative;
+            overflow: hidden;
+        }
+        .session-card:hover {
+            background: rgba(255, 255, 255, 0.04);
+            border-color: rgba(255, 255, 255, 0.12);
+            transform: translateY(-1px);
+        }
+        .session-card:active {
+            transform: scale(0.98);
+        }
+
+        .session-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 8px;
+        }
+        .session-card-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .session-mode-icon {
+            font-size: 20px;
+        }
+        .session-info h4 {
+            font-size: 14px;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 2px;
+        }
+        .session-info span {
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        .session-card-actions {
+            display: flex;
+            gap: 4px;
+        }
+        .action-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: transparent;
+            border: 1px solid transparent;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: rgba(255, 255, 255, 0.3);
+            font-size: 12px;
+            transition: all 0.2s;
+        }
+        .action-btn:hover {
+            background: rgba(255, 255, 255, 0.06);
+            color: #fff;
+            border-color: rgba(255, 255, 255, 0.15);
+        }
+        .action-btn.delete:hover {
+            background: rgba(255, 70, 70, 0.15);
+            color: #ff6b6b;
+            border-color: rgba(255, 100, 100, 0.3);
+        }
+
+        .session-preview {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.35);
+            line-height: 1.5;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            max-width: 100%;
+        }
+        .session-meta {
+            display: flex;
+            gap: 12px;
+            margin-top: 8px;
+            font-size: 10px;
+            color: rgba(255, 255, 255, 0.3);
+        }
+        .session-meta span {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        /* ============ حالة فارغة ============ */
+        .empty-state {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 60px 20px;
+            animation: fadeInUp 0.6s ease forwards;
+        }
+        .empty-icon {
+            font-size: 56px;
+            color: rgba(212, 168, 83, 0.15);
+            margin-bottom: 16px;
+        }
+        .empty-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: rgba(255, 255, 255, 0.3);
+            margin-bottom: 6px;
+        }
+        .empty-sub {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.15);
+        }
+
+        /* ============ مودال تفاصيل الجلسة ============ */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 200;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        .modal-content {
+            background: #111111;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 24px;
+            width: 90%;
+            max-width: 500px;
+            max-height: 80vh;
+            overflow-y: auto;
+            transform: scale(0.9);
+            transition: transform 0.25s ease;
+        }
+        .modal-overlay.active .modal-content {
+            transform: scale(1);
+        }
+        .modal-content::-webkit-scrollbar {
+            width: 4px;
+        }
+        .modal-content::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+        }
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .modal-title {
+            font-size: 17px;
+            font-weight: 800;
+            color: #fff;
+        }
+        .modal-close {
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: rgba(255, 255, 255, 0.5);
+            transition: all 0.2s;
+            font-size: 13px;
+        }
+        .modal-close:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+        }
+        .modal-message {
+            padding: 10px 14px;
+            border-radius: 10px;
+            margin-bottom: 8px;
+            font-size: 12px;
+            line-height: 1.6;
+        }
+        .modal-message.user-msg {
+            background: rgba(212, 168, 83, 0.08);
+            border: 1px solid rgba(212, 168, 83, 0.15);
+            color: rgba(255, 255, 255, 0.8);
+        }
+        .modal-message.agent-msg {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            color: rgba(255, 255, 255, 0.7);
+        }
+        .modal-msg-sender {
+            font-size: 10px;
+            font-weight: 700;
+            margin-bottom: 4px;
+            color: rgba(255, 255, 255, 0.4);
+        }
+        .modal-msg-sender.user-sender {
+            color: #d4a853;
+        }
+
+        /* ============ Responsive ============ */
+        @media (max-width: 420px) {
+            .top-bar { padding: 10px 14px; }
+            .page-title { font-size: 16px; }
+            .main-wrapper { padding: 80px 12px 30px; }
+            .session-card { padding: 14px; }
+            .session-info h4 { font-size: 13px; }
+            .modal-content { padding: 18px; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- خلفية -->
+<div class="bg-orb orb-1"></div>
+<div class="bg-orb orb-2"></div>
+<div class="bg-grid"></div>
+
+<!-- شريط علوي -->
+<div class="top-bar">
+    <div class="top-bar-right">
+        <div class="back-btn" id="backBtn">
+            <i class="fas fa-arrow-right"></i>
+        </div>
+        <div>
+            <div class="page-title" id="pageTitle">الأرشيف</div>
+            <div class="page-subtitle" id="pageSubtitle">جلساتك السابقة</div>
+        </div>
+    </div>
+    <div class="top-bar-left">
+        <div class="icon-btn delete-all" id="deleteAllBtn" title="حذف الكل">
+            <i class="fas fa-trash"></i>
+        </div>
+        <div class="icon-btn" id="refreshBtn" title="تحديث">
+            <i class="fas fa-sync-alt"></i>
+        </div>
+    </div>
+</div>
+
+<!-- المحتوى -->
+<div class="main-wrapper">
+    <!-- فلتر -->
+    <div class="filter-row" id="filterRow">
+        <div class="filter-chip active" data-filter="all" id="filterAll">الكل</div>
+        <div class="filter-chip" data-filter="simple">⚡ بسيط</div>
+        <div class="filter-chip" data-filter="critic">🔥 ناقد</div>
+        <div class="filter-chip" data-filter="deep">🧠 عميق</div>
+        <div class="filter-chip" data-filter="expanded">💬 موسع</div>
+        <div class="filter-chip" data-filter="brief">📝 مختصر</div>
+        <div class="filter-chip" data-filter="transparent">👁️ شفاف</div>
+    </div>
+
+    <!-- قائمة الجلسات -->
+    <div class="sessions-list" id="sessionsList"></div>
+
+    <!-- حالة فارغة -->
+    <div class="empty-state" id="emptyState" style="display: none;">
+        <div class="empty-icon">
+            <i class="fas fa-folder-open"></i>
+        </div>
+        <div class="empty-title" id="emptyTitle">لا توجد جلسات محفوظة</div>
+        <div class="empty-sub" id="emptySub">جلساتك المحفوظة ستظهر هنا</div>
+    </div>
+</div>
+
+<!-- مودال تفاصيل الجلسة -->
+<div class="modal-overlay" id="sessionModal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <span class="modal-title" id="modalTitle">تفاصيل الجلسة</span>
+            <div class="modal-close" id="modalClose">
+                <i class="fas fa-times"></i>
+            </div>
+        </div>
+        <div id="modalMessages"></div>
+    </div>
+</div>
+
+<!-- Firebase SDKs -->
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-app.js";
+    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-auth.js";
+    import { getFirestore, doc, getDoc, updateDoc, arrayRemove } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyBysr4ZEHTY_ojej_onmso3d09sz6uU65A",
+        authDomain: "infinity-ai-bd879.firebaseapp.com",
+        projectId: "infinity-ai-bd879",
+        storageBucket: "infinity-ai-bd879.firebasestorage.app",
+        messagingSenderId: "391390244727",
+        appId: "1:391390244727:web:7cc77f13f3ed0e4221fb72",
+        measurementId: "G-XGW87N67WZ"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    // ============ ترجمة ============
+    const translations = {
+        ar: {
+            pageTitle: "الأرشيف",
+            pageSubtitle: "جلساتك السابقة",
+            filterAll: "الكل",
+            emptyTitle: "لا توجد جلسات محفوظة",
+            emptySub: "جلساتك المحفوظة ستظهر هنا",
+            modalTitle: "تفاصيل الجلسة",
+            deleteAllConfirm: "هل أنت متأكد من حذف جميع الجلسات؟ لا يمكن التراجع عن هذا.",
+            deleteSessionConfirm: "هل أنت متأكد من حذف هذه الجلسة؟",
+            messages: "رسائل",
+            noMessages: "لا توجد رسائل في هذه الجلسة",
+            modes: {
+                simple: "بسيط وسريع",
+                critic: "ناقد شرس",
+                deep: "محلل عميق",
+                expanded: "نقاش موسع",
+                brief: "مختصر",
+                transparent: "شفاف"
+            },
+            models: {
+                gemini: "Gemini",
+                deepseek: "DeepSeek",
+                kimi: "Kimi",
+                chatgpt: "ChatGPT",
+                user: "أنت",
+                system: "النظام"
+            }
+        },
+        en: {
+            pageTitle: "Archive",
+            pageSubtitle: "Your previous sessions",
+            filterAll: "All",
+            emptyTitle: "No saved sessions",
+            emptySub: "Your saved sessions will appear here",
+            modalTitle: "Session Details",
+            deleteAllConfirm: "Are you sure you want to delete all sessions? This cannot be undone.",
+            deleteSessionConfirm: "Are you sure you want to delete this session?",
+            messages: "Messages",
+            noMessages: "No messages in this session",
+            modes: {
+                simple: "Simple & Fast",
+                critic: "Fierce Critic",
+                deep: "Deep Analyst",
+                expanded: "Expanded Discussion",
+                brief: "Brief",
+                transparent: "Transparent"
+            },
+            models: {
+                gemini: "Gemini",
+                deepseek: "DeepSeek",
+                kimi: "Kimi",
+                chatgpt: "ChatGPT",
+                user: "You",
+                system: "System"
+            }
+        }
+    };
+
+    let currentLang = 'ar';
+    let currentUser = null;
+    let sessions = [];
+    let currentFilter = 'all';
+
+    // ============ دوال ============
+    function formatDate(dateStr) {
+        const date = new Date(dateStr);
+        const now = new Date();
+        const diff = now - date;
+        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+        
+        if (days === 0) {
+            const hours = Math.floor(diff / (1000 * 60 * 60));
+            if (hours === 0) {
+                const mins = Math.floor(diff / (1000 * 60));
+                return currentLang === 'ar' ? `منذ ${mins} دقيقة` : `${mins}m ago`;
+            }
+            return currentLang === 'ar' ? `منذ ${hours} ساعة` : `${hours}h ago`;
+        } else if (days === 1) {
+            return currentLang === 'ar' ? 'أمس' : 'Yesterday';
+        } else if (days < 7) {
+            return currentLang === 'ar' ? `منذ ${days} أيام` : `${days}d ago`;
+        }
+        return date.toLocaleDateString(currentLang === 'ar' ? 'ar-EG' : 'en-US');
+    }
+
+    function getPreview(messages) {
+        if (!messages || messages.length === 0) return translations[currentLang].noMessages;
+        const firstUserMsg = messages.find(m => m.type === 'user');
+        if (firstUserMsg) {
+            const preview = firstUserMsg.content.substring(0, 60);
+            return preview.length < firstUserMsg.content.length ? preview + '...' : preview;
+        }
+        return translations[currentLang].noMessages;
+    }
+
+    function getModeIcon(mode) {
+        const icons = {
+            simple: '⚡',
+            critic: '🔥',
+            deep: '🧠',
+            expanded: '💬',
+            brief: '📝',
+            transparent: '👁️'
+        };
+        return icons[mode] || '💬';
+    }
+
+    function getModeLabel(mode) {
+        return translations[currentLang].modes[mode] || mode;
+    }
+
+    function getSenderLabel(modelName) {
+        return translations[currentLang].models[modelName] || modelName;
+    }
+
+    function getSenderClass(type) {
+        return type === 'user' ? 'user-sender' : '';
+    }
+
+    // ============ عرض الجلسات ============
+    function renderSessions() {
+        const list = document.getElementById('sessionsList');
+        const emptyState = document.getElementById('emptyState');
+        
+        // فلترة
+        let filtered = sessions;
+        if (currentFilter !== 'all') {
+            filtered = sessions.filter(s => s.mode === currentFilter);
+        }
+
+        if (filtered.length === 0) {
+            list.innerHTML = '';
+            emptyState.style.display = 'flex';
+            return;
+        }
+
+        emptyState.style.display = 'none';
+        list.innerHTML = '';
+
+        filtered.forEach((session, index) => {
+            const card = document.createElement('div');
+            card.className = 'session-card';
+            card.style.animationDelay = `${index * 0.06}s`;
+            card.innerHTML = `
+                <div class="session-card-header">
+                    <div class="session-card-left">
+                        <div class="session-mode-icon">${getModeIcon(session.mode)}</div>
+                        <div class="session-info">
+                            <h4>${getModeLabel(session.mode)}</h4>
+                            <span>${formatDate(session.createdAt)}</span>
+                        </div>
+                    </div>
+                    <div class="session-card-actions">
+                        <div class="action-btn view" data-id="${session.sessionId}" title="عرض">
+                            <i class="fas fa-eye"></i>
+                        </div>
+                        <div class="action-btn delete" data-id="${session.sessionId}" title="حذف">
+                            <i class="fas fa-trash"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="session-preview">${getPreview(session.messages)}</div>
+                <div class="session-meta">
+                    <span><i class="fas fa-comment"></i> ${session.messages ? session.messages.length : 0} ${translations[currentLang].messages}</span>
+                </div>
+            `;
+
+            // أحداث
+            card.addEventListener('click', (e) => {
+                if (!e.target.closest('.action-btn')) {
+                    openSessionModal(session);
+                }
+            });
+
+            card.querySelector('.action-btn.view').addEventListener('click', (e) => {
+                e.stopPropagation();
+                openSessionModal(session);
+            });
+
+            card.querySelector('.action-btn.delete').addEventListener('click', (e) => {
+                e.stopPropagation();
+                deleteSession(session.sessionId);
+            });
+
+            list.appendChild(card);
+        });
+    }
+
+    // ============ مودال التفاصيل ============
+    function openSessionModal(session) {
+        const modal = document.getElementById('sessionModal');
+        const messagesDiv = document.getElementById('modalMessages');
+        document.getElementById('modalTitle').innerText = getModeLabel(session.mode);
+
+        messagesDiv.innerHTML = '';
+
+        if (!session.messages || session.messages.length === 0) {
+            messagesDiv.innerHTML = `<p style="color: rgba(255,255,255,0.3); text-align: center; padding: 20px;">${translations[currentLang].noMessages}</p>`;
+        } else {
+            session.messages.forEach(msg => {
+                const msgDiv = document.createElement('div');
+                const typeClass = msg.type === 'user' ? 'user-msg' : 'agent-msg';
+                const senderClass = msg.type === 'user' ? 'user-sender' : '';
+                const senderName = msg.type === 'user' 
+                    ? translations[currentLang].models.user 
+                    : (getSenderLabel(msg.modelName) || translations[currentLang].models.system);
+
+                msgDiv.className = `modal-message ${typeClass}`;
+                msgDiv.innerHTML = `
+                    <div class="modal-msg-sender ${senderClass}">${senderName}</div>
+                    <div>${msg.content}</div>
+                `;
+                messagesDiv.appendChild(msgDiv);
+            });
+        }
+
+        modal.classList.add('active');
+    }
+
+    function closeModal() {
+        document.getElementById('sessionModal').classList.remove('active');
+    }
+
+    // ============ حذف ============
+    async function deleteSession(sessionId) {
+        if (!currentUser) return;
+        const confirmed = confirm(translations[currentLang].deleteSessionConfirm);
+        if (!confirmed) return;
+
+        const sessionToDelete = sessions.find(s => s.sessionId === sessionId);
+        if (!sessionToDelete) return;
+
+        try {
+            const userRef = doc(db, "users", currentUser.uid);
+            await updateDoc(userRef, {
+                chatSessions: arrayRemove(sessionToDelete)
+            });
+            sessions = sessions.filter(s => s.sessionId !== sessionId);
+            renderSessions();
+        } catch (e) {
+            console.error('خطأ في الحذف:', e);
+            // حذف محلي حتى لو فشل Firestore
+            sessions = sessions.filter(s => s.sessionId !== sessionId);
+            renderSessions();
+        }
+    }
+
+    async function deleteAllSessions() {
+        if (!currentUser || sessions.length === 0) return;
+        const confirmed = confirm(translations[currentLang].deleteAllConfirm);
+        if (!confirmed) return;
+
+        try {
+            const userRef = doc(db, "users", currentUser.uid);
+            await updateDoc(userRef, {
+                chatSessions: []
+            });
+            sessions = [];
+            renderSessions();
+        } catch (e) {
+            console.error('خطأ في حذف الكل:', e);
+            sessions = [];
+            renderSessions();
+        }
+    }
+
+    // ============ تحميل الجلسات ============
+    async function loadSessions() {
+        if (!currentUser) return;
+        try {
+            const userDoc = await getDoc(doc(db, "users", currentUser.uid));
+            if (userDoc.exists()) {
+                const data = userDoc.data();
+                sessions = (data.chatSessions || []).sort((a, b) => 
+                    new Date(b.createdAt) - new Date(a.createdAt)
+                );
+            } else {
+                sessions = [];
+            }
+        } catch (e) {
+            console.log('لم يتم تحميل الجلسات من Firestore');
+            sessions = [];
+        }
+        renderSessions();
+    }
+
+    function updateUILanguage(lang) {
+        document.getElementById('pageTitle').innerText = translations[lang].pageTitle;
+        document.getElementById('pageSubtitle').innerText = translations[lang].pageSubtitle;
+        document.getElementById('filterAll').innerText = translations[lang].filterAll;
+        document.getElementById('emptyTitle').innerText = translations[lang].emptyTitle;
+        document.getElementById('emptySub').innerText = translations[lang].emptySub;
+        document.getElementById('modalTitle').innerText = translations[lang].modalTitle;
+        
+        if (lang === 'ar') {
+            document.body.setAttribute('dir', 'rtl');
+        } else {
+            document.body.setAttribute('dir', 'ltr');
+        }
+
+        renderSessions();
+    }
+
+    // ============ Firebase Auth ============
+    onAuthStateChanged(auth, async (user) => {
+        if (user) {
+            currentUser = user;
+            try {
+                const userDoc = await getDoc(doc(db, "users", user.uid));
+                if (userDoc.exists()) {
+                    const data = userDoc.data();
+                    if (data.language && data.language !== currentLang) {
+                        currentLang = data.language;
+                    }
+                }
+            } catch (e) {
+                console.log('Firestore غير متصل');
+            }
+            updateUILanguage(currentLang);
+            loadSessions();
+        } else {
+            window.location.href = 'index.html';
+        }
+    });
+
+    // ============ أحداث ============
+    document.getElementById('backBtn').addEventListener('click', () => {
+        window.location.href = 'home.html';
+    });
+
+    document.getElementById('refreshBtn').addEventListener('click', loadSessions);
+
+    document.getElementById('deleteAllBtn').addEventListener('click', deleteAllSessions);
+
+    document.getElementById('modalClose').addEventListener('click', closeModal);
+
+    document.getElementById('sessionModal').addEventListener('click', (e) => {
+        if (e.target === document.getElementById('sessionModal')) {
+            closeModal();
+        }
+    });
+
+    // Escape للخروج من المودال
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+            closeModal();
+        }
+    });
+
+    // الفلاتر
+    document.querySelectorAll('.filter-chip').forEach(chip => {
+        chip.addEventListener('click', () => {
+            document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+            chip.classList.add('active');
+            currentFilter = chip.dataset.filter;
+            renderSessions();
+        });
+    });
+</script>
+</body>
+</html>
