@@ -6,7 +6,7 @@
   <title>مدرسة الجيل الجديد | كورسات المهندس إسماعيل عماد</title>
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-app.js";
-    import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-firestore.js";
+    import { getFirestore, collection, addDoc, serverTimestamp, getDocs } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-firestore.js";
     import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-analytics.js";
 
     const firebaseConfig = {
@@ -26,6 +26,7 @@
     window.firestoreCollection = collection;
     window.firestoreAddDoc = addDoc;
     window.firestoreServerTimestamp = serverTimestamp;
+    window.firestoreGetDocs = getDocs;
   </script>
   <style>
     * {
@@ -95,29 +96,56 @@
       margin-top: 2px;
     }
 
-    /* عداد الزوار */
+    /* عداد الزوار - الآن يعرض العدد الحقيقي من Firebase */
     .visitor-counter {
       background: #ffffff;
       border-radius: 12px;
-      padding: 10px 16px;
+      padding: 12px 16px;
       margin-bottom: 16px;
       border: 1px solid #e4e4e7;
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 8px;
+      gap: 10px;
       font-size: 13px;
       color: #52525b;
       font-weight: 500;
+      transition: all 0.3s;
+    }
+
+    .visitor-counter.loading {
+      opacity: 0.7;
     }
 
     .visitor-number {
       font-weight: 700;
       color: #18181b;
-      font-size: 18px;
+      font-size: 20px;
       background: #f4f4f5;
-      padding: 2px 12px;
-      border-radius: 14px;
+      padding: 4px 16px;
+      border-radius: 16px;
+      min-width: 50px;
+      text-align: center;
+      transition: all 0.3s;
+    }
+
+    .visitor-icon {
+      font-size: 16px;
+    }
+
+    .live-indicator {
+      width: 8px;
+      height: 8px;
+      background: #16a34a;
+      border-radius: 50%;
+      display: inline-block;
+      animation: pulse 1.5s infinite;
+      margin-left: 4px;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
     }
 
     /* الكورسات المتاحة */
@@ -380,10 +408,12 @@
       <div class="subhead">الانطلاق 5 يوليو 2025</div>
     </div>
 
-    <!-- 2. عداد الزوار -->
-    <div class="visitor-counter">
-      <span>👁️ عدد زوار الصفحة:</span>
+    <!-- 2. عداد الزوار - العدد الحقيقي من Firebase -->
+    <div class="visitor-counter" id="visitorCounterBox">
+      <span class="visitor-icon">👁️</span>
+      <span>عدد زوار الصفحة:</span>
       <span class="visitor-number" id="visitorCount">...</span>
+      <span class="live-indicator" title="تحديث مباشر"></span>
     </div>
 
     <!-- 3. الكورسات المتاحة -->
@@ -506,6 +536,7 @@
         const collectionRef = window.firestoreCollection;
         const addDocRef = window.firestoreAddDoc;
         const serverTimestamp = window.firestoreServerTimestamp;
+        const getDocsRef = window.firestoreGetDocs;
 
         const checkboxes = document.querySelectorAll('.course-checkbox');
         const courseOptions = document.querySelectorAll('.course-option');
@@ -517,53 +548,67 @@
         const successAlert = document.getElementById('successAlert');
         const foundationNote = document.getElementById('gradeFoundationNote');
         const visitorCountEl = document.getElementById('visitorCount');
+        const visitorCounterBox = document.getElementById('visitorCounterBox');
 
-        // ========== عداد الزوار ==========
-        async function recordVisitor() {
+        // ========== دالة جلب عدد الزوار الحقيقي من Firebase ==========
+        async function fetchRealVisitorCount() {
           try {
-            // تسجيل زيارة جديدة في مجموعة "visitors"
+            const visitorsCol = collectionRef(db, "visitors");
+            const snapshot = await getDocsRef(visitorsCol);
+            return snapshot.size; // العدد الحقيقي للوثائق
+          } catch (error) {
+            console.error("❌ خطأ في جلب عدد الزوار:", error);
+            return null;
+          }
+        }
+
+        // ========== دالة تحديث عرض العداد ==========
+        async function updateVisitorDisplay() {
+          const count = await fetchRealVisitorCount();
+          if (count !== null) {
+            visitorCountEl.textContent = count;
+            visitorCounterBox.classList.remove('loading');
+          } else {
+            visitorCountEl.textContent = '...';
+          }
+        }
+
+        // ========== تسجيل زيارة جديدة ==========
+        async function recordNewVisitor() {
+          try {
             const visitorsCol = collectionRef(db, "visitors");
             await addDocRef(visitorsCol, {
               visitedAt: serverTimestamp(),
               page: "تسجيل كورسات الجيل الجديد",
               userAgent: navigator.userAgent.substring(0, 100)
             });
-            console.log("✅ تم تسجيل زيارة جديدة");
+            console.log("✅ تم تسجيل زيارة جديدة في Firebase");
+            
+            // تحديث العداد مباشرة بعد التسجيل
+            await updateVisitorDisplay();
           } catch (error) {
             console.error("❌ خطأ في تسجيل الزيارة:", error);
+            // حتى لو فشل التسجيل، نعرض العدد الحالي
+            await updateVisitorDisplay();
           }
         }
 
-        // جلب عدد الزوار من localStorage كذاكرة مؤقتة
-        function getVisitorCount() {
-          // نحسب عدد الزوار من التخزين المحلي أولاً
-          const storedCount = localStorage.getItem('visitorCount');
-          return storedCount ? parseInt(storedCount) : 0;
-        }
+        // ========== المنطق الرئيسي للزائر ==========
+        async function handleVisitorLogic() {
+          const hasVisitedThisSession = sessionStorage.getItem('visitorRecorded');
 
-        function incrementAndShowVisitor() {
-          let count = getVisitorCount();
-          count++;
-          localStorage.setItem('visitorCount', count);
-          visitorCountEl.textContent = count;
-        }
-
-        // التحقق إذا كانت هذه أول زيارة للجلسة
-        const hasVisited = sessionStorage.getItem('hasVisited');
-        if (!hasVisited) {
-          sessionStorage.setItem('hasVisited', 'true');
-          await recordVisitor();
-          incrementAndShowVisitor();
-        } else {
-          // عرض العدد المخزن
-          const count = getVisitorCount();
-          visitorCountEl.textContent = count > 0 ? count : 1;
-          if (count === 0) {
-            // إذا كان العدد صفر، نسجل زيارة جديدة
-            await recordVisitor();
-            incrementAndShowVisitor();
+          if (!hasVisitedThisSession) {
+            // أول زيارة في هذه الجلسة - نسجلها في Firebase
+            sessionStorage.setItem('visitorRecorded', 'true');
+            await recordNewVisitor();
+          } else {
+            // الزائر موجود بالفعل في الجلسة - فقط اعرض العدد الحقيقي
+            await updateVisitorDisplay();
           }
         }
+
+        // تنفيذ منطق الزائر
+        handleVisitorLogic();
 
         // ========== تحديث مظهر البطاقات ==========
         function updateSelectedStyles() {
@@ -626,7 +671,8 @@
               selectedCourses: selectedCourses,
               submittedAt: serverTimestamp(),
               source: "مدرسة الجيل الجديد - نموذج كورسات",
-              teacher: "أ/ إسماعيل عماد"
+              teacher: "أ/ إسماعيل عماد",
+              read: false
             });
 
             // إظهار رسالة النجاح
