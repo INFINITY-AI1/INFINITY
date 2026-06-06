@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>المراجعة النهائية - الجزء الثاني - العلوم - الصف الثالث الإعدادي</title>
+    <style>
+        :root {
+            --bg: #f5f0eb;
+            --card-bg: #ffffff;
+            --text: #1a1a2e;
+            --text-secondary: #64748b;
+            --question-bg: #fff7ed;
+            --question-text: #9a3412;
+            --question-border: #f97316;
+            --answer-bg: #f0fdf4;
+            --answer-text: #166534;
+            --answer-border: #22c55e;
+            --accent: #ea580c;
+            --accent-light: #ffedd5;
+            --accent-dark: #c2410c;
+            --gold: #f59e0b;
+            --gold-light: #fef3c7;
+            --nav-btn: #ea580c;
+            --nav-btn-text: #fff;
+            --progress-bg: #e2e8f0;
+            --progress-fill: #ea580c;
+            --shadow: 0 4px 20px rgba(0,0,0,0.08);
+            --header-bg: linear-gradient(135deg, #431407 0%, #7c2d12 50%, #9a3412 100%);
+            --header-text: #ffffff;
+            --badge-bg: #fef3c7;
+            --badge-text: #92400e;
+            --divider: #e2e8f0;
+        }
+
+        .dark-mode {
+            --bg: #0f172a;
+            --card-bg: #1e293b;
+            --text: #e2e8f0;
+            --text-secondary: #94a3b8;
+            --question-bg: #431407;
+            --question-text: #fdba74;
+            --question-border: #f97316;
+            --answer-bg: #064e3b;
+            --answer-text: #a7f3d0;
+            --answer-border: #10b981;
+            --accent: #f97316;
+            --accent-light: #431407;
+            --accent-dark: #fb923c;
+            --gold: #fbbf24;
+            --gold-light: #78350f;
+            --nav-btn: #f97316;
+            --shadow: 0 4px 20px rgba(0,0,0,0.4);
+            --header-bg: linear-gradient(135deg, #020617 0%, #431407 50%, #7c2d12 100%);
+            --badge-bg: #78350f;
+            --badge-text: #fcd34d;
+            --divider: #334155;
+            --progress-bg: #334155;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', 'Cairo', 'Tahoma', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.8;
+            transition: background 0.3s, color 0.3s;
+            -webkit-tap-highlight-color: transparent;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .container {
+            max-width: 500px;
+            margin: 0 auto;
+            width: 100%;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 0 10px;
+        }
+
+        .header {
+            background: var(--header-bg);
+            color: var(--header-text);
+            padding: 16px 14px 12px;
+            text-align: center;
+            border-radius: 0 0 24px 24px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.25);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .header .main-title {
+            font-size: 1.15rem;
+            font-weight: 900;
+            letter-spacing: 0.3px;
+            margin-bottom: 2px;
+        }
+        .header .sub-title {
+            font-size: 0.9rem;
+            font-weight: 700;
+            opacity: 0.9;
+            margin-bottom: 6px;
+        }
+        .header .teacher-info {
+            font-size: 0.8rem;
+            font-weight: 600;
+            opacity: 0.95;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            flex-wrap: wrap;
+        }
+        .header .phone-number {
+            direction: ltr;
+            display: inline-block;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        .youtube-promo {
+            background: linear-gradient(135deg, #ff0000 0%, #cc0000 100%);
+            color: #fff;
+            padding: 10px 14px;
+            margin: 10px 0;
+            border-radius: 14px;
+            text-align: center;
+            font-weight: 700;
+            font-size: 0.85rem;
+            animation: pulse-promo 2s infinite;
+            box-shadow: 0 4px 15px rgba(255,0,0,0.3);
+            cursor: pointer;
+            text-decoration: none;
+            display: block;
+        }
+        @keyframes pulse-promo {
+            0%, 100% { box-shadow: 0 4px 15px rgba(255,0,0,0.3); }
+            50% { box-shadow: 0 6px 25px rgba(255,0,0,0.5); }
+        }
+        .youtube-promo .yt-icon {
+            font-size: 1.3rem;
+        }
+        .youtube-promo .yt-text {
+            display: block;
+            font-size: 0.75rem;
+            font-weight: 500;
+            margin-top: 2px;
+            opacity: 0.9;
+        }
+
+        .part-badge {
+            display: inline-block;
+            background: #f97316;
+            color: #fff;
+            padding: 4px 14px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            margin: 4px auto;
+            text-align: center;
+        }
+
+        .section-tabs {
+            display: flex;
+            gap: 6px;
+            padding: 8px 0;
+            overflow-x: auto;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+            flex-shrink: 0;
+        }
+        .section-tabs::-webkit-scrollbar { display: none; }
+        .section-tab {
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.72rem;
+            font-weight: 700;
+            white-space: nowrap;
+            cursor: pointer;
+            border: 2px solid var(--divider);
+            background: var(--card-bg);
+            color: var(--text);
+            transition: all 0.2s;
+            flex-shrink: 0;
+            font-family: inherit;
+        }
+        .section-tab.active {
+            background: var(--accent);
+            color: #fff;
+            border-color: var(--accent);
+        }
+
+        .question-card-wrapper {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 6px 0;
+        }
+        .question-card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 18px 16px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--divider);
+            transition: all 0.3s;
+            position: relative;
+            min-height: 250px;
+        }
+        .question-card .badge-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 12px;
+            flex-wrap: wrap;
+        }
+        .question-card .q-number {
+            background: var(--accent);
+            color: #fff;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+        .question-card .q-section {
+            background: var(--badge-bg);
+            color: var(--badge-text);
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 700;
+        }
+        .question-card .question-block {
+            background: var(--question-bg);
+            border-right: 5px solid var(--question-border);
+            padding: 14px;
+            border-radius: 12px;
+            margin-bottom: 10px;
+        }
+        .question-card .question-label {
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: var(--question-border);
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .question-card .question-text {
+            font-weight: 700;
+            color: var(--question-text);
+            font-size: 0.95rem;
+            line-height: 1.7;
+        }
+        .question-card .answer-block {
+            background: var(--answer-bg);
+            border-right: 5px solid var(--answer-border);
+            padding: 14px;
+            border-radius: 12px;
+            margin-top: 6px;
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .question-card .answer-block.show {
+            display: block;
+        }
+        .question-card .answer-label {
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: var(--answer-border);
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .question-card .answer-text {
+            color: var(--answer-text);
+            font-size: 0.9rem;
+            line-height: 1.8;
+        }
+        .toggle-answer-btn {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            margin-top: 8px;
+            background: var(--answer-border);
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: inherit;
+        }
+        .toggle-answer-btn:active {
+            transform: scale(0.96);
+            opacity: 0.85;
+        }
+        .toggle-answer-btn.hidden-btn {
+            background: #94a3b8;
+        }
+
+        .nav-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 0;
+        }
+        .nav-btn {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 14px;
+            font-size: 0.9rem;
+            font-weight: 700;
+            cursor: pointer;
+            background: var(--nav-btn);
+            color: var(--nav-btn-text);
+            transition: all 0.2s;
+            font-family: inherit;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+        }
+        .nav-btn:active {
+            transform: scale(0.95);
+            opacity: 0.85;
+        }
+        .nav-btn:disabled {
+            background: #94a3b8;
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        .nav-btn:disabled:active {
+            transform: none;
+            opacity: 0.5;
+        }
+        .progress-info {
+            text-align: center;
+            font-size: 0.78rem;
+            font-weight: 700;
+            color: var(--text-secondary);
+            padding: 2px 0;
+        }
+        .progress-bar-outer {
+            width: 100%;
+            height: 6px;
+            background: var(--progress-bg);
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 4px 0;
+        }
+        .progress-bar-inner {
+            height: 100%;
+            background: var(--progress-fill);
+            border-radius: 10px;
+            transition: width 0.3s ease;
+        }
+
+        .mode-toggle {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: var(--card-bg);
+            border: 2px solid var(--divider);
+            font-size: 1.2rem;
+            cursor: pointer;
+            z-index: 200;
+            box-shadow: var(--shadow);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+        .mode-toggle:active {
+            transform: scale(0.9);
+        }
+
+        @media (max-width: 360px) {
+            .header .main-title { font-size: 1rem; }
+            .question-card .question-text { font-size: 0.85rem; }
+            .question-card .answer-text { font-size: 0.8rem; }
+            .nav-btn { font-size: 0.8rem; padding: 10px; }
+        }
+        @media (min-width: 400px) {
+            .question-card { padding: 22px 18px; }
+            .question-card .question-text { font-size: 1rem; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <!-- HEADER -->
+    <div class="header">
+        <div class="main-title">🧬 المراجعة النهائية لمادة العلوم</div>
+        <div class="sub-title">الصف الثالث الإعدادي</div>
+        <div class="teacher-info">
+            👨‍🏫 أ/ إسماعيل عماد &nbsp;|&nbsp; <span class="phone-number">📞 01122104596</span>
+        </div>
+        <div class="part-badge">📗 الجزء الثاني</div>
+    </div>
+
+    <!-- YOUTUBE PROMO -->
+    <a href="https://youtube.com/@ismall-i1m?si=q7IptcVQXOr9c9Z_" target="_blank" class="youtube-promo">
+        <span class="yt-icon">▶️</span> عشان تدعمنا اشترك في القناة فضلاً وليس أمراً
+        <span class="yt-text">هينزل عليها شرح الصف الأول الثانوي دوس هنا 🔔</span>
+    </a>
+
+    <!-- SECTION TABS -->
+    <div class="section-tabs" id="sectionTabs">
+        <button class="section-tab active" data-section="all">📚 الكل</button>
+        <button class="section-tab" data-section="reactions">🧪 التفاعلات</button>
+        <button class="section-tab" data-section="electricity">⚡ الكهرباء</button>
+        <button class="section-tab" data-section="genetics">🧬 الوراثة</button>
+        <button class="section-tab" data-section="nuclear">☢️ الإشعاع</button>
+        <button class="section-tab" data-section="hormones">💉 الهرمونات</button>
+    </div>
+
+    <!-- QUESTION CARD -->
+    <div class="question-card-wrapper">
+        <div class="question-card" id="questionCard">
+            <div class="badge-row">
+                <span class="q-number" id="qNumber">سؤال #1</span>
+                <span class="q-section" id="qSection">التفاعلات</span>
+            </div>
+            <div class="question-block">
+                <div class="question-label">📝 السؤال</div>
+                <div class="question-text" id="questionText"></div>
+            </div>
+            <button class="toggle-answer-btn" id="toggleAnswerBtn" onclick="toggleAnswer()">
+                👁️ إظهار الإجابة
+            </button>
+            <div class="answer-block" id="answerBlock">
+                <div class="answer-label">✅ الإجابة</div>
+                <div class="answer-text" id="answerText"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- NAVIGATION -->
+    <div class="progress-bar-outer">
+        <div class="progress-bar-inner" id="progressBarInner"></div>
+    </div>
+    <div class="progress-info" id="progressInfo">1 / 103</div>
+    <div class="nav-row">
+        <button class="nav-btn" id="prevBtn" onclick="prevQuestion()">◀ السابق</button>
+        <button class="nav-btn" id="nextBtn" onclick="nextQuestion()">التالي ▶</button>
+    </div>
+</div>
+
+<!-- DARK MODE TOGGLE -->
+<button class="mode-toggle" id="modeToggle" onclick="toggleDarkMode()" title="الوضع الليلي">🌙</button>
+
+<script>
+    // ==================== ALL QUESTIONS DATA (103 Questions) ====================
+    const allQuestions = [
+        // REACTIONS (1-24)
+        { id:1, section:'reactions', sectionName:'التفاعلات الكيميائية', q:'لماذا يبدو الألومنيوم أقل تأثراً بالتفاعل مع حمض الهيدروكلوريك المخفف رغم نشاطه الكيميائي؟', a:'بسبب وجود طبقة من أكسيد الألومنيوم (Al₂O₃) تعزله عن الحمض وتأخذ فترة حتى تتآكل.' },
+        { id:2, section:'reactions', sectionName:'التفاعلات الكيميائية', q:'ماذا ينتج من تفاعل نترات الفضة مع كلوريد الصوديوم؟', a:'نترات الصوديوم وراسب أبيض من كلوريد الفضة (AgCl).' },
+        { id:3, section:'reactions', sectionName:'التفاعلات الكيميائية', q:'ما نوع تفاعل نترات الفضة مع كلوريد الصوديوم؟', a:'تفاعل <b>إحلال مزدوج</b>.' },
+        { id:4, section:'reactions', sectionName:'التفاعلات الكيميائية', q:'لماذا يعد تفاعل محلول كلوريد الصوديوم مع محلول نترات الفضة من التفاعلات اللحظية؟', a:'لأنه يتم بين الأيونات الناتجة من تفكك كل منهما في الماء.' },
+        { id:5, section:'reactions', sectionName:'التفاعلات الكيميائية', q:'ماذا يحدث عند تفاعل الماغنيسيوم مع كبريتات النحاس؟', a:'يحل الماغنيسيوم محل النحاس ويتكون كبريتات الماغنيسيوم ونحاس أحمر اللون.<br><b>المعادلة:</b> Mg + CuSO₄ → MgSO₄ + Cu' },
+        { id:6, section:'reactions', sectionName:'التفاعلات الكيميائية', q:'ماذا يمثل المحور الأفقي في الرسم البياني لسرعة التفاعل الكيميائي؟', a:'<b>الزمن</b>.' },
+        { id:7, section:'reactions', sectionName:'التفاعلات الكيميائية', q:'ماذا يمثل المحور الرأسي في الرسم البياني لسرعة التفاعل الكيميائي؟', a:'<b>التركيز</b>.' },
+        { id:8, section:'reactions', sectionName:'التفاعلات الكيميائية', q:'ما العوامل المؤثرة في سرعة التفاعل الكيميائي؟', a:'① طبيعة المواد المتفاعلة (نوع الترابط).<br>② مساحة السطح المعرضة للتفاعل.<br>③ تركيز المتفاعلات.<br>④ درجة حرارة التفاعل.<br>⑤ العوامل الحفازة والإنزيمات.' },
+        { id:9, section:'reactions', sectionName:'التفاعلات الكيميائية', q:'كيف يتم الكشف عن غاز الأكسجين؟', a:'بإدخال عود ثقاب متوهج فيزداد توهجه (الأكسجين يساعد على الاشتعال).' },
+        { id:10, section:'reactions', sectionName:'التفاعلات الكيميائية', q:'ماذا يحدث عند تفاعل الصوديوم مع الماء؟', a:'يتفاعل بعنف وقد يشتعل نتيجة نشاطه الكيميائي الكبير.' },
+        { id:11, section:'reactions', sectionName:'التفاعلات الكيميائية', q:'ما العلاقة بين عدد الإلكترونات المفقودة والمكتسبة في تفاعلات الأكسدة والاختزال؟', a:'عدد الإلكترونات المفقودة <b>يساوي</b> عدد الإلكترونات المكتسبة.' },
+        { id:12, section:'reactions', sectionName:'التفاعلات الكيميائية', q:'اذكر مثالاً لتفاعل كيميائي بطيء نسبياً.', a:'تفاعل الزيت مع الصودا الكاوية لتكوين الصابون.' },
+        { id:13, section:'reactions', sectionName:'التفاعلات الكيميائية', q:'اذكر مثالاً لتفاعل كيميائي بطيء جداً.', a:'صدأ الحديد (يحتاج لعدة شهور).' },
+        { id:14, section:'reactions', sectionName:'التفاعلات الكيميائية', q:'اذكر مثالاً لتفاعل كيميائي بطيء جداً جداً.', a:'تكوين الوقود الحفري (يحتاج ملايين السنين).' },
+        { id:15, section:'reactions', sectionName:'التفاعلات الكيميائية', q:'اذكر مثالاً لتفاعل كيميائي سريع.', a:'الألعاب النارية.' },
+        { id:16, section:'reactions', sectionName:'التفاعلات الكيميائية', q:'ماذا يحدث عند تعرض أزيد الصوديوم لشرارة كهربية في الوسادة الهوائية؟', a:'يتحلل إلى صوديوم وغاز النيتروجين الذي يؤدي إلى انتفاخ الوسادة الهوائية.<br><b>المعادلة:</b> 2NaN₃ → 2Na + 3N₂' },
+        { id:17, section:'reactions', sectionName:'التفاعلات الكيميائية', q:'اكتب معادلة تحلل خامس أكسيد النيتروجين.', a:'2N₂O₅ → 4NO₂ + O₂' },
+        { id:18, section:'reactions', sectionName:'التفاعلات الكيميائية', q:'ما دور إنزيم الأوكسيديز وثاني أكسيد المنجنيز في تحلل فوق أكسيد الهيدروجين؟', a:'يزيد من سرعة تفكك فوق أكسيد الهيدروجين إلى ماء وغاز الأكسجين.' },
+        { id:19, section:'reactions', sectionName:'التفاعلات الكيميائية', q:'ما وحدة قياس التركيز؟', a:'<b>مول/لتر</b>.' },
+        { id:20, section:'reactions', sectionName:'التفاعلات الكيميائية', q:'أهمية التفاعلات الكيميائية في السيارة.', a:'احتراق الوقود لتوليد الطاقة اللازمة لحركة السيارة.' },
+        { id:21, section:'reactions', sectionName:'التفاعلات الكيميائية', q:'أهمية التفاعلات الكيميائية في النبات.', a:'تفاعل الماء مع ثاني أكسيد الكربون لتكوين الغذاء في النبات من خلال عملية البناء الضوئي.' },
+        { id:22, section:'reactions', sectionName:'التفاعلات الكيميائية', q:'ما المقصود بتفاعل التعادل؟', a:'تفاعل حمض مع قلوي لتكوين ملح وماء.<br><b>المعادلة:</b> NaOH + HCl → NaCl + H₂O' },
+        { id:23, section:'reactions', sectionName:'التفاعلات الكيميائية', q:'ما المقصود بمتسلسلة النشاط الكيميائي؟', a:'ترتيب العناصر ترتيباً تنازلياً حسب درجة نشاطها الكيميائي.' },
+        { id:24, section:'reactions', sectionName:'التفاعلات الكيميائية', q:'لماذا تحفظ الأطعمة في الثلاجة؟', a:'لأن انخفاض درجة الحرارة يقلل سرعة التفاعلات الكيميائية المسببة لفساد الطعام.' },
+
+        // OXIDATION-REDUCTION (25-30)
+        { id:25, section:'reactions', sectionName:'التفاعلات الكيميائية', q:'ماذا يحدث للهيدروجين في المعادلة H₂ + CuO → Cu + H₂O؟', a:'<b>يتأكسد</b> لأنه اتحد بالأكسجين (يعتبر عامل مختزل).' },
+        { id:26, section:'reactions', sectionName:'التفاعلات الكيميائية', q:'ماذا يحدث لأكسيد النحاس في المعادلة H₂ + CuO → Cu + H₂O؟', a:'<b>يختزل</b> لأنه فقد الأكسجين.' },
+        { id:27, section:'reactions', sectionName:'التفاعلات الكيميائية', q:'لماذا يعد الهيدروجين عاملاً مختزلاً في هذه المعادلة؟', a:'لأنه تسبب في اختزال أكسيد النحاس.' },
+        { id:28, section:'reactions', sectionName:'التفاعلات الكيميائية', q:'لماذا يعد أكسيد النحاس عاملاً مؤكسداً في هذه المعادلة؟', a:'لأنه تسبب في أكسدة الهيدروجين.' },
+        { id:29, section:'reactions', sectionName:'التفاعلات الكيميائية', q:'كيف يتم الكشف عن غاز الهيدروجين؟', a:'بتقريب عود ثقاب مشتعل فيشتعل الغاز محدثاً فرقعة.' },
+        { id:30, section:'reactions', sectionName:'التفاعلات الكيميائية', q:'كيف يتم الكشف عن غاز ثاني أكسيد الكربون؟', a:'بتعكير ماء الجير الرائق.' },
+
+        // GAS PROPERTIES (31)
+        { id:31, section:'reactions', sectionName:'التفاعلات الكيميائية', q:'ما خواص غاز ثاني أكسيد الكربون بالنسبة للاشتعال؟', a:'لا يشتعل ولا يساعد على الاشتعال.' },
+
+        // ELECTRICITY (32-48)
+        { id:32, section:'electricity', sectionName:'الكهرباء', q:'لماذا تعد المعادن موصلات جيدة للكهرباء؟', a:'لاحتوائها على <b>إلكترونات حرة الحركة</b>.' },
+        { id:33, section:'electricity', sectionName:'الكهرباء', q:'ماذا يحدث عند انعدام أو ضعف قوة التجاذب بين النواة وإلكترونات التكافؤ؟', a:'تتحرر إلكترونات التكافؤ وتسمى <b>الإلكترونات الحرة</b>.' },
+        { id:34, section:'electricity', sectionName:'الكهرباء', q:'لماذا تستخدم مادة البورسلين في صناعة الأجهزة الكهربائية؟', a:'لأنها <b>عازل جيد للكهرباء</b> (موجودة في تركيب الريوستات المنزلق).' },
+        { id:35, section:'electricity', sectionName:'الكهرباء', q:'ما الفرق بين المحول الكهربي والمحول الحفزي؟', a:'<b>المحول الكهربي:</b> يستخدم لخفض جهد الكهرباء.<br><b>المحول الحفزي:</b> يستخدم لمعالجة الغازات الضارة الناتجة من احتراق الوقود.' },
+        { id:36, section:'electricity', sectionName:'الكهرباء', q:'مما تتكون دائرة قانون أوم؟', a:'بطارية ومفتاح وريوستات ومقاومة ثابتة وأميتر وفولتميتر.' },
+        { id:37, section:'electricity', sectionName:'الكهرباء', q:'ماذا ينص قانون أوم؟', a:'شدة التيار الكهربي المار في موصل تتناسب <b>طردياً</b> مع فرق الجهد بين طرفيه عند ثبوت درجة الحرارة.' },
+        { id:38, section:'electricity', sectionName:'الكهرباء', q:'ما الفرق بين التيار المستمر والتيار المتردد؟', a:'<b>التيار المستمر:</b> ثابت الشدة والاتجاه.<br><b>التيار المتردد:</b> متغير الشدة والاتجاه.' },
+        { id:39, section:'electricity', sectionName:'الكهرباء', q:'ماذا يحدث إذا كان لموصلين نفس الجهد الكهربي؟', a:'لا يسري بينهما تيار كهربي.' },
+        { id:40, section:'electricity', sectionName:'الكهرباء', q:'ماذا يقصد بتوصيل الأقطاب المتشابهة معاً؟', a:'<b>التوصيل على التوازي</b> (للحصول على نفس قوة العمود الواحد).' },
+        { id:41, section:'electricity', sectionName:'الكهرباء', q:'ماذا يقصد بتوصيل الأقطاب المختلفة معاً؟', a:'<b>التوصيل على التوالي</b> (للحصول على مجموع قوى الأعمدة).' },
+        { id:42, section:'electricity', sectionName:'الكهرباء', q:'ما وظيفة الريوستات المنزلق؟', a:'<b>التحكم في شدة التيار الكهربي.</b>' },
+        { id:43, section:'electricity', sectionName:'الكهرباء', q:'كيف يوصل الأميتر في الدائرة الكهربية؟', a:'يوصل <b>على التوالي</b>.' },
+        { id:44, section:'electricity', sectionName:'الكهرباء', q:'ما وظيفة الأميتر؟', a:'<b>قياس شدة التيار الكهربي.</b>' },
+        { id:45, section:'electricity', sectionName:'الكهرباء', q:'كيف يوصل الفولتميتر في الدائرة الكهربية؟', a:'يوصل <b>على التوازي</b>.' },
+        { id:46, section:'electricity', sectionName:'الكهرباء', q:'ما وظيفة الفولتميتر؟', a:'<b>قياس فرق الجهد الكهربي.</b>' },
+        { id:47, section:'electricity', sectionName:'الكهرباء', q:'ما الفرق بين الريوستات والأميتر؟', a:'<b>الريوستات:</b> يتحكم في شدة التيار.<br><b>الأميتر:</b> يقيس شدة التيار.' },
+        { id:48, section:'electricity', sectionName:'الكهرباء', q:'ما الفرق بين العمود الجاف والدينامو؟', a:'<b>العمود الجاف:</b> مصدر للتيار المستمر.<br><b>الدينامو:</b> مصدر للتيار المتردد.' },
+        { id:49, section:'electricity', sectionName:'الكهرباء', q:'خلال كم من الزمن تنتفخ الوسادة الهوائية؟', a:'خلال نحو <b>40 مللي ثانية</b>.' },
+        { id:50, section:'electricity', sectionName:'الكهرباء', q:'من العالم صاحب قانون أوم؟', a:'<b>جورج سيمون أوم</b>.' },
+        { id:51, section:'electricity', sectionName:'الكهرباء', q:'كيف تتناسب المقاومة الكهربائية مع طول السلك؟', a:'تتناسب <b>طردياً</b>.' },
+        { id:52, section:'electricity', sectionName:'الكهرباء', q:'كيف تتناسب المقاومة الكهربائية مع شدة التيار الكهربي؟', a:'تتناسب <b>عكسياً</b>.' },
+        { id:53, section:'electricity', sectionName:'الكهرباء', q:'ما مصدر التيار المستمر؟', a:'<b>العمود الجاف</b>.' },
+        { id:54, section:'electricity', sectionName:'الكهرباء', q:'فيم يستخدم التيار المستمر؟', a:'في عمليات <b>الطلاء الكهربي</b>.' },
+        { id:55, section:'electricity', sectionName:'الكهرباء', q:'ما خصائص التيار المتردد؟', a:'متغير الشدة والاتجاه ويمكن نقله لمسافات بعيدة.' },
+        { id:56, section:'electricity', sectionName:'الكهرباء', q:'ما مصدر التيار المتردد؟', a:'<b>الدينامو</b>.' },
+        { id:57, section:'electricity', sectionName:'الكهرباء', q:'لماذا يفضل استخدام التيار المتردد؟', a:'لأنه يمكن نقله لمسافات بعيدة ويمكن تحويله إلى تيار مستمر.' },
+        { id:58, section:'electricity', sectionName:'الكهرباء', q:'فيم يستخدم التيار المتردد؟', a:'في إنارة المنازل وتشغيل الأجهزة الكهربائية.' },
+
+        // NUCLEAR / RADIATION (59-66)
+        { id:59, section:'nuclear', sectionName:'النشاط الإشعاعي', q:'ما المقصود بالطاقة النووية في مجال الطب؟', a:'تستخدم لتشخيص وعلاج بعض الأمراض كالسرطان.' },
+        { id:60, section:'nuclear', sectionName:'النشاط الإشعاعي', q:'تستخدم الطاقة النووية لتحويل الرمال إلى شرائح السيلكون. وضح.', a:'نعم، تستخدم الطاقة النووية في تنقية السيليكون وتحويله إلى شرائح تستخدم في صناعة الدوائر الإلكترونية.' },
+        { id:61, section:'nuclear', sectionName:'النشاط الإشعاعي', q:'كيف قد يحدث تلوث إشعاعي في مناطق لم يحدث بها انفجار نووي؟', a:'لأن التلوث الإشعاعي قد ينتقل إلى سطح الأرض عن طريق السقوط الجاف بواسطة الرياح أو السقوط بواسطة الأمطار (كما حدث في مفاعل تشرنوبل).' },
+        { id:62, section:'nuclear', sectionName:'النشاط الإشعاعي', q:'من العالم مكتشف ظاهرة النشاط الإشعاعي؟', a:'<b>هنري بيكريل</b> (وهو أول من اكتشف إشعاعات اليورانيوم).' },
+        { id:63, section:'nuclear', sectionName:'النشاط الإشعاعي', q:'ما وحدة قياس الجرعة الإشعاعية الممتصة؟', a:'<b>السيفرت (Sv)</b>.' },
+        { id:64, section:'nuclear', sectionName:'النشاط الإشعاعي', q:'ما الحد الأقصى المسموح به للعاملين في مجال الإشعاع؟', a:'<b>20 ملي سيفرت سنوياً</b>.' },
+        { id:65, section:'nuclear', sectionName:'النشاط الإشعاعي', q:'ما الحد الأقصى المسموح به لغير العاملين في مجال الإشعاع؟', a:'<b>1 ملي سيفرت سنوياً</b>.' },
+        { id:66, section:'nuclear', sectionName:'النشاط الإشعاعي', q:'ما المقصود بالإصابات الجسدية الناتجة عن الإشعاع؟', a:'إصابة الشخص بأمراض مثل السرطان.' },
+        { id:67, section:'nuclear', sectionName:'النشاط الإشعاعي', q:'ما المقصود بالإصابات الخلوية الناتجة عن الإشعاع؟', a:'حدوث تغيرات في تركيب الخلايا مثل الهيموجلوبين، ويصبح غير قادر على حمل الأكسجين إلى جميع خلايا الدم مما قد يؤدي إلى تدميرها.' },
+        { id:68, section:'nuclear', sectionName:'النشاط الإشعاعي', q:'ما النتائج المترتبة على نقص عدد كرات الدم الحمراء في جسم الإنسان؟', a:'الشعور بالإعياء - حدوث التهابات متنوعة بأماكن متفرقة من الجسم مثل الحنجرة والجهاز التنفسي - حدوث غثيان ودوار وإسهال.' },
+
+        // GENETICS (69-95)
+        { id:69, section:'genetics', sectionName:'الوراثة', q:'من العالمان اللذان وضعا نموذج DNA؟', a:'<b>واطسون وكريك</b>.' },
+        { id:70, section:'genetics', sectionName:'الوراثة', q:'ماذا تنص نظرية بيدل وتاتوم؟', a:'<b>لكل جين إنزيم معين</b> مسؤول عن ظهور صفة وراثية معينة.' },
+        { id:71, section:'genetics', sectionName:'الوراثة', q:'كم صفة وراثية درس مندل في نبات البسلة؟', a:'<b>سبع صفات</b>.' },
+        { id:72, section:'genetics', sectionName:'الوراثة', q:'ماذا يحتوي الأرز المعدل وراثياً؟', a:'<b>كاروتين</b> (بروفيتامين أ).' },
+        { id:73, section:'genetics', sectionName:'الوراثة', q:'لماذا يتم تغطية المياسم أثناء التجارب الوراثية؟', a:'<b>لمنع حدوث التلقيح الخلطي</b> بعد التلقيح.' },
+        { id:74, section:'genetics', sectionName:'الوراثة', q:'لماذا يتم نزع المتوك من الزهرة قبل نضجها؟', a:'<b>لمنع حدوث التلقيح الذاتي</b>.' },
+        { id:75, section:'genetics', sectionName:'الوراثة', q:'ما أهمية DNA؟', a:'يحمل المعلومات الوراثية للكائن الحي.' },
+        { id:76, section:'genetics', sectionName:'الوراثة', q:'ما أهمية الجينات؟', a:'تتحكم في ظهور الصفات الوراثية.' },
+        { id:77, section:'genetics', sectionName:'الوراثة', q:'من مؤسس علم الوراثة؟', a:'<b>جريجور مندل</b>.' },
+        { id:78, section:'genetics', sectionName:'الوراثة', q:'ماذا ينص قانون انعزال العوامل؟', a:'تنفصل العوامل الوراثية عند تكوين الأمشاج ويحمل كل مشيج عاملاً وراثياً واحداً من كل زوج.' },
+        { id:79, section:'genetics', sectionName:'الوراثة', q:'ماذا ينص قانون التوزيع الحر للعوامل؟', a:'تتوزع العوامل الوراثية المختلفة بصورة مستقلة عند تكوين الأمشاج.' },
+        { id:80, section:'genetics', sectionName:'الوراثة', q:'ما المقصود بالصفة الوراثية؟', a:'صفة تنتقل من الآباء إلى الأبناء عبر الجينات.' },
+        { id:81, section:'genetics', sectionName:'الوراثة', q:'اذكر أمثلة للصفات الوراثية.', a:'لون العينين وفصيلة الدم والطول ولون الشعر.' },
+        { id:82, section:'genetics', sectionName:'الوراثة', q:'ما المقصود بالصفة السائدة؟', a:'الصفة التي تظهر في الفرد عند وجود جين سائد واحد على الأقل.' },
+        { id:83, section:'genetics', sectionName:'الوراثة', q:'ما المقصود بالصفة المتنحية؟', a:'الصفة التي لا تظهر إلا إذا اجتمع جينان متنحيان.' },
+        { id:84, section:'genetics', sectionName:'الوراثة', q:'ماذا ينتج عن اجتماع جين سائد مع جين سائد؟', a:'ظهور الصفة السائدة (<b>فرد نقي</b>).' },
+        { id:85, section:'genetics', sectionName:'الوراثة', q:'ماذا ينتج عن اجتماع جين سائد مع جين متنح؟', a:'ظهور الصفة السائدة (<b>فرد هجين</b>).' },
+        { id:86, section:'genetics', sectionName:'الوراثة', q:'ماذا ينتج عن اجتماع جين متنح مع جين متنح؟', a:'ظهور الصفة المتنحية (<b>فرد نقي</b>).' },
+        { id:87, section:'genetics', sectionName:'الوراثة', q:'متى تظهر الصفة المتنحية؟', a:'عند اجتماع جينين متنحيين.' },
+        { id:88, section:'genetics', sectionName:'الوراثة', q:'ماذا يحدث إذا فشل الجين في إنتاج الإنزيم الخاص به؟', a:'لا تظهر الصفة الوراثية المرتبطة بهذا الجين.' },
+        { id:89, section:'genetics', sectionName:'الوراثة', q:'ما طبيعة صفة لون القرن الأخضر في نبات البسلة؟', a:'<b>صفة سائدة</b>.' },
+        { id:90, section:'genetics', sectionName:'الوراثة', q:'ما طبيعة صفة لون البذرة الخضراء في نبات البسلة؟', a:'<b>صفة متنحية</b>.' },
+        { id:91, section:'genetics', sectionName:'الوراثة', q:'ما المقصود بالهندسة الوراثية؟', a:'نقل أو إدخال جينات من كائن حي إلى كائن آخر للحصول على صفات مرغوبة.' },
+        { id:92, section:'genetics', sectionName:'الوراثة', q:'كيف يتم إنتاج هرمون النمو البشري باستخدام الهندسة الوراثية؟', a:'بإدخال الجين المسؤول عن إنتاج هرمون النمو البشري إلى البكتيريا.' },
+        { id:93, section:'genetics', sectionName:'الوراثة', q:'ما ناتج تهجين سائد هجين مع متنح نقي؟', a:'<b>50% أفراد سائدة</b> و<b>50% أفراد متنحية</b>.' },
+        { id:94, section:'genetics', sectionName:'الوراثة', q:'متى يحدث انعزال العوامل الوراثية؟', a:'أثناء تكوين الأمشاج <b>بالانقسام الميوزي</b>.' },
+        { id:95, section:'genetics', sectionName:'الوراثة', q:'لماذا اختار مندل نبات البسلة لإجراء تجاربه؟', a:'لسهولة زراعته وسرعة نموه وقصر دورة حياته وإنتاجه أعداداً كبيرة من البذور وإمكانية التلقيح الذاتي والخلطي وسهولة تمييز صفاته.' },
+        { id:96, section:'genetics', sectionName:'الوراثة', q:'من العالم الذي استخدم مصطلح الجين بدلاً من العامل الوراثي؟', a:'العالم الدنماركي <b>جوهانسن</b>.' },
+
+        // HORMONES (97-103)
+        { id:97, section:'hormones', sectionName:'الهرمونات', q:'ما وظيفة هرمون الجلوكاجون؟', a:'<b>رفع مستوى السكر في الدم</b>.' },
+        { id:98, section:'hormones', sectionName:'الهرمونات', q:'ما العنصر الذي يدخل في تركيب هرمون الثيروكسين؟', a:'عنصر <b>اليود</b>.' },
+        { id:99, section:'hormones', sectionName:'الهرمونات', q:'ما وظيفة هرمون التستوستيرون؟', a:'إظهار <b>الصفات الجنسية الثانوية الذكرية</b>.' },
+        { id:100, section:'hormones', sectionName:'الهرمونات', q:'ما وظيفة هرمون الإستروجين؟', a:'إظهار <b>الصفات الجنسية الثانوية الأنثوية</b>.' },
+        { id:101, section:'hormones', sectionName:'الهرمونات', q:'ما وظيفة هرمون البروجستيرون؟', a:'المساعدة في <b>نمو وتجهيز بطانة الرحم</b>.' },
+        { id:102, section:'hormones', sectionName:'الهرمونات', q:'لماذا يسمى الأدرينالين هرمون الطوارئ؟', a:'لأنه يهيئ الجسم للاستجابة السريعة في المواقف الطارئة والخطرة.' },
+        { id:103, section:'hormones', sectionName:'الهرمونات', q:'ما وسيلة نقل الهرمونات داخل الجسم؟', a:'<b>الدم</b>.' }
+    ];
+
+    // ==================== STATE ====================
+    let currentFilteredQuestions = [...allQuestions];
+    let currentIndex = 0;
+    let currentSection = 'all';
+    let isDarkMode = false;
+    let answerVisible = false;
+
+    // ==================== DOM ====================
+    const questionText = document.getElementById('questionText');
+    const answerText = document.getElementById('answerText');
+    const answerBlock = document.getElementById('answerBlock');
+    const toggleAnswerBtn = document.getElementById('toggleAnswerBtn');
+    const qNumber = document.getElementById('qNumber');
+    const qSection = document.getElementById('qSection');
+    const progressInfo = document.getElementById('progressInfo');
+    const progressBarInner = document.getElementById('progressBarInner');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const modeToggle = document.getElementById('modeToggle');
+
+    // ==================== FUNCTIONS ====================
+    function filterQuestions(section) {
+        if (section === 'all') {
+            currentFilteredQuestions = [...allQuestions];
+        } else {
+            currentFilteredQuestions = allQuestions.filter(q => q.section === section);
+        }
+        currentIndex = 0;
+        answerVisible = false;
+        displayQuestion();
+    }
+
+    function displayQuestion() {
+        if (currentFilteredQuestions.length === 0) {
+            questionText.innerHTML = 'لا توجد أسئلة في هذا القسم.';
+            answerText.innerHTML = '';
+            qNumber.textContent = 'سؤال #0';
+            qSection.textContent = '';
+            progressInfo.textContent = '0 / 0';
+            progressBarInner.style.width = '0%';
+            prevBtn.disabled = true;
+            nextBtn.disabled = true;
+            toggleAnswerBtn.style.display = 'none';
+            answerBlock.classList.remove('show');
+            return;
+        }
+
+        const q = currentFilteredQuestions[currentIndex];
+        questionText.innerHTML = q.q;
+        answerText.innerHTML = q.a;
+        qNumber.textContent = 'سؤال #' + q.id;
+        qSection.textContent = q.sectionName;
+        progressInfo.textContent = (currentIndex + 1) + ' / ' + currentFilteredQuestions.length;
+        progressBarInner.style.width = ((currentIndex + 1) / currentFilteredQuestions.length * 100) + '%';
+
+        answerVisible = false;
+        answerBlock.classList.remove('show');
+        toggleAnswerBtn.textContent = '👁️ إظهار الإجابة';
+        toggleAnswerBtn.classList.remove('hidden-btn');
+        toggleAnswerBtn.style.display = 'block';
+
+        prevBtn.disabled = (currentIndex === 0);
+        nextBtn.disabled = (currentIndex === currentFilteredQuestions.length - 1);
+
+        document.getElementById('questionCard').scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+
+    function toggleAnswer() {
+        answerVisible = !answerVisible;
+        if (answerVisible) {
+            answerBlock.classList.add('show');
+            toggleAnswerBtn.textContent = '🙈 إخفاء الإجابة';
+            toggleAnswerBtn.classList.add('hidden-btn');
+        } else {
+            answerBlock.classList.remove('show');
+            toggleAnswerBtn.textContent = '👁️ إظهار الإجابة';
+            toggleAnswerBtn.classList.remove('hidden-btn');
+        }
+    }
+
+    function nextQuestion() {
+        if (currentIndex < currentFilteredQuestions.length - 1) {
+            currentIndex++;
+            answerVisible = false;
+            displayQuestion();
+        }
+    }
+
+    function prevQuestion() {
+        if (currentIndex > 0) {
+            currentIndex--;
+            answerVisible = false;
+            displayQuestion();
+        }
+    }
+
+    function toggleDarkMode() {
+        isDarkMode = !isDarkMode;
+        document.body.classList.toggle('dark-mode', isDarkMode);
+        modeToggle.textContent = isDarkMode ? '☀️' : '🌙';
+        localStorage.setItem('sciencePart2DarkMode', isDarkMode ? '1' : '0');
+    }
+
+    // ==================== SECTION TABS ====================
+    document.getElementById('sectionTabs').addEventListener('click', function(e) {
+        if (e.target.classList.contains('section-tab')) {
+            document.querySelectorAll('.section-tab').forEach(t => t.classList.remove('active'));
+            e.target.classList.add('active');
+            currentSection = e.target.getAttribute('data-section');
+            filterQuestions(currentSection);
+        }
+    });
+
+    // ==================== KEYBOARD ====================
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'ArrowRight') { e.preventDefault(); nextQuestion(); }
+        else if (e.key === 'ArrowLeft') { e.preventDefault(); prevQuestion(); }
+        else if (e.key === ' ' || e.key === 'Spacebar') { e.preventDefault(); toggleAnswer(); }
+    });
+
+    // ==================== SWIPE ====================
+    let touchStartX = 0;
+    document.addEventListener('touchstart', function(e) { touchStartX = e.changedTouches[0].screenX; });
+    document.addEventListener('touchend', function(e) {
+        const diff = touchStartX - e.changedTouches[0].screenX;
+        if (Math.abs(diff) > 60) {
+            if (diff > 0) nextQuestion();
+            else prevQuestion();
+        }
+    });
+
+    // ==================== INIT ====================
+    function init() {
+        const savedDark = localStorage.getItem('sciencePart2DarkMode');
+        if (savedDark === '1') {
+            isDarkMode = true;
+            document.body.classList.add('dark-mode');
+            modeToggle.textContent = '☀️';
+        }
+        filterQuestions('all');
+    }
+
+    init();
+</script>
+
+</body>
+</html>

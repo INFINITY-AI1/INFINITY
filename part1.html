@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>المراجعة النهائية - العلوم - الصف الثالث الإعدادي</title>
+    <style>
+        :root {
+            --bg: #f0f4f8;
+            --card-bg: #ffffff;
+            --text: #1a1a2e;
+            --text-secondary: #64748b;
+            --question-bg: #eff6ff;
+            --question-text: #1e40af;
+            --question-border: #3b82f6;
+            --answer-bg: #f0fdf4;
+            --answer-text: #166534;
+            --answer-border: #22c55e;
+            --accent: #2563eb;
+            --accent-light: #dbeafe;
+            --accent-dark: #1d4ed8;
+            --gold: #f59e0b;
+            --gold-light: #fef3c7;
+            --nav-btn: #2563eb;
+            --nav-btn-text: #fff;
+            --progress-bg: #e2e8f0;
+            --progress-fill: #2563eb;
+            --shadow: 0 4px 20px rgba(0,0,0,0.08);
+            --header-bg: linear-gradient(135deg, #0f172a 0%, #1e3a5f 50%, #1e40af 100%);
+            --header-text: #ffffff;
+            --badge-bg: #fef3c7;
+            --badge-text: #92400e;
+            --divider: #e2e8f0;
+        }
+
+        .dark-mode {
+            --bg: #0f172a;
+            --card-bg: #1e293b;
+            --text: #e2e8f0;
+            --text-secondary: #94a3b8;
+            --question-bg: #1e3a5f;
+            --question-text: #93c5fd;
+            --question-border: #3b82f6;
+            --answer-bg: #064e3b;
+            --answer-text: #a7f3d0;
+            --answer-border: #10b981;
+            --accent: #3b82f6;
+            --accent-light: #1e3a5f;
+            --accent-dark: #60a5fa;
+            --gold: #fbbf24;
+            --gold-light: #78350f;
+            --nav-btn: #3b82f6;
+            --shadow: 0 4px 20px rgba(0,0,0,0.4);
+            --header-bg: linear-gradient(135deg, #020617 0%, #0f172a 50%, #1e3a5f 100%);
+            --badge-bg: #78350f;
+            --badge-text: #fcd34d;
+            --divider: #334155;
+            --progress-bg: #334155;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', 'Cairo', 'Tahoma', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.8;
+            transition: background 0.3s, color 0.3s;
+            -webkit-tap-highlight-color: transparent;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .container {
+            max-width: 500px;
+            margin: 0 auto;
+            width: 100%;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 0 10px;
+        }
+
+        /* === HEADER === */
+        .header {
+            background: var(--header-bg);
+            color: var(--header-text);
+            padding: 16px 14px 12px;
+            text-align: center;
+            border-radius: 0 0 24px 24px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.25);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .header .main-title {
+            font-size: 1.15rem;
+            font-weight: 900;
+            letter-spacing: 0.3px;
+            margin-bottom: 2px;
+        }
+        .header .sub-title {
+            font-size: 0.9rem;
+            font-weight: 700;
+            opacity: 0.9;
+            margin-bottom: 6px;
+        }
+        .header .teacher-info {
+            font-size: 0.8rem;
+            font-weight: 600;
+            opacity: 0.95;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            flex-wrap: wrap;
+        }
+        .header .phone-number {
+            direction: ltr;
+            display: inline-block;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        /* === YOUTUBE PROMO === */
+        .youtube-promo {
+            background: linear-gradient(135deg, #ff0000 0%, #cc0000 100%);
+            color: #fff;
+            padding: 10px 14px;
+            margin: 10px 0;
+            border-radius: 14px;
+            text-align: center;
+            font-weight: 700;
+            font-size: 0.85rem;
+            animation: pulse-promo 2s infinite;
+            box-shadow: 0 4px 15px rgba(255,0,0,0.3);
+            cursor: pointer;
+            text-decoration: none;
+            display: block;
+        }
+        @keyframes pulse-promo {
+            0%, 100% { box-shadow: 0 4px 15px rgba(255,0,0,0.3); }
+            50% { box-shadow: 0 6px 25px rgba(255,0,0,0.5); }
+        }
+        .youtube-promo .yt-icon {
+            font-size: 1.3rem;
+        }
+        .youtube-promo .yt-text {
+            display: block;
+            font-size: 0.75rem;
+            font-weight: 500;
+            margin-top: 2px;
+            opacity: 0.9;
+        }
+
+        /* === QUESTION CARD === */
+        .question-card-wrapper {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 6px 0;
+        }
+        .question-card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 18px 16px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--divider);
+            transition: all 0.3s;
+            position: relative;
+            min-height: 250px;
+        }
+        .question-card .badge-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 12px;
+            flex-wrap: wrap;
+        }
+        .question-card .q-number {
+            background: var(--accent);
+            color: #fff;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+        .question-card .q-section {
+            background: var(--badge-bg);
+            color: var(--badge-text);
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 700;
+        }
+        .question-card .question-block {
+            background: var(--question-bg);
+            border-right: 5px solid var(--question-border);
+            padding: 14px;
+            border-radius: 12px;
+            margin-bottom: 10px;
+        }
+        .question-card .question-label {
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: var(--question-border);
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .question-card .question-text {
+            font-weight: 700;
+            color: var(--question-text);
+            font-size: 0.95rem;
+            line-height: 1.7;
+        }
+        .question-card .answer-block {
+            background: var(--answer-bg);
+            border-right: 5px solid var(--answer-border);
+            padding: 14px;
+            border-radius: 12px;
+            margin-top: 6px;
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .question-card .answer-block.show {
+            display: block;
+        }
+        .question-card .answer-label {
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: var(--answer-border);
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .question-card .answer-text {
+            color: var(--answer-text);
+            font-size: 0.9rem;
+            line-height: 1.8;
+        }
+        .toggle-answer-btn {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            margin-top: 8px;
+            background: var(--answer-border);
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: inherit;
+        }
+        .toggle-answer-btn:active {
+            transform: scale(0.96);
+            opacity: 0.85;
+        }
+        .toggle-answer-btn.hidden-btn {
+            background: #94a3b8;
+        }
+
+        /* === NAVIGATION === */
+        .nav-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 0;
+        }
+        .nav-btn {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 14px;
+            font-size: 0.9rem;
+            font-weight: 700;
+            cursor: pointer;
+            background: var(--nav-btn);
+            color: var(--nav-btn-text);
+            transition: all 0.2s;
+            font-family: inherit;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+        }
+        .nav-btn:active {
+            transform: scale(0.95);
+            opacity: 0.85;
+        }
+        .nav-btn:disabled {
+            background: #94a3b8;
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        .nav-btn:disabled:active {
+            transform: none;
+            opacity: 0.5;
+        }
+        .progress-info {
+            text-align: center;
+            font-size: 0.78rem;
+            font-weight: 700;
+            color: var(--text-secondary);
+            padding: 2px 0;
+        }
+        .progress-bar-outer {
+            width: 100%;
+            height: 6px;
+            background: var(--progress-bg);
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 4px 0;
+        }
+        .progress-bar-inner {
+            height: 100%;
+            background: var(--progress-fill);
+            border-radius: 10px;
+            transition: width 0.3s ease;
+        }
+
+        /* === DARK MODE TOGGLE === */
+        .mode-toggle {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: var(--card-bg);
+            border: 2px solid var(--divider);
+            font-size: 1.2rem;
+            cursor: pointer;
+            z-index: 200;
+            box-shadow: var(--shadow);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+        .mode-toggle:active {
+            transform: scale(0.9);
+        }
+
+        /* === RESPONSIVE === */
+        @media (max-width: 360px) {
+            .header .main-title { font-size: 1rem; }
+            .question-card .question-text { font-size: 0.85rem; }
+            .question-card .answer-text { font-size: 0.8rem; }
+            .nav-btn { font-size: 0.8rem; padding: 10px; }
+        }
+        @media (min-width: 400px) {
+            .question-card { padding: 22px 18px; }
+            .question-card .question-text { font-size: 1rem; }
+        }
+
+        /* === SECTION TABS (TOP) === */
+        .section-tabs {
+            display: flex;
+            gap: 6px;
+            padding: 8px 0;
+            overflow-x: auto;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+            flex-shrink: 0;
+        }
+        .section-tabs::-webkit-scrollbar { display: none; }
+        .section-tab {
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.72rem;
+            font-weight: 700;
+            white-space: nowrap;
+            cursor: pointer;
+            border: 2px solid var(--divider);
+            background: var(--card-bg);
+            color: var(--text);
+            transition: all 0.2s;
+            flex-shrink: 0;
+            font-family: inherit;
+        }
+        .section-tab.active {
+            background: var(--accent);
+            color: #fff;
+            border-color: var(--accent);
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <!-- HEADER -->
+    <div class="header">
+        <div class="main-title">🧬 المراجعة النهائية لمادة العلوم</div>
+        <div class="sub-title">الصف الثالث الإعدادي</div>
+        <div class="teacher-info">
+            👨‍🏫 أ/ إسماعيل عماد &nbsp;|&nbsp; <span class="phone-number">📞 01122104596</span>
+        </div>
+    </div>
+
+    <!-- YOUTUBE PROMO -->
+    <a href="https://youtube.com/@ismall-i1m?si=q7IptcVQXOr9c9Z_" target="_blank" class="youtube-promo">
+        <span class="yt-icon">▶️</span> عشان تدعمنا اشترك في القناة فضلاً وليس أمراً
+        <span class="yt-text">هينزل عليها شرح الصف الأول الثانوي دوس هنا 🔔</span>
+    </a>
+
+    <!-- SECTION TABS -->
+    <div class="section-tabs" id="sectionTabs">
+        <button class="section-tab active" data-section="all">📚 الكل</button>
+        <button class="section-tab" data-section="genetics">🧬 الوراثة</button>
+        <button class="section-tab" data-section="nuclear">☢️ النشاط الإشعاعي</button>
+        <button class="section-tab" data-section="electricity">⚡ الكهرباء</button>
+        <button class="section-tab" data-section="reactions">🧪 التفاعلات</button>
+    </div>
+
+    <!-- QUESTION CARD -->
+    <div class="question-card-wrapper">
+        <div class="question-card" id="questionCard">
+            <div class="badge-row">
+                <span class="q-number" id="qNumber">سؤال #1</span>
+                <span class="q-section" id="qSection">الوراثة</span>
+            </div>
+            <div class="question-block">
+                <div class="question-label">📝 السؤال</div>
+                <div class="question-text" id="questionText"></div>
+            </div>
+            <button class="toggle-answer-btn" id="toggleAnswerBtn" onclick="toggleAnswer()">
+                👁️ إظهار الإجابة
+            </button>
+            <div class="answer-block" id="answerBlock">
+                <div class="answer-label">✅ الإجابة</div>
+                <div class="answer-text" id="answerText"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- NAVIGATION -->
+    <div class="progress-bar-outer">
+        <div class="progress-bar-inner" id="progressBarInner"></div>
+    </div>
+    <div class="progress-info" id="progressInfo">1 / 82</div>
+    <div class="nav-row">
+        <button class="nav-btn" id="prevBtn" onclick="prevQuestion()">◀ السابق</button>
+        <button class="nav-btn" id="nextBtn" onclick="nextQuestion()">التالي ▶</button>
+    </div>
+</div>
+
+<!-- DARK MODE TOGGLE -->
+<button class="mode-toggle" id="modeToggle" onclick="toggleDarkMode()" title="الوضع الليلي">🌙</button>
+
+<script>
+    // ==================== ALL QUESTIONS DATA ====================
+    const allQuestions = [
+        // GENETICS (1-14)
+        { id:1, section:'genetics', sectionName:'الوراثة', q:'علل: يعتبر العالم مندل مؤسس علم الوراثة.', a:'لأنه وضع القوانين الأساسية لعلم الوراثة.' },
+        { id:2, section:'genetics', sectionName:'الوراثة', q:'علل: يعرف القانون الأول لمندل بقانون انعزال العوامل.', a:'لأن زوج العوامل الوراثية ينعزل عند تكوين الأمشاج.' },
+        { id:3, section:'genetics', sectionName:'الوراثة', q:'علل: عند تلقيح نبات بسلة أصفر القرون نقي مع نبات بسلة أخضر القرون نقي ينتج نباتات جميعها ذات قرون خضراء.', a:'لأن صفة اللون الأخضر للقرون هي الصفة السائدة التي تسود على صفة اللون الأصفر (الصفة المتنحية) في الجيل الأول.' },
+        { id:4, section:'genetics', sectionName:'الوراثة', q:'ما المقصود بكل من:<br>① الصفات الوراثية<br>② الصفة المتنحية<br>③ قانون مندل الأول<br>④ الفرد النقي', a:'<b>① الصفات الوراثية:</b> صفات تنتقل من جيل إلى آخر.<br><b>② الصفة المتنحية:</b> الصفة التي لا تظهر إلا عند اجتماع عاملين متماثلين للصفة المتنحية.<br><b>③ قانون مندل الأول:</b> ينص على انعزال عاملي الصفة الوراثية عند تكوين الأمشاج.<br><b>④ الفرد النقي:</b> فرد يحمل عاملين متماثلين للصفة (سائدين أو متنحيين).' },
+        { id:5, section:'genetics', sectionName:'الوراثة', q:'وضح على أساس علمي ناتج تزاوج نبات بسلة أزهاره حمراء نقية مع نبات بسلة أزهاره بيضاء، مع ذكر النسبة بين الأفراد الناتجة حتى الجيل الثاني موضحاً الأمشاج.', a:'<b>الجيل الأول (F1):</b> تظهر جميع الأفراد بأزهار حمراء هجينة (100% صفة سائدة).<br><b>الجيل الثاني (F2):</b> تظهر أزهار حمراء وأزهار بيضاء بنسبة 3 : 1 (75% سائد، 25% متنحي).' },
+        { id:6, section:'genetics', sectionName:'الوراثة', q:'أكمل ما يأتي بكلمات مناسبة:<br>① تعلم السباحة من الصفات .......<br>② انتزع مندل أسدية الأزهار أثناء تجاربه لمنع حدوث ....... بينما غطى مياسم الأزهار بعد تلقيحها لمنع حدوث .......<br>③ في نبات البسلة تعتبر صفة ....... الساق من الصفات السائدة بينما صفة الشكل ....... للبذور من الصفات المتنحية.<br>④ يتحكم في كل صفة وراثية عاملان ....... ينعزلان أثناء تكوين .......', a:'① <b>المكتسبة</b>.<br>② <b>التلقيح الذاتي</b>، <b>التلقيح الخلطي</b>.<br>③ <b>طول</b>، <b>المجعد</b>.<br>④ <b>وراثيان</b>، <b>الأمشاج (الجاميتات)</b>.' },
+        { id:7, section:'genetics', sectionName:'الوراثة', q:'اكتب المفهوم العلمي الذي تدل عليه العبارات التالية:<br>① الصفة التي تظهر في جميع أفراد الجيل الأول في تجارب مندل.<br>② الخلايا التي يتم بواسطتها انتقال العوامل الوراثية من الآباء إلى الأبناء.<br>③ ظهور صفة وراثية في أفراد الجيل الأول عند تزاوج فردين يحمل كل منهما صفة وراثية مضادة للصفة التي يحملها الآخر.<br>④ الصفة التي لا تظهر إلا عند اجتماع عاملين متماثلين للصفة المتنحية.', a:'① <b>الصفة السائدة</b>.<br>② <b>الأمشاج (الجاميتات)</b>.<br>③ <b>مبدأ السيادة التامة</b>.<br>④ <b>الصفة المتنحية</b>.' },
+        { id:8, section:'genetics', sectionName:'الوراثة', q:'علل:<br>① تعلم المشي لدى الأطفال لا يعتبر صفة وراثية.<br>② انتزع مندل أسدية بعض أزهار البسلة قبل إجراء تجاربه عليها.<br>③ الصفة المتنحية تكون دائماً نقية.', a:'① لأنها من <b>الصفات المكتسبة</b> (التي لا تنتقل من جيل لآخر).<br>② <b>لمنع التلقيح الذاتي</b> ولضمان حدوث التلقيح الخلطي المقصود.<br>③ لأنها لا تظهر إلا عند اجتماع عاملي الصفة المتنحية معاً.' },
+        { id:9, section:'genetics', sectionName:'الوراثة', q:'صوب ما تحته خط:<br>① الصفات المكتسبة هي الصفات التي تنتقل من جيل إلى آخر.<br>② يعد مندل مؤسس علم الوراثة.<br>③ القدرة على الكتابة صفة وراثية.', a:'① الصواب: <b>الصفات الوراثية</b>.<br>② <b>جريجور مندل</b> (العبارة صحيحة).<br>③ الصواب: <b>صفة مكتسبة</b>.' },
+        { id:10, section:'genetics', sectionName:'الوراثة', q:'وضح على أسس وراثية ناتج تزاوج نبات بسلة طويل الساق هجين مع نبات بسلة قصير الساق نقي.', a:'ينتج أفراد الجيل بنسبة <b>50% طويل الساق هجين</b>، و<b>50% قصير الساق نقي</b> (نسبة 1:1).' },
+        { id:11, section:'genetics', sectionName:'الوراثة', q:'أكمل المخطط التالي (الصفات الوراثية):', a:'• <b>الصفات السائدة</b> (نقية، هجينة).<br>• <b>الصفات المتنحية</b> (دائماً نقية).' },
+        { id:12, section:'genetics', sectionName:'الوراثة', q:'وضح أوجه التشابه والاختلاف في الصفات الوراثية بين أفراد النوع الواحد من خلال دراسة كيفية انتقالها من جيل إلى آخر.', a:'<b>علم الوراثة:</b> العلم الذي يفسر أوجه التشابه والاختلاف في الصفات الوراثية بين أفراد النوع الواحد من خلال دراسة كيفية انتقالها من جيل إلى آخر.<br><b>الصفات الوراثية:</b> الصفات التي تنتقل من جيل إلى آخر.<br><b>الصفات المكتسبة:</b> الصفات غير القابلة للانتقال من جيل إلى آخر.<br><b>الصفة السائدة:</b> الصفة التي تظهر عند اجتماع عاملين متماثلين للصفة السائدة أو عامل للصفة السائدة مع عامل للصفة المتنحية.<br><b>الصفة المتنحية:</b> الصفة التي لا تظهر إلا عند اجتماع عاملين متماثلين للصفة المتنحية.' },
+        { id:13, section:'genetics', sectionName:'الوراثة', q:'اختر الإجابة الصحيحة:<br>① نسبة الأبناء التي تحمل صفة متنحية لأبوين كلاهما هجين هي ........<br>② تظهر الصفة المتنحية على أحد الأبناء إذا ورد من الأبوين ........<br>③ عند تزاوج ذكر وأنثى تركيبهما الوراثي (Bb) فإن التركيب الوراثي Bb يحتمل ظهوره في أبنائهما بنسبة ........', a:'① <b>25%</b>.<br>② <b>جينين متنحيين</b>.<br>③ <b>50%</b>.' },
+        { id:14, section:'genetics', sectionName:'الوراثة', q:'أكمل العبارات التالية:<br>① في بسلة يسود اللون الأخضر للبذور ....... على اللون الأصفر لها بينما يسود اللون ....... للأزهار ....... على اللون الأخضر لها.<br>② الأفراد التي ترث على الأقل جين الصفة السائدة سوف تظهر عليها صفة .......', a:'① <b>القرون</b>، <b>القرمزي</b>، <b>السائدة</b> (يسود اللون الأخضر للبذور على الأصفر، ويسود اللون القرمزي للأزهار على الأبيض).<br>② <b>السائدة</b>.' },
+
+        // NUCLEAR (15-24)
+        { id:15, section:'nuclear', sectionName:'النشاط الإشعاعي', q:'أكمل العبارات التالية:<br>① تستخدم الطاقة النووية في الطب في .......<br>② يرجع اكتشاف ظاهرة النشاط الإشعاعي إلى العالم ....... حيث اكتشف انبعاث أشعة غير مرئية من عنصر .......<br>③ تدفن النفايات ذات الإشعاعات الضعيفة والمتوسطة في باطن الأرض محاطة بـ .......<br>④ وحدة قياس الإشعاع الممتص .......<br>⑤ التعرض للإشعاع له تأثيرات ....... تؤدي إلى حدوث تغيرات في تركيب الكروموسومات الجنسية وتكون نتيجتها .......<br>⑥ تعد قوى ....... المصدر الذي تستمد منه الذرة قوتها الهائلة والتي تعرف باسم .......', a:'① <b>تشخيص وعلاج بعض الأمراض مثل السرطان</b>.<br>② <b>هنري بيكريل</b>، <b>اليورانيوم</b>.<br>③ <b>الصخور أو الأسمنت</b>.<br>④ <b>السيفرت (Sv)</b>.<br>⑤ <b>وراثية</b>، <b>ولادة أطفال مشوهين (مُصابين بتشوهات خلقية)</b>.<br>⑥ <b>الترابط النووي</b>، <b>الطاقة النووية</b>.' },
+        { id:16, section:'nuclear', sectionName:'النشاط الإشعاعي', q:'اكتب المصطلح العلمي:<br>① عملية التحول التلقائي لذرات بعض العناصر الموجودة في الطبيعة للوصول إلى تركيب أكثر استقراراً.<br>② الإشعاع أو الطاقة النووية المنطلقة أثناء التفاعلات النووية التي يمكن التحكم فيها وتجرى بالمفاعلات النووية.<br>③ التغيرات التي تطرأ على الكائن الحي ذاته نتيجة التعرض للإشعاعات.<br>④ وحدة قياس الإشعاع الممتص.<br>⑤ العناصر التي تحتوي أنوية ذراتها على عدد من النيوترونات يزيد عن العدد اللازم لاستقرار.<br>⑥ ارتفاع كمية الإشعاعات النووية وزيادة نوعيتها في البيئة.', a:'① <b>ظاهرة النشاط الإشعاعي الطبيعي</b>.<br>② <b>النشاط الإشعاعي الصناعي</b>.<br>③ <b>التأثيرات البدنية للإشعاعات النووية</b>.<br>④ <b>السيفرت (Sv)</b>.<br>⑤ <b>العناصر المشعة الطبيعية</b>.<br>⑥ <b>التلوث الإشعاعي</b>.' },
+        { id:17, section:'nuclear', sectionName:'النشاط الإشعاعي', q:'علل:<br>① يجب أن تكون المنطقة المختارة لحفظ النفايات المشعة مستقرة.<br>② للإشعاعات تأثيرات وراثية.<br>③ بعد وقوع حادثة تشيرنوبل اكتشفت نظائر مشعة في الأطعمة.', a:'① حتى لا تنتشر النفايات المشعة في البيئة المحيطة بفعل الهزات الأرضية الناتجة عن حدوث <b>الزلازل</b>.<br>② لأنه يؤدي إلى حدوث تغيرات في تركيب الكروموسومات الجنسية للآباء ويكون نتيجتها <b>ولادة أطفال غير عاديين (مصابين بتشوهات خلقية)</b>.<br>③ لأن الانفجار أدى إلى صعود غبار ذري محمل بالعناصر المشعة شكل سحابة نقلتها الرياح إلى معظم دول أوروبا؛ وحين سقطت الأمطار، انتقلت هذه العناصر إلى التربة والنباتات ومنها إلى الحيوانات، مما أدى لتلوث اللحوم والألبان والنباتات بالنظائر المشعة.' },
+        { id:18, section:'nuclear', sectionName:'النشاط الإشعاعي', q:'أكمل العبارات التالية:<br>① التفاعلات النووية الصناعية التي يمكن التحكم فيها تستخدم في الأغراض ....... بينما التي لا يمكن التحكم فيها تستخدم في الأغراض .......<br>② تستخدم الإشعاعات النووية للقضاء على الآفات ....... وتحسين سلالات .......<br>③ تستخدم الطاقة النووية في مجال التنقيب عن ....... والمياه الجوفية.<br>④ تنقسم مصادر التلوث الإشعاعي إلى نوعين هما مصادر ....... ومصادر .......<br>⑤ التعرض لإشعاع بجرعات هائلة يدمر نخاع العظام والطحال والجهاز الهضمي و .......<br>⑥ يؤدي التعرض لجرعات إشعاعية صغيرة لعدة أشهر إلى ظهور تأثيرات ....... و ....... وخلوية.<br>⑦ من أمثلة التأثيرات الخلوية للإشعاع، تغير التركيب الكيميائي لـ ....... مما يجعله غير قادر على حمل الأكسجين إلى جميع خلايا الجسم.<br>⑧ تدفن النفايات المشعة بعيداً تماماً عن مجرى ....... وعن المناطق المعرضة لحدوث .......', a:'① <b>السلمية</b>، <b>العسكرية</b>.<br>② <b>الزراعية</b>، <b>بعض النباتات</b>.<br>③ <b>البترول</b> والمياه الجوفية.<br>④ <b>طبيعية</b>، <b>صناعية</b>.<br>⑤ <b>الجهاز العصبي المركزي</b>.<br>⑥ <b>بدنية</b>، <b>وراثية</b>.<br>⑦ <b>هيموجلوبين الدم</b>.<br>⑧ <b>المياه الجوفية</b>، <b>الزلازل</b>.' },
+        { id:19, section:'nuclear', sectionName:'النشاط الإشعاعي', q:'اكتب المصطلح العلمي:<br>① تغير التركيب الكيميائي لهيموجلوبين الدم ويصبح غير قادر على حمل الأكسجين إلى جميع خلايا الجسم.<br>② اكتشاف انبعاث أشعة غير منظورة من عنصر اليورانيوم لها القدرة على النفاذ خلال المواد الصلبة.<br>③ شرائح تستخدم في تصنيع أجزاء الكمبيوتر والدوائر الإلكترونية المدمجة بالأجهزة الكهربائية.<br>④ مفاعل نووي - 26 أبريل 1986 م.', a:'① <b>التأثيرات الخلوية للإشعاعات النووية</b>.<br>② <b>ظاهرة النشاط الإشعاعي</b> (العالم هنري بيكريل).<br>③ <b>شرائح السيلكون</b>.<br>④ <b>مفاعل تشيرنوبل</b>.' },
+        { id:20, section:'nuclear', sectionName:'النشاط الإشعاعي', q:'علل:<br>① للنشاط الإشعاعي مصادر طبيعية وأخرى صناعية.<br>② يطلق على بعض العناصر اسم العناصر المشعة.<br>③ تتماسك نواة العناصر المستقرة بالرغم من وجود قوى تنافر داخلها.<br>④ يحدث تحول تلقائي لعنصر السيزيوم.<br>⑤ تميل أنوية ذرات العناصر المشعة إلى إصدار إشعاعات غير مرئية بشكل تلقائي.', a:'① لأن المصادر الطبيعية تنتج عن الإشعاعات الصادرة من العناصر المشعة الموجودة في الطبيعة والأشعة الكونية، بينما الصناعية تنتج عن تفجير القنابل الذرية والمفاعلات النووية.<br>② لاحتواء نواة ذراتها على عدد من النيوترونات يزيد عن العدد اللازم لاستقرارها، مما يجعلها غير مستقرة وتصدر إشعاعات غير مرئية بشكل تلقائي.<br>③ بسبب وجود <b>"قوى الترابط النووي"</b> التي تربط مكونات النواة ببعضها وتتغلب على قوى التنافر الناشئة بين البروتونات الموجبة.<br>④ لتتخلص نواته من الطاقة الزائدة وتصل إلى تركيب أكثر استقراراً.<br>⑤ للتخلص من الطاقة الزائدة والعدد الفائض من الجسيمات داخل النواة غير المستقرة (المشعة)، لكي تصل الذرة إلى حالة الاستقرار.' },
+        { id:21, section:'nuclear', sectionName:'النشاط الإشعاعي', q:'صمم درع وقاية مناسب لكل نوع من أنواع الإشعاع مستخدم المواد: (ورق، بلاستيك، رصاص).', a:'• <b>جسيمات ألفا:</b> الورق (لأن قدرتها على النفاذ ضعيفة جداً).<br>• <b>جسيمات بيتا:</b> البلاستيك (لأن قدرتها على النفاذ متوسطة).<br>• <b>أشعة جاما:</b> الرصاص (لأن قدرتها على النفاذ عالية جداً وتتطلب مواد عالية الكثافة).' },
+        { id:22, section:'nuclear', sectionName:'النشاط الإشعاعي', q:'ما هي طرق الوقاية من التلوث الإشعاعي؟', a:'• <b>الورق:</b> يمنع جسيمات ألفا (قدرتها على النفاذ ضعيفة).<br>• <b>البلاستيك:</b> يمنع جسيمات بيتا (قدرتها على النفاذ متوسطة).<br>• <b>الرصاص أو الخرسانة:</b> يمنع أشعة جاما (قدرتها على النفاذ عالية جداً، ولا يوقفها إلا الدروع السميكة من المواد الثقيلة).' },
+        { id:23, section:'nuclear', sectionName:'النشاط الإشعاعي', q:'حاول تصميم نموذج عملي للدرع باستخدام المواد المتاحة.', a:'يتم تصميم درع <b>متعدد الطبقات</b>: يبدأ بطبقة داخلية خفيفة، ويليه طبقة من البلاستيك المقوى، وينتهي بطبقة خارجية سميكة من الرصاص لحجب الأشعة الأكثر خطورة (جاما).' },
+        { id:24, section:'nuclear', sectionName:'النشاط الإشعاعي', q:'حادثة انفجار المفاعل النووي "تشيرنوبل" من أخطر المصادر الصناعية للتلوث الإشعاعي. وضح ذلك.', a:'نتيجة تسرب الكثير من الغبار الذري المحمل بالعناصر المشعة مكوناً سحب ضخمة حملتها الرياح إلى معظم دول أوروبا الشرقية والغربية، وعندما سقطت الأمطار حاملة معها العناصر المشعة إلى سطح الأرض أدى ذلك إلى تلوث الأغذية والمشروبات بالعناصر المشعة.' },
+
+        // ELECTRICITY (25-31)
+        { id:25, section:'electricity', sectionName:'الكهرباء', q:'قارن بين: الأميتر والريوستات المنزلقة، الخلايا الكهروكيميائية والمولدات الكهربائية، التيار المستمر والتيار المتردد.', a:'• <b>الأميتر:</b> قياس شدة التيار. <b>الريوستات:</b> التحكم في شدة التيار (المقاومة).<br>• <b>الخلايا الكهروكيميائية:</b> تحول الطاقة الكيميائية إلى كهربائية (تيار مستمر). <b>المولدات:</b> تحول الحركية إلى كهربائية (تيار متردد).<br>• <b>التيار المستمر:</b> ثابت الشدة والاتجاه. <b>التيار المتردد:</b> متغير الشدة والاتجاه.' },
+        { id:26, section:'electricity', sectionName:'الكهرباء', q:'احسب القوة الدافعة الكهربائية الكلية للدوائر الكهربائية:<br>الدائرة الأولى: 4 بطاريات 1.5 فولت على التوالي.<br>الدائرة الثانية: بطارية 3 فولت + بطارية 1.5 فولت.<br>الدائرة الثالثة: بطارية 2 فولت + بطارية 1.5 فولت.<br>الدائرة الرابعة: فرعين متوازيين كل منهما 2 فولت.', a:'<b>الدائرة الأولى:</b> 1.5 + 1.5 + 1.5 + 1.5 = <b>6 فولت</b> (توصيل توالي).<br><b>الدائرة الثانية:</b> 3 + 1.5 = <b>4.5 فولت</b>.<br><b>الدائرة الثالثة:</b> 2 + 1.5 = <b>3.5 فولت</b>.<br><b>الدائرة الرابعة:</b> 2 + 2 = <b>4 فولت</b> (توصيل توازي ثم توالي).' },
+        { id:27, section:'electricity', sectionName:'الكهرباء', q:'احسب قيمة ق.د.ك لكل بطارية:<br>الدائرة (1): ثلاث أعمدة 1.5 فولت.<br>الدائرة (2): توصيل مختلط.', a:'<b>الدائرة (1):</b> البطارية <b>4.5 فولت</b> (ثلاث أعمدة 1.5).<br><b>الدائرة (2):</b> <b>4.5 فولت</b> (توصيل مختلط).' },
+        { id:28, section:'electricity', sectionName:'الكهرباء', q:'احسب قراءة الأميتر في الدوائر الكهربائية:<br>① المقاومة 10 أوم، فرق الجهد 4 فولت.<br>② 4 بطاريات 2 فولت على التوالي، المقاومة 8 أوم.', a:'① شدة التيار = فرق الجهد ÷ المقاومة = 4 ÷ 10 = <b>0.4 أمبير</b>.<br>② (أ) ق.د.ك للبطارية = 2 + 2 + 2 + 2 = <b>8 فولت</b>.<br>(ب) قراءة الأميتر = 8 ÷ 8 = <b>1 أمبير</b>.' },
+        { id:29, section:'electricity', sectionName:'الكهرباء', q:'في الدائرة الكهربائية: 3 بطاريات 2 فولت على التوالي، المقاومة 3 أوم. احسب:<br>(أ) قراءة الأميتر.<br>(ب) مقدار الشغل المبذول لنقل كمية من الكهربية بين النقطتين أ، ب خلال 5 دقيقة.', a:'(أ) ق.د.ك للبطارية = 2 + 2 + 2 = <b>6 فولت</b>. شدة التيار = 6 ÷ 3 = <b>2 أمبير</b>.<br>(ب) الزمن بالثواني = 5 × 60 = 300 ثانية. كمية الكهربية = 2 × 300 = 600 كولوم. الشغل = 6 × 600 = <b>3600 جول</b>.' },
+        { id:30, section:'electricity', sectionName:'الكهرباء', q:'ما النتائج المترتبة على زيادة عدد الأعمدة الكهربية الموصلة على التوالي والتوازي بالنسبة للقوة الدافعة الكهربائية؟', a:'• <b>التوصيل على التوالي:</b> تزداد القوة الدافعة الكهربائية الكلية للبطارية.<br>• <b>التوصيل على التوازي:</b> لا تتغير القوة الدافعة الكهربائية للبطارية (تظل ثابتة وتساوي ق.د.ك للعمود الواحد).' },
+        { id:31, section:'electricity', sectionName:'الكهرباء', q:'قارن بين: التيار المستمر والتيار المتردد من حيث الاستخدام، إمكانية النقل، والتحويل.', a:'• <b>التيار المستمر:</b> يستخدم في عمليات الطلاء الكهربي وتشغيل بعض الأجهزة، لا يمكن نقله لمسافات طويلة، ولا يمكن تحويله لتيار متردد بسهولة.<br>• <b>التيار المتردد:</b> يستخدم في إنارة المنازل والشوارع وتشغيل معظم الأجهزة، يمكن نقله لمسافات قصيرة أو طويلة، ويمكن تحويله لتيار مستمر.' },
+
+        // CHEMICAL REACTIONS (32-82)
+        { id:32, section:'reactions', sectionName:'التفاعلات الكيميائية', q:'تفاعلات الإحلال البسيط (فلز محل فلز و فلز محل هيدروجين الماء أو هيدروجين الحمض).', a:'تفاعلات يتم فيها إحلال عنصر نشط محل عنصر آخر أقل منه نشاطاً في محلول أحد مركباته.' },
+        { id:33, section:'reactions', sectionName:'التفاعلات الكيميائية', q:'علل: سرعة التفاعل الكيميائي تزداد بارتفاع درجة الحرارة.', a:'لأن ارتفاع درجة الحرارة يزيد من سرعة الجزيئات المتفاعلة، مما يؤدي إلى زيادة عدد التصادمات بينها.' },
+        { id:34, section:'reactions', sectionName:'التفاعلات الكيميائية', q:'وحدة قياس تركيز المتفاعلات أو النواتج (مول / لتر) تسمى ........', a:'<b>المولارية</b> (أو التركيز المولي).' },
+        { id:35, section:'reactions', sectionName:'التفاعلات الكيميائية', q:'نترات الصوديوم و HgO مواد لا تعطي ناتج أسود عند التسخين ويتصاعد غاز الأكسجين. وضح.', a:'تتحلل <b>نترات الصوديوم (NaNO₃)</b> بالحرارة إلى نتريت الصوديوم (NaNO₂) وأكسجين، بينما <b>أكسيد الزئبق (HgO)</b> الأحمر يتحلل إلى زئبق (فضي) وأكسجين.' },
+        { id:36, section:'reactions', sectionName:'التفاعلات الكيميائية', q:'تفاعل التعادل هو تفاعل حمض مع قلوي لتكوين ملح وماء.', a:'يؤدي هذا التفاعل إلى إبطال مفعول الحمض بواسطة القلوي.' },
+        { id:37, section:'reactions', sectionName:'التفاعلات الكيميائية', q:'في بداية التفاعل يكون تركيز المتفاعلات 100% وتركيز النواتج 0%.', a:'هذه هي <b>الحالة الابتدائية</b> للتفاعل قبل حدوث التغير الكيميائي.' },
+        { id:38, section:'reactions', sectionName:'التفاعلات الكيميائية', q:'في نهاية التفاعل يكون تركيز المتفاعلات 0% وتركيز النواتج 100%.', a:'هذه هي حالة <b>اكتمال التفاعل الكيميائي</b>.' },
+        { id:39, section:'reactions', sectionName:'التفاعلات الكيميائية', q:'الأكسدة والاختزال عمليتان متلازمتان.', a:'تحدثان في نفس الوقت؛ فالمادة التي تأكسد تفقد إلكترونات (وتختزل مادة أخرى)، والمادة التي تختزل تكتسب إلكترونات (وتؤكسد مادة أخرى).' },
+        { id:40, section:'reactions', sectionName:'التفاعلات الكيميائية', q:'التغير في تركيز المواد المتفاعلة والناتجة من التفاعل في وحدة الزمن.', a:'هذا هو تعريف <b>سرعة التفاعل الكيميائي</b>.' },
+        { id:41, section:'reactions', sectionName:'التفاعلات الكيميائية', q:'تفاعل الصودا الكاوية مع الزيت من التفاعلات البطيئة نسبياً.', a:'تحتاج هذه التفاعلات إلى وقت لإتمامها، على عكس التفاعلات الأيونية اللحظية.' },
+        { id:42, section:'reactions', sectionName:'التفاعلات الكيميائية', q:'علل: المركبات الأيونية تفاعلاتها أسرع من المركبات التساهمية.', a:'لأن المركبات الأيونية تتفكك إلى أيونات في الماء، بينما المركبات التساهمية لا تتفكك ويكون التفاعل بين جزيئات.' },
+        { id:43, section:'reactions', sectionName:'التفاعلات الكيميائية', q:'الأكسدة عملية كيميائية تفقد فيها ذرة العنصر إلكتروناً أو أكثر.', a:'عملية فقد الإلكترونات هي <b>أكسدة</b>.' },
+        { id:44, section:'reactions', sectionName:'التفاعلات الكيميائية', q:'الاختزال عملية كيميائية تكتسب فيها ذرة العنصر إلكتروناً أو أكثر.', a:'عملية اكتساب الإلكترونات هي <b>اختزال</b>.' },
+        { id:45, section:'reactions', sectionName:'التفاعلات الكيميائية', q:'العامل المؤكسد هو المادة التي تكتسب الأكسجين أو تنزع الهيدروجين أثناء التفاعل. (صوب)', a:'<b>التصحيح:</b> العامل المؤكسد هو المادة التي <b>تعطي الأكسجين</b> أو <b>تأخذ الهيدروجين</b>، أي تساعد غيرها على الأكسدة.' },
+        { id:46, section:'reactions', sectionName:'التفاعلات الكيميائية', q:'العامل المختزل هو المادة التي تكتسب الأكسجين أو تعطي الهيدروجين أثناء التفاعل.', a:'<b>التصحيح:</b> العامل المختزل هو المادة التي <b>تأخذ الأكسجين</b> أو <b>تعطي الهيدروجين</b>، أي تساعد غيرها على الاختزال.' },
+        { id:47, section:'reactions', sectionName:'التفاعلات الكيميائية', q:'متسلسلة النشاط الكيميائي هي ترتيب العناصر الفلزية تنازلياً حسب درجة نشاطها الكيميائي.', a:'قائمة توضح تدرج نشاط الفلزات بالنسبة لبعضها.' },
+        { id:48, section:'reactions', sectionName:'التفاعلات الكيميائية', q:'يحل العنصر الأكثر نشاطاً محل العنصر الأقل نشاطاً.', a:'هذا هو المبدأ الأساسي في تفاعلات <b>الإحلال البسيط</b>.' },
+        { id:49, section:'reactions', sectionName:'التفاعلات الكيميائية', q:'التفاعل الكيميائي هو كسر الروابط الكيميائية الموجودة في جزيئات المواد المتفاعلة وتكوين روابط جديدة في جزيئات المواد الناتجة.', a:'هذا هو <b>تعريف التفاعل الكيميائي</b>.' },
+        { id:50, section:'reactions', sectionName:'التفاعلات الكيميائية', q:'أهمية التفاعلات الكيميائية في حياتنا.', a:'استخدام التفاعلات في تحويل الخامات الطبيعية إلى منتجات مفيدة (تكوين الوقود، الصناعة، الزراعة، الأدوية).' },
+        { id:51, section:'reactions', sectionName:'التفاعلات الكيميائية', q:'تفاعل كربونات الصوديوم مع حمض الهيدروكلوريك المخفف يتصاعد غاز ثاني أكسيد الكربون.', a:'غاز <b>CO₂</b> الناتج يعكر ماء الجير.' },
+        { id:52, section:'reactions', sectionName:'التفاعلات الكيميائية', q:'تفاعل الألومنيوم مع حمض الهيدروكلوريك المخفف يتصاعد غاز الهيدروجين.', a:'يحدث إحلال للألومنيوم محل الهيدروجين.' },
+        { id:53, section:'reactions', sectionName:'التفاعلات الكيميائية', q:'تنحل كبريتات الفلزات إلى أكسيد فلز وثالث أكسيد الكبريت.', a:'بالتسخين، مثل كبريتات النحاس الزرقاء التي تتحلل لأكسيد نحاس أسود وغاز <b>SO₃</b>.' },
+        { id:54, section:'reactions', sectionName:'التفاعلات الكيميائية', q:'زيادة مساحة السطح المعرض للتفاعل تزيد من سرعة التفاعل الكيميائي.', a:'لأن التصادمات تزداد مع زيادة مساحة السطح.' },
+        { id:55, section:'reactions', sectionName:'التفاعلات الكيميائية', q:'بزيادة تركيز المواد المتفاعلة يزداد عدد التصادمات.', a:'كلما زاد التركيز، زادت احتمالية التصادم بين الجزيئات.' },
+        { id:56, section:'reactions', sectionName:'التفاعلات الكيميائية', q:'عند ارتفاع درجة الحرارة يزداد معدل التفاعل الكيميائي بسبب زيادة عدد التصادمات بين الجزيئات المتفاعلة.', a:'طاقة الحركة تزيد مما يرفع احتمالية <b>التصادم الفعال</b>.' },
+        { id:57, section:'reactions', sectionName:'التفاعلات الكيميائية', q:'كتلة العامل الحفاز قبل التفاعل تساوي كتلة العامل الحفاز بعد التفاعل.', a:'العامل الحفاز يشارك في التفاعل دون استهلاك.' },
+        { id:58, section:'reactions', sectionName:'التفاعلات الكيميائية', q:'يحل المغنيسيوم محل النحاس.', a:'لأنه <b>أنشط</b> منه.' },
+        { id:59, section:'reactions', sectionName:'التفاعلات الكيميائية', q:'خامس أكسيد النيتروجين صيغته الكيميائية N₂O₅.', a:'معلومة كيميائية صحيحة.' },
+        { id:60, section:'reactions', sectionName:'التفاعلات الكيميائية', q:'غاز ثاني أكسيد الكربون يعكر ماء الجير الرائق.', a:'اختبار الكشف عن الغاز.' },
+        { id:61, section:'reactions', sectionName:'التفاعلات الكيميائية', q:'ثاني أكسيد المنجنيز عامل حفاز.', a:'مادة تزيد من سرعة التفاعل دون أن تُستهلك.' },
+        { id:62, section:'reactions', sectionName:'التفاعلات الكيميائية', q:'تنحل أكاسيد الفلزات إلى فلز وأكسجين.', a:'بالتسخين الشديد.' },
+        { id:63, section:'reactions', sectionName:'التفاعلات الكيميائية', q:'تنحل نترات الفلزات إلى نتريت فلز وأكسجين.', a:'بالتسخين مثل نترات الصوديوم: 2NaNO₃ → 2NaNO₂ + O₂' },
+        { id:64, section:'reactions', sectionName:'التفاعلات الكيميائية', q:'تنحل هيدروكسيدات الفلزات إلى أكسيد فلز وبخار ماء.', a:'بالتسخين.' },
+        { id:65, section:'reactions', sectionName:'التفاعلات الكيميائية', q:'تنحل كربونات الفلزات إلى أكسيد فلز وثاني أكسيد الكربون.', a:'بالتسخين مثل كربونات النحاس.' },
+        { id:66, section:'reactions', sectionName:'التفاعلات الكيميائية', q:'تنحل كبريتات الفلزات إلى أكسيد فلز وثالث أكسيد الكبريت.', a:'بالتسخين.' },
+        { id:67, section:'reactions', sectionName:'التفاعلات الكيميائية', q:'لماذا التفاعلات الأيونية أسرع من التفاعلات التساهمية؟', a:'لأن التفاعل في الأيونية يتم بين أيونات، وفي التساهمية يتم بين جزيئات.' },
+        { id:68, section:'reactions', sectionName:'التفاعلات الكيميائية', q:'انحلال حراري لنترات الصوديوم (2NaNO₃ → 2NaNO₂ + O₂).', a:'يتحول اللون الأبيض إلى أبيض مصفر.' },
+        { id:69, section:'reactions', sectionName:'التفاعلات الكيميائية', q:'إمرار غاز الهيدروجين على أكسيد نحاس ساخن (H₂ + CuO → H₂O + Cu).', a:'يختزل الهيدروجين أكسيد النحاس الأسود إلى نحاس أحمر.' },
+        { id:70, section:'reactions', sectionName:'التفاعلات الكيميائية', q:'إضافة خرائط نحاس إلى حمض الهيدروكلوريك المخفف لا يحدث تفاعل.', a:'لأن النحاس يلي الهيدروجين في متسلسلة النشاط الكيميائي.' },
+        { id:71, section:'reactions', sectionName:'التفاعلات الكيميائية', q:'يتفكك خامس أكسيد النيتروجين إلى ثاني أكسيد النيتروجين وأكسجين.', a:'معادلة التفكك: 2N₂O₅ → 4NO₂ + O₂' },
+        { id:72, section:'reactions', sectionName:'التفاعلات الكيميائية', q:'وحدة قياس الشغل تساوي فولت × أمبير × ثانية.', a:'لأن الشغل = فرق الجهد (فولت) × شدة التيار (أمبير) × الزمن (ثانية).' },
+        { id:73, section:'reactions', sectionName:'التفاعلات الكيميائية', q:'تفاعل الصوديوم مع الماء (2Na + 2H₂O → 2NaOH + H₂).', a:'تفاعل <b>إحلال بسيط</b>.' },
+        { id:74, section:'reactions', sectionName:'التفاعلات الكيميائية', q:'العامل الحفاز مادة تغير من سرعة التفاعل الكيميائي دون أن تتغير.', a:'تعريف العامل الحفاز.' },
+        { id:75, section:'reactions', sectionName:'التفاعلات الكيميائية', q:'مسحوق كلوريد الصوديوم يتفاعل أسرع من مكعب كلوريد الصوديوم.', a:'بسبب زيادة مساحة السطح المعرض للتفاعل.' },
+        { id:76, section:'reactions', sectionName:'التفاعلات الكيميائية', q:'تفاعل الماغنسيوم مع كبريتات النحاس (Mg + CuSO₄ → MgSO₄ + Cu).', a:'يختفي اللون الأزرق لكبريتات النحاس وتترسب مادة حمراء (نحاس).' },
+        { id:77, section:'reactions', sectionName:'التفاعلات الكيميائية', q:'تفاعل أكسيد النحاس مع الهيدروجين: لماذا يعتبر أكسيد النحاس عاملاً مؤكسداً؟', a:'لأنه أعطى الأكسجين للهيدروجين أثناء التفاعل.' },
+        { id:78, section:'reactions', sectionName:'التفاعلات الكيميائية', q:'ما اسم العملية التي حدثت لأكسيد النحاس؟', a:'عملية <b>اختزال</b>.' },
+        { id:79, section:'reactions', sectionName:'التفاعلات الكيميائية', q:'ما اسم العملية التي حدثت للهيدروجين؟', a:'عملية <b>أكسدة</b>.' },
+        { id:80, section:'reactions', sectionName:'التفاعلات الكيميائية', q:'كيف تحصل على راسب أبيض من نترات الفضة؟', a:'بإضافتها إلى محلول كلوريد الصوديوم: NaCl + AgNO₃ → NaNO₃ + AgCl↓' },
+        { id:81, section:'reactions', sectionName:'التفاعلات الكيميائية', q:'تفاعل كربونات الصوديوم مع حمض الهيدروكلوريك (Na₂CO₃ + 2HCl → 2NaCl + H₂O + CO₂).', a:'تصاعد غاز يعكر ماء الجير.' },
+        { id:82, section:'reactions', sectionName:'التفاعلات الكيميائية', q:'عند تسخين كربونات النحاس يتغير لونها إلى الأسود.', a:'بسبب تكون <b>أكسيد النحاس الأسود</b>.' }
+    ];
+
+    // ==================== STATE ====================
+    let currentFilteredQuestions = [...allQuestions];
+    let currentIndex = 0;
+    let currentSection = 'all';
+    let isDarkMode = false;
+    let answerVisible = false;
+
+    // ==================== DOM ====================
+    const questionText = document.getElementById('questionText');
+    const answerText = document.getElementById('answerText');
+    const answerBlock = document.getElementById('answerBlock');
+    const toggleAnswerBtn = document.getElementById('toggleAnswerBtn');
+    const qNumber = document.getElementById('qNumber');
+    const qSection = document.getElementById('qSection');
+    const progressInfo = document.getElementById('progressInfo');
+    const progressBarInner = document.getElementById('progressBarInner');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const modeToggle = document.getElementById('modeToggle');
+
+    // ==================== FUNCTIONS ====================
+    function filterQuestions(section) {
+        if (section === 'all') {
+            currentFilteredQuestions = [...allQuestions];
+        } else {
+            currentFilteredQuestions = allQuestions.filter(q => q.section === section);
+        }
+        currentIndex = 0;
+        answerVisible = false;
+        displayQuestion();
+    }
+
+    function displayQuestion() {
+        if (currentFilteredQuestions.length === 0) {
+            questionText.innerHTML = 'لا توجد أسئلة في هذا القسم.';
+            answerText.innerHTML = '';
+            qNumber.textContent = 'سؤال #0';
+            qSection.textContent = '';
+            progressInfo.textContent = '0 / 0';
+            progressBarInner.style.width = '0%';
+            prevBtn.disabled = true;
+            nextBtn.disabled = true;
+            toggleAnswerBtn.style.display = 'none';
+            answerBlock.classList.remove('show');
+            return;
+        }
+
+        const q = currentFilteredQuestions[currentIndex];
+        questionText.innerHTML = q.q;
+        answerText.innerHTML = q.a;
+        qNumber.textContent = 'سؤال #' + q.id;
+        qSection.textContent = q.sectionName;
+        progressInfo.textContent = (currentIndex + 1) + ' / ' + currentFilteredQuestions.length;
+        progressBarInner.style.width = ((currentIndex + 1) / currentFilteredQuestions.length * 100) + '%';
+
+        // Reset answer visibility
+        answerVisible = false;
+        answerBlock.classList.remove('show');
+        toggleAnswerBtn.textContent = '👁️ إظهار الإجابة';
+        toggleAnswerBtn.classList.remove('hidden-btn');
+        toggleAnswerBtn.style.display = 'block';
+
+        // Update nav buttons
+        prevBtn.disabled = (currentIndex === 0);
+        nextBtn.disabled = (currentIndex === currentFilteredQuestions.length - 1);
+
+        // Scroll to card
+        document.getElementById('questionCard').scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+
+    function toggleAnswer() {
+        answerVisible = !answerVisible;
+        if (answerVisible) {
+            answerBlock.classList.add('show');
+            toggleAnswerBtn.textContent = '🙈 إخفاء الإجابة';
+            toggleAnswerBtn.classList.add('hidden-btn');
+        } else {
+            answerBlock.classList.remove('show');
+            toggleAnswerBtn.textContent = '👁️ إظهار الإجابة';
+            toggleAnswerBtn.classList.remove('hidden-btn');
+        }
+    }
+
+    function nextQuestion() {
+        if (currentIndex < currentFilteredQuestions.length - 1) {
+            currentIndex++;
+            answerVisible = false;
+            displayQuestion();
+        }
+    }
+
+    function prevQuestion() {
+        if (currentIndex > 0) {
+            currentIndex--;
+            answerVisible = false;
+            displayQuestion();
+        }
+    }
+
+    function toggleDarkMode() {
+        isDarkMode = !isDarkMode;
+        document.body.classList.toggle('dark-mode', isDarkMode);
+        modeToggle.textContent = isDarkMode ? '☀️' : '🌙';
+        localStorage.setItem('scienceDarkMode', isDarkMode ? '1' : '0');
+    }
+
+    // ==================== SECTION TABS ====================
+    document.getElementById('sectionTabs').addEventListener('click', function(e) {
+        if (e.target.classList.contains('section-tab')) {
+            document.querySelectorAll('.section-tab').forEach(t => t.classList.remove('active'));
+            e.target.classList.add('active');
+            currentSection = e.target.getAttribute('data-section');
+            filterQuestions(currentSection);
+        }
+    });
+
+    // ==================== KEYBOARD NAVIGATION ====================
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'ArrowRight') {
+            e.preventDefault();
+            nextQuestion();
+        } else if (e.key === 'ArrowLeft') {
+            e.preventDefault();
+            prevQuestion();
+        } else if (e.key === ' ' || e.key === 'Spacebar') {
+            e.preventDefault();
+            toggleAnswer();
+        }
+    });
+
+    // ==================== SWIPE SUPPORT ====================
+    let touchStartX = 0;
+    let touchEndX = 0;
+    document.addEventListener('touchstart', function(e) {
+        touchStartX = e.changedTouches[0].screenX;
+    });
+    document.addEventListener('touchend', function(e) {
+        touchEndX = e.changedTouches[0].screenX;
+        const diff = touchStartX - touchEndX;
+        if (Math.abs(diff) > 60) {
+            if (diff > 0) {
+                nextQuestion(); // swipe left -> next
+            } else {
+                prevQuestion(); // swipe right -> prev
+            }
+        }
+    });
+
+    // ==================== INIT ====================
+    function init() {
+        const savedDark = localStorage.getItem('scienceDarkMode');
+        if (savedDark === '1') {
+            isDarkMode = true;
+            document.body.classList.add('dark-mode');
+            modeToggle.textContent = '☀️';
+        }
+        filterQuestions('all');
+    }
+
+    init();
+</script>
+
+</body>
+</html>
