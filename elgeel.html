@@ -96,51 +96,40 @@
       margin-top: 2px;
     }
 
-    /* عداد الزوار - الآن يعرض العدد الحقيقي من Firebase */
+    /* عداد الزوار */
     .visitor-counter {
       background: #ffffff;
       border-radius: 12px;
-      padding: 12px 16px;
+      padding: 10px 16px;
       margin-bottom: 16px;
       border: 1px solid #e4e4e7;
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 10px;
+      gap: 8px;
       font-size: 13px;
       color: #52525b;
       font-weight: 500;
-      transition: all 0.3s;
-    }
-
-    .visitor-counter.loading {
-      opacity: 0.7;
     }
 
     .visitor-number {
       font-weight: 700;
       color: #18181b;
-      font-size: 20px;
+      font-size: 18px;
       background: #f4f4f5;
-      padding: 4px 16px;
-      border-radius: 16px;
-      min-width: 50px;
+      padding: 2px 12px;
+      border-radius: 14px;
+      min-width: 40px;
       text-align: center;
-      transition: all 0.3s;
-    }
-
-    .visitor-icon {
-      font-size: 16px;
     }
 
     .live-indicator {
-      width: 8px;
-      height: 8px;
+      width: 7px;
+      height: 7px;
       background: #16a34a;
       border-radius: 50%;
       display: inline-block;
       animation: pulse 1.5s infinite;
-      margin-left: 4px;
     }
 
     @keyframes pulse {
@@ -148,11 +137,11 @@
       50% { opacity: 0.4; }
     }
 
-    /* الكورسات المتاحة */
+    /* اختيار الكورس */
     .courses-selection {
       background: #ffffff;
       border-radius: 14px;
-      padding: 14px 12px;
+      padding: 16px 14px;
       margin-bottom: 16px;
       border: 1px solid #e4e4e7;
     }
@@ -160,53 +149,107 @@
     .courses-title {
       font-weight: 600;
       color: #27272a;
-      margin-bottom: 12px;
-      font-size: 14px;
+      margin-bottom: 14px;
+      font-size: 15px;
       padding-right: 2px;
+      text-align: center;
     }
 
-    .checkbox-group {
+    .courses-options {
       display: flex;
       flex-direction: column;
-      gap: 8px;
+      gap: 10px;
     }
 
-    .course-option {
+    .course-option-card {
+      background: #fafafa;
+      border: 2px solid #e4e4e7;
+      border-radius: 14px;
+      padding: 14px;
+      cursor: pointer;
+      transition: all 0.2s;
+      position: relative;
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+    }
+
+    .course-option-card:hover {
+      border-color: #a1a1aa;
+      background: #f5f5f5;
+    }
+
+    .course-option-card.selected {
+      border-color: #18181b;
+      background: #f0f0f0;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+    }
+
+    .radio-indicator {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      border: 2px solid #a1a1aa;
+      flex-shrink: 0;
       display: flex;
       align-items: center;
-      background: #fafafa;
-      padding: 10px 14px;
-      border-radius: 12px;
-      border: 1px solid #e4e4e7;
-      transition: all 0.15s;
-      cursor: pointer;
+      justify-content: center;
+      margin-top: 2px;
+      transition: all 0.2s;
     }
 
-    .course-option.selected {
-      background: #f0f0f0;
-      border-color: #a1a1aa;
+    .course-option-card.selected .radio-indicator {
+      border-color: #18181b;
+      background: #18181b;
     }
 
-    .course-option input[type="checkbox"] {
-      width: 17px;
-      height: 17px;
-      accent-color: #3f3f46;
-      margin-left: 12px;
-      flex-shrink: 0;
-      cursor: pointer;
+    .radio-indicator::after {
+      content: '';
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: white;
+      display: none;
     }
 
-    .course-label {
-      font-weight: 600;
-      font-size: 15px;
+    .course-option-card.selected .radio-indicator::after {
+      display: block;
+    }
+
+    .course-info {
+      flex: 1;
+    }
+
+    .course-name {
+      font-weight: 700;
+      font-size: 16px;
       color: #18181b;
+      margin-bottom: 4px;
     }
 
     .course-desc {
       font-size: 12px;
-      font-weight: 400;
       color: #71717a;
-      margin-top: 1px;
+      font-weight: 400;
+      line-height: 1.5;
+    }
+
+    .course-badge {
+      display: inline-block;
+      background: #f4f4f5;
+      color: #52525b;
+      padding: 2px 10px;
+      border-radius: 10px;
+      font-size: 11px;
+      font-weight: 600;
+      margin-top: 6px;
+      border: 1px solid #e4e4e7;
+    }
+
+    .foundation-highlight {
+      background: #fef3c7;
+      color: #92400e;
+      border-color: #fcd34d;
     }
 
     .start-date {
@@ -298,23 +341,6 @@
       background: #ffffff;
     }
 
-    .grade-foundation-note {
-      display: none;
-      font-size: 12px;
-      font-weight: 500;
-      color: #52525b;
-      background: #f4f4f5;
-      padding: 8px 12px;
-      border-radius: 8px;
-      margin-top: 4px;
-      border-right: 3px solid #71717a;
-      line-height: 1.5;
-    }
-
-    .grade-foundation-note.visible {
-      display: block;
-    }
-
     .btn-reserve {
       background: #27272a;
       border: none;
@@ -349,6 +375,20 @@
       align-items: center;
       gap: 6px;
       border: 1px solid #bbf7d0;
+    }
+
+    .error-message {
+      background: #fef2f2;
+      color: #dc2626;
+      padding: 12px;
+      border-radius: 12px;
+      margin-top: 8px;
+      font-weight: 500;
+      font-size: 13px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      border: 1px solid #fecaca;
     }
 
     /* معلومات المعلم */
@@ -404,53 +444,40 @@
     <!-- 1. الهيدر -->
     <div class="header">
       <span class="school-badge">مدرسة الجيل الجديد الخاصة</span>
-      <h1>كورسات تدريبية سنوية</h1>
+      <h1>كورسات برمجة تدريبية</h1>
       <div class="subhead">الانطلاق 5 يوليو 2025</div>
     </div>
 
-    <!-- 2. عداد الزوار - العدد الحقيقي من Firebase -->
-    <div class="visitor-counter" id="visitorCounterBox">
-      <span class="visitor-icon">👁️</span>
-      <span>عدد زوار الصفحة:</span>
+    <!-- 2. عداد الزوار -->
+    <div class="visitor-counter">
+      <span>👁️ عدد زوار الصفحة:</span>
       <span class="visitor-number" id="visitorCount">...</span>
-      <span class="live-indicator" title="تحديث مباشر"></span>
+      <span class="live-indicator"></span>
     </div>
 
-    <!-- 3. الكورسات المتاحة -->
+    <!-- 3. اختيار الكورس -->
     <div class="courses-selection">
-      <div class="courses-title">اختر الكورس المناسب (يمكن اختيار أكثر من كورس)</div>
-      <div class="checkbox-group" id="coursesCheckboxGroup">
-        <label class="course-option" id="courseOption1">
-          <input type="checkbox" value="برمجة" class="course-checkbox">
-          <div>
-            <div class="course-label">كورس برمجة</div>
-            <div class="course-desc">أساسيات قوية ومشاريع عملية</div>
+      <div class="courses-title">اختر الكورس المناسب</div>
+      <div class="courses-options">
+        <div class="course-option-card" id="courseOption1" data-course="برمجة">
+          <div class="radio-indicator"></div>
+          <div class="course-info">
+            <div class="course-name">كورس برمجة</div>
+            <div class="course-desc">أساسيات البرمجة والمشاريع العملية لجميع المراحل الدراسية</div>
+            <span class="course-badge">مناسب للصف الرابع حتى الثالث الإعدادي</span>
           </div>
-        </label>
-        <label class="course-option" id="courseOption2">
-          <input type="checkbox" value="روبوتات (روبوتيكس)" class="course-checkbox">
-          <div>
-            <div class="course-label">كورس روبوتات (روبوتيكس)</div>
-            <div class="course-desc">تصميم وبناء وبرمجة الروبوت</div>
+        </div>
+        <div class="course-option-card" id="courseOption2" data-course="برمجة - تأسيس ثانوي">
+          <div class="radio-indicator"></div>
+          <div class="course-info">
+            <div class="course-name">برمجة للصف الثالث الإعدادي</div>
+            <div class="course-desc">تأسيس متكامل لمادة البرمجة استعداداً للصف الأول الثانوي بمنهج متدرج</div>
+            <span class="course-badge foundation-highlight">تأسيس ثانوي</span>
           </div>
-        </label>
-        <label class="course-option" id="courseOption3">
-          <input type="checkbox" value="ذكاء اصطناعي" class="course-checkbox">
-          <div>
-            <div class="course-label">كورس ذكاء اصطناعي</div>
-            <div class="course-desc">خوارزميات وتطبيقات ذكية</div>
-          </div>
-        </label>
-        <label class="course-option" id="courseOption4">
-          <input type="checkbox" value="لغة إسبانية" class="course-checkbox">
-          <div>
-            <div class="course-label">كورس لغة إسبانية</div>
-            <div class="course-desc">محادثة وقواعد ومهارات تواصل</div>
-          </div>
-        </label>
+        </div>
       </div>
       <div class="start-date">
-        موعد الانطلاق: من 5 يوليو (7/5) - في المدرسة
+        📅 موعد الانطلاق: من 5 يوليو (7/5) - في المدرسة
       </div>
     </div>
 
@@ -471,7 +498,7 @@
       </div>
     </div>
 
-    <!-- 5. فورم التسجيل (ظاهر دائماً) -->
+    <!-- 5. فورم التسجيل -->
     <form id="studentForm" class="registration-form">
       <div class="form-group">
         <label>الاسم الثلاثي</label>
@@ -492,15 +519,12 @@
           <option value="الثاني الإعدادي">الثاني الإعدادي</option>
           <option value="الثالث الإعدادي">الثالث الإعدادي</option>
         </select>
-        <div id="gradeFoundationNote" class="grade-foundation-note">
-          تأسيس الصف الثالث الإعدادي لمادة البرمجة استعداداً للصف الأول الثانوي – منهج متدرج يناسب جميع المراحل.
-        </div>
       </div>
       <button type="submit" class="btn-reserve" id="reserveButton">
         حجز الكورس
       </button>
       <div id="successAlert" class="success-message" style="display: none;">
-        تم الحجز بنجاح. سيتم التواصل معك عبر الواتساب لتوضيح تفاصيل الكورس وسعره.
+        ✅ تم الحجز بنجاح. سيتم التواصل معك عبر الواتساب لتوضيح تفاصيل الكورس وسعره.
       </div>
     </form>
 
@@ -538,115 +562,94 @@
         const serverTimestamp = window.firestoreServerTimestamp;
         const getDocsRef = window.firestoreGetDocs;
 
-        const checkboxes = document.querySelectorAll('.course-checkbox');
-        const courseOptions = document.querySelectorAll('.course-option');
+        // عناصر الواجهة
+        const courseOption1 = document.getElementById('courseOption1');
+        const courseOption2 = document.getElementById('courseOption2');
         const studentForm = document.getElementById('studentForm');
         const fullNameInput = document.getElementById('fullName');
         const phoneInput = document.getElementById('phoneNumber');
         const gradeSelect = document.getElementById('gradeLevel');
         const reserveBtn = document.getElementById('reserveButton');
         const successAlert = document.getElementById('successAlert');
-        const foundationNote = document.getElementById('gradeFoundationNote');
         const visitorCountEl = document.getElementById('visitorCount');
-        const visitorCounterBox = document.getElementById('visitorCounterBox');
 
-        // ========== دالة جلب عدد الزوار الحقيقي من Firebase ==========
+        // المتغيرات
+        let selectedCourse = null;
+
+        // ========== عداد الزوار ==========
         async function fetchRealVisitorCount() {
           try {
             const visitorsCol = collectionRef(db, "visitors");
             const snapshot = await getDocsRef(visitorsCol);
-            return snapshot.size; // العدد الحقيقي للوثائق
+            return snapshot.size;
           } catch (error) {
-            console.error("❌ خطأ في جلب عدد الزوار:", error);
+            console.error("خطأ في جلب عدد الزوار:", error);
             return null;
           }
         }
 
-        // ========== دالة تحديث عرض العداد ==========
         async function updateVisitorDisplay() {
           const count = await fetchRealVisitorCount();
           if (count !== null) {
             visitorCountEl.textContent = count;
-            visitorCounterBox.classList.remove('loading');
           } else {
             visitorCountEl.textContent = '...';
           }
         }
 
-        // ========== تسجيل زيارة جديدة ==========
         async function recordNewVisitor() {
           try {
             const visitorsCol = collectionRef(db, "visitors");
             await addDocRef(visitorsCol, {
               visitedAt: serverTimestamp(),
-              page: "تسجيل كورسات الجيل الجديد",
+              page: "تسجيل كورسات الجيل الجديد - برمجة",
               userAgent: navigator.userAgent.substring(0, 100)
             });
-            console.log("✅ تم تسجيل زيارة جديدة في Firebase");
-            
-            // تحديث العداد مباشرة بعد التسجيل
             await updateVisitorDisplay();
           } catch (error) {
-            console.error("❌ خطأ في تسجيل الزيارة:", error);
-            // حتى لو فشل التسجيل، نعرض العدد الحالي
+            console.error("خطأ في تسجيل الزيارة:", error);
             await updateVisitorDisplay();
           }
         }
 
-        // ========== المنطق الرئيسي للزائر ==========
         async function handleVisitorLogic() {
           const hasVisitedThisSession = sessionStorage.getItem('visitorRecorded');
-
           if (!hasVisitedThisSession) {
-            // أول زيارة في هذه الجلسة - نسجلها في Firebase
             sessionStorage.setItem('visitorRecorded', 'true');
             await recordNewVisitor();
           } else {
-            // الزائر موجود بالفعل في الجلسة - فقط اعرض العدد الحقيقي
             await updateVisitorDisplay();
           }
         }
 
-        // تنفيذ منطق الزائر
         handleVisitorLogic();
 
-        // ========== تحديث مظهر البطاقات ==========
-        function updateSelectedStyles() {
-          checkboxes.forEach((cb, index) => {
-            const optionDiv = courseOptions[index];
-            if (cb.checked) {
-              optionDiv.classList.add('selected');
-            } else {
-              optionDiv.classList.remove('selected');
-            }
-          });
+        // ========== اختيار الكورس ==========
+        function selectCourse(courseElement) {
+          // إزالة التحديد من الكل
+          courseOption1.classList.remove('selected');
+          courseOption2.classList.remove('selected');
+          
+          // إضافة التحديد للعنصر المختار
+          courseElement.classList.add('selected');
+          selectedCourse = courseElement.dataset.course;
         }
 
-        // إظهار/إخفاء ملاحظة التأسيس حسب الصف المختار
-        function toggleFoundationNote() {
-          if (gradeSelect.value === 'الثالث الإعدادي') {
-            foundationNote.classList.add('visible');
-          } else {
-            foundationNote.classList.remove('visible');
-          }
-        }
-
-        checkboxes.forEach(cb => {
-          cb.addEventListener('change', updateSelectedStyles);
+        courseOption1.addEventListener('click', function() {
+          selectCourse(this);
         });
 
-        gradeSelect.addEventListener('change', toggleFoundationNote);
+        courseOption2.addEventListener('click', function() {
+          selectCourse(this);
+        });
 
         // ========== معالجة إرسال الفورم ==========
         studentForm.addEventListener('submit', async function(e) {
           e.preventDefault();
 
-          const selectedCourses = Array.from(checkboxes)
-            .filter(cb => cb.checked)
-            .map(cb => cb.value);
-
-          if (selectedCourses.length === 0) {
-            alert('من فضلك اختر كورس واحد على الأقل قبل الحجز.');
+          // التحقق من اختيار كورس
+          if (!selectedCourse) {
+            alert('من فضلك اختر كورس قبل الحجز.');
             return;
           }
 
@@ -668,9 +671,10 @@
               studentName: fullName,
               phoneNumber: phone,
               gradeLevel: grade,
-              selectedCourses: selectedCourses,
+              selectedCourse: selectedCourse,
+              courseType: selectedCourse === 'برمجة - تأسيس ثانوي' ? 'تأسيس ثانوي' : 'برمجة عامة',
               submittedAt: serverTimestamp(),
-              source: "مدرسة الجيل الجديد - نموذج كورسات",
+              source: "مدرسة الجيل الجديد - نموذج كورسات البرمجة",
               teacher: "أ/ إسماعيل عماد",
               read: false
             });
@@ -678,9 +682,11 @@
             // إظهار رسالة النجاح
             successAlert.style.display = 'flex';
             studentForm.reset();
-            checkboxes.forEach(cb => cb.checked = false);
-            updateSelectedStyles();
-            foundationNote.classList.remove('visible');
+            
+            // إلغاء اختيار الكورس
+            courseOption1.classList.remove('selected');
+            courseOption2.classList.remove('selected');
+            selectedCourse = null;
 
             // إخفاء رسالة النجاح بعد 6 ثواني
             setTimeout(() => {
@@ -697,9 +703,6 @@
             reserveBtn.textContent = 'حجز الكورس';
           }
         });
-
-        updateSelectedStyles();
-        toggleFoundationNote();
       }
     })();
   </script>
