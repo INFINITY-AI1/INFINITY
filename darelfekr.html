@@ -1,0 +1,878 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
+  <title>مدرسة دار الفكر الخاصة | كورس البرمجة</title>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-app.js";
+    import { getFirestore, collection, addDoc, serverTimestamp, getDocs } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-firestore.js";
+    import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-analytics.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyBysr4ZEHTY_ojej_onmso3d09sz6uU65A",
+      authDomain: "infinity-ai-bd879.firebaseapp.com",
+      projectId: "infinity-ai-bd879",
+      storageBucket: "infinity-ai-bd879.firebasestorage.app",
+      messagingSenderId: "391390244727",
+      appId: "1:391390244727:web:7cc77f13f3ed0e4221fb72",
+      measurementId: "G-XGW87N67WZ"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const analytics = getAnalytics(app);
+    window.firebaseDB = db;
+    window.firestoreCollection = collection;
+    window.firestoreAddDoc = addDoc;
+    window.firestoreServerTimestamp = serverTimestamp;
+    window.firestoreGetDocs = getDocs;
+  </script>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: linear-gradient(170deg, #fdf8f0 0%, #fef5e7 30%, #fdf2f8 60%, #f8f4ff 100%);
+      font-family: 'Cairo', 'Tajawal', 'Segoe UI', sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      min-height: 100vh;
+      padding: 0;
+      margin: 0;
+      direction: rtl;
+      color: #1a1a2e;
+      position: relative;
+    }
+
+    /* خلفية زخرفية */
+    body::before {
+      content: '';
+      position: fixed;
+      top: -50%;
+      right: -30%;
+      width: 80%;
+      height: 80%;
+      background: radial-gradient(circle, rgba(255,182,108,0.08) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    body::after {
+      content: '';
+      position: fixed;
+      bottom: -30%;
+      left: -20%;
+      width: 70%;
+      height: 70%;
+      background: radial-gradient(circle, rgba(147,112,219,0.06) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .main-wrapper {
+      width: 100%;
+      max-width: 480px;
+      position: relative;
+      z-index: 1;
+      padding: 0 0 100px 0;
+    }
+
+    /* الهيدر */
+    .hero-section {
+      background: linear-gradient(135deg, #5c1f5e 0%, #7b2d8b 30%, #8e3a6e 60%, #6d2860 100%);
+      padding: 32px 20px 36px;
+      text-align: center;
+      color: white;
+      position: relative;
+      overflow: hidden;
+      border-radius: 0 0 32px 32px;
+      box-shadow: 0 15px 40px rgba(90, 30, 95, 0.3);
+    }
+
+    .hero-section::before {
+      content: '';
+      position: absolute;
+      top: -40px;
+      right: -40px;
+      width: 140px;
+      height: 140px;
+      background: rgba(255,255,255,0.04);
+      border-radius: 50%;
+    }
+
+    .hero-section::after {
+      content: '';
+      position: absolute;
+      bottom: -30px;
+      left: -30px;
+      width: 100px;
+      height: 100px;
+      background: rgba(255,255,255,0.03);
+      border-radius: 50%;
+    }
+
+    .hero-badge {
+      display: inline-block;
+      background: rgba(255,255,255,0.15);
+      backdrop-filter: blur(10px);
+      color: #ffd6a5;
+      padding: 6px 18px;
+      border-radius: 24px;
+      font-weight: 600;
+      font-size: 12px;
+      letter-spacing: 0.5px;
+      margin-bottom: 14px;
+      border: 1px solid rgba(255,255,255,0.2);
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-title {
+      font-size: 26px;
+      font-weight: 900;
+      margin: 8px 0 6px;
+      line-height: 1.4;
+      position: relative;
+      z-index: 1;
+      text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    }
+
+    .hero-subtitle {
+      font-size: 15px;
+      font-weight: 500;
+      opacity: 0.9;
+      position: relative;
+      z-index: 1;
+      color: #f0d4ff;
+      line-height: 1.6;
+    }
+
+    .hero-highlight {
+      display: inline-block;
+      background: linear-gradient(135deg, #ffb347, #ff8c42);
+      color: #5c1f5e;
+      padding: 2px 12px;
+      border-radius: 10px;
+      font-weight: 800;
+      font-size: 14px;
+      margin: 0 3px;
+    }
+
+    /* عداد الزوار */
+    .visitor-strip {
+      background: white;
+      margin: -16px 16px 0;
+      border-radius: 14px;
+      padding: 10px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+      position: relative;
+      z-index: 2;
+      border: 1px solid #f0e6f6;
+      font-size: 12px;
+      color: #6b5b7b;
+      font-weight: 600;
+    }
+
+    .visitor-number {
+      font-weight: 800;
+      font-size: 20px;
+      color: #5c1f5e;
+      background: #fdf4ff;
+      padding: 2px 14px;
+      border-radius: 12px;
+    }
+
+    .visitor-dot {
+      width: 7px;
+      height: 7px;
+      background: #22c55e;
+      border-radius: 50%;
+      animation: pulse 1.5s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+
+    /* المحتوى الرئيسي */
+    .content-section {
+      padding: 16px 14px;
+    }
+
+    /* قسم ماذا يقدم الكورس */
+    .section-card {
+      background: white;
+      border-radius: 20px;
+      padding: 20px 16px;
+      margin-bottom: 16px;
+      box-shadow: 0 2px 14px rgba(0,0,0,0.04);
+      border: 1px solid #f3edf7;
+    }
+
+    .section-title {
+      font-size: 18px;
+      font-weight: 800;
+      color: #5c1f5e;
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      line-height: 1.4;
+    }
+
+    .section-title .icon-circle {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #fdf4ff, #fae8ff);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+
+    .intro-text {
+      font-size: 13px;
+      color: #5c4f6b;
+      line-height: 1.8;
+      margin-bottom: 16px;
+      font-weight: 500;
+    }
+
+    /* المهارات */
+    .skill-category {
+      margin-bottom: 14px;
+    }
+
+    .skill-category-title {
+      font-weight: 700;
+      font-size: 14px;
+      color: #7b2d8b;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .skill-list {
+      list-style: none;
+      padding-right: 0;
+    }
+
+    .skill-list li {
+      font-size: 12px;
+      color: #4a3f5c;
+      padding: 7px 12px 7px 8px;
+      margin-bottom: 5px;
+      border-right: 3px solid #e9d5f5;
+      background: #fdfaff;
+      border-radius: 0 8px 8px 0;
+      line-height: 1.6;
+      font-weight: 500;
+      transition: all 0.2s;
+    }
+
+    .skill-list li:hover {
+      border-right-color: #7b2d8b;
+      background: #f8f0fc;
+    }
+
+    .final-level {
+      background: linear-gradient(135deg, #fef9f0, #fdf4ff);
+      border-radius: 14px;
+      padding: 14px;
+      margin-top: 16px;
+      border: 1px solid #f0dfff;
+      font-size: 13px;
+      color: #5c1f5e;
+      font-weight: 600;
+      line-height: 1.7;
+      text-align: center;
+    }
+
+    .final-level span {
+      font-weight: 800;
+      color: #7b2d8b;
+    }
+
+    /* معلومات المدرسة */
+    .school-info-card {
+      background: white;
+      border-radius: 20px;
+      padding: 18px 16px;
+      margin-bottom: 16px;
+      box-shadow: 0 2px 14px rgba(0,0,0,0.04);
+      border: 1px solid #f3edf7;
+    }
+
+    .school-info-title {
+      font-weight: 700;
+      font-size: 14px;
+      color: #5c1f5e;
+      margin-bottom: 10px;
+    }
+
+    .school-detail {
+      font-size: 12px;
+      color: #4a3f5c;
+      line-height: 1.8;
+      margin-bottom: 4px;
+      display: flex;
+      align-items: flex-start;
+      gap: 6px;
+    }
+
+    .school-detail .label {
+      font-weight: 700;
+      color: #7b2d8b;
+      min-width: 55px;
+    }
+
+    /* الزر العائم */
+    .floating-btn {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: linear-gradient(135deg, #ff8c42, #ff6b35);
+      color: white;
+      border: none;
+      padding: 14px 28px;
+      border-radius: 32px;
+      font-weight: 800;
+      font-size: 16px;
+      cursor: pointer;
+      box-shadow: 0 8px 28px rgba(255, 107, 53, 0.4);
+      z-index: 100;
+      transition: all 0.3s;
+      font-family: inherit;
+      white-space: nowrap;
+      animation: float 2s ease-in-out infinite;
+      letter-spacing: 0.3px;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateX(-50%) translateY(0); }
+      50% { transform: translateX(-50%) translateY(-6px); }
+    }
+
+    .floating-btn:hover {
+      background: linear-gradient(135deg, #ff9f5c, #ff7b4a);
+      box-shadow: 0 12px 32px rgba(255, 107, 53, 0.5);
+      transform: translateX(-50%) translateY(-2px);
+    }
+
+    .floating-btn:active {
+      transform: translateX(-50%) scale(0.96);
+    }
+
+    /* المودال */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(30, 10, 40, 0.7);
+      z-index: 200;
+      justify-content: center;
+      align-items: center;
+      padding: 16px;
+      backdrop-filter: blur(4px);
+    }
+
+    .modal-overlay.active {
+      display: flex;
+    }
+
+    .modal-box {
+      background: white;
+      border-radius: 24px;
+      padding: 24px 18px;
+      max-width: 420px;
+      width: 100%;
+      box-shadow: 0 24px 50px rgba(0, 0, 0, 0.3);
+      border: 1px solid #f3edf7;
+      animation: slideUp 0.3s ease;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .modal-header {
+      text-align: center;
+      margin-bottom: 18px;
+    }
+
+    .modal-title {
+      font-size: 20px;
+      font-weight: 800;
+      color: #5c1f5e;
+      margin-bottom: 4px;
+    }
+
+    .modal-subtitle {
+      font-size: 12px;
+      color: #8b7d9b;
+      font-weight: 500;
+    }
+
+    .form-group {
+      margin-bottom: 14px;
+    }
+
+    .form-group label {
+      display: block;
+      font-weight: 600;
+      font-size: 13px;
+      color: #4a2d5c;
+      margin-bottom: 5px;
+    }
+
+    .form-group input,
+    .form-group select {
+      width: 100%;
+      padding: 12px 14px;
+      border: 2px solid #e8ddf2;
+      border-radius: 14px;
+      font-size: 14px;
+      font-family: inherit;
+      background: #fdfaff;
+      color: #2d1b3a;
+      transition: all 0.2s;
+      outline: none;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus {
+      border-color: #7b2d8b;
+      box-shadow: 0 0 0 3px rgba(123, 45, 139, 0.08);
+      background: white;
+    }
+
+    .btn-submit {
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(135deg, #7b2d8b, #5c1f5e);
+      color: white;
+      border: none;
+      border-radius: 16px;
+      font-weight: 700;
+      font-size: 16px;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all 0.2s;
+      margin-top: 6px;
+    }
+
+    .btn-submit:hover {
+      background: linear-gradient(135deg, #8e3a9e, #6d2860);
+      transform: translateY(-1px);
+      box-shadow: 0 8px 20px rgba(90, 30, 95, 0.3);
+    }
+
+    .btn-submit:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .btn-close-modal {
+      width: 100%;
+      padding: 10px;
+      background: transparent;
+      color: #8b7d9b;
+      border: 1px solid #e8ddf2;
+      border-radius: 14px;
+      font-weight: 600;
+      font-size: 13px;
+      cursor: pointer;
+      font-family: inherit;
+      margin-top: 8px;
+      transition: all 0.2s;
+    }
+
+    .btn-close-modal:hover {
+      background: #fdf4ff;
+    }
+
+    .success-box {
+      display: none;
+      text-align: center;
+      padding: 20px;
+    }
+
+    .success-box.show {
+      display: block;
+    }
+
+    .success-icon {
+      font-size: 50px;
+      margin-bottom: 12px;
+    }
+
+    .success-text {
+      font-size: 16px;
+      font-weight: 700;
+      color: #5c1f5e;
+      margin-bottom: 6px;
+    }
+
+    .success-detail {
+      font-size: 13px;
+      color: #6b5b7b;
+      line-height: 1.6;
+    }
+
+    /* تحسينات للجوال */
+    @media (max-width: 400px) {
+      .hero-title {
+        font-size: 22px;
+      }
+      .hero-subtitle {
+        font-size: 13px;
+      }
+      .section-title {
+        font-size: 16px;
+      }
+      .floating-btn {
+        font-size: 14px;
+        padding: 12px 22px;
+        bottom: 18px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="main-wrapper">
+    
+    <!-- الهيرو -->
+    <div class="hero-section">
+      <div class="hero-badge">✨ تحت إشراف إدارة المدرسة</div>
+      <h1 class="hero-title">مدرسة دار الفكر الخاصة</h1>
+      <p class="hero-subtitle">
+        تعلن لأول مرة عن بدء التسجيل في<br>
+        <span class="hero-highlight">كورس البرمجة</span>
+      </p>
+      <p class="hero-subtitle" style="margin-top: 8px; font-size: 13px;">
+        تأسيس الطالب من الصفر حتى الاحتراف<br>حصرياً خلال سنوات الدراسة في المدرسة
+      </p>
+    </div>
+
+    <!-- عداد الزوار -->
+    <div class="visitor-strip">
+      <span>👁️ زوار الصفحة</span>
+      <span class="visitor-number" id="visitorCount">...</span>
+      <span class="visitor-dot"></span>
+    </div>
+
+    <!-- المحتوى -->
+    <div class="content-section">
+      
+      <!-- ماذا يقدم الكورس -->
+      <div class="section-card">
+        <div class="section-title">
+          <span class="icon-circle">💡</span>
+          ماذا يقدم كورس البرمجة؟
+        </div>
+        <p class="intro-text">
+          صُمم كورس البرمجة ليصاحب الطالب خطوة بخطوة خلال رحلته التعليمية، بدءًا من المفاهيم الأساسية وصولًا إلى المهارات المتقدمة المطلوبة في المستقبل الدراسي والمهني.
+        </p>
+        <p class="intro-text" style="font-weight: 700; color: #5c1f5e; margin-bottom: 12px;">
+          ينقسم البرنامج إلى 5 مستويات متدرجة، وعند إتمامها يكتسب الطالب مجموعة من المهارات المهمة:
+        </p>
+
+        <!-- المهارة 1 -->
+        <div class="skill-category">
+          <div class="skill-category-title">🧠 1. تنمية التفكير وحل المشكلات</div>
+          <ul class="skill-list">
+            <li>تعلم تحليل المشكلات الكبيرة وتحويلها إلى خطوات بسيطة ومنظمة</li>
+            <li>تنمية مهارات التفكير المنطقي التي تساعد في الرياضيات والعلوم</li>
+            <li>اكتساب القدرة على البحث عن أكثر من حل للمشكلة الواحدة</li>
+            <li>تطوير مهارة اكتشاف الأخطاء وتصحيحها ذاتياً</li>
+          </ul>
+        </div>
+
+        <!-- المهارة 2 -->
+        <div class="skill-category">
+          <div class="skill-category-title">🚀 2. مهارات المستقبل والاستعداد للعصر الرقمي</div>
+          <ul class="skill-list">
+            <li>الانتقال من مجرد استخدام التكنولوجيا إلى فهمها وصناعتها</li>
+            <li>تصميم الألعاب والقصص التفاعلية والمشروعات البرمجية</li>
+            <li>فهم أساسيات عمل الأجهزة والتطبيقات والأنظمة الرقمية</li>
+            <li>تكوين أساس قوي لمواكبة التخصصات التقنية المطلوبة مستقبلاً</li>
+          </ul>
+        </div>
+
+        <!-- المهارة 3 -->
+        <div class="skill-category">
+          <div class="skill-category-title">📚 3. الاستعداد الأكاديمي</div>
+          <ul class="skill-list">
+            <li>تأسيس قوي لمادة البرمجة المقررة بالمرحلة الثانوية</li>
+            <li>بناء قاعدة معرفية تسهّل دراسة المجالات التقنية والهندسية</li>
+          </ul>
+        </div>
+
+        <!-- المهارة 4 -->
+        <div class="skill-category">
+          <div class="skill-category-title">🌟 4. بناء الشخصية وتنمية المهارات الحياتية</div>
+          <ul class="skill-list">
+            <li>تعزيز الثقة بالنفس من خلال تحويل الأفكار إلى مشروعات حقيقية</li>
+            <li>تنمية مهارات التواصل والعمل الجماعي</li>
+            <li>تدريب الطالب على التفكير المنظم وتحمل المسؤولية</li>
+          </ul>
+        </div>
+
+        <!-- المستوى الخامس -->
+        <div class="final-level">
+          في نهاية <span>المستوى الخامس</span>، يكون الطالب قد تعلم أساسيات لغتي <span>Python</span> و <span>Java</span>، مع امتلاكه قاعدة قوية تؤهله للتطوير المستقبلي في مختلف المجالات التقنية.
+        </div>
+      </div>
+
+      <!-- معلومات المدرسة -->
+      <div class="school-info-card">
+        <div class="school-info-title">📞 معلومات المدرسة</div>
+        <div class="school-detail">
+          <span class="label">الاسم:</span>
+          <span>مدرسة دار الفكر الخاصة</span>
+        </div>
+        <div class="school-detail">
+          <span class="label">الهاتف:</span>
+          <span dir="ltr" style="text-align: right;">01111854506</span>
+        </div>
+        <div class="school-detail">
+          <span class="label">العنوان:</span>
+          <span>شارع الحرية، بجوار الوحدة الصحية - بشتيل</span>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- الزر العائم -->
+    <button class="floating-btn" id="floatingRegisterBtn">
+      ✋ للتسجيل في الكورس اضغط هنا
+    </button>
+
+  </div>
+
+  <!-- مودال التسجيل -->
+  <div class="modal-overlay" id="registerModal">
+    <div class="modal-box">
+      <div id="formContainer">
+        <div class="modal-header">
+          <div class="modal-title">تسجيل في كورس البرمجة</div>
+          <div class="modal-subtitle">مدرسة دار الفكر الخاصة</div>
+        </div>
+        <form id="registrationForm">
+          <div class="form-group">
+            <label>الاسم الثلاثي</label>
+            <input type="text" id="studentName" placeholder="أدخل الاسم كاملاً" required autocomplete="name">
+          </div>
+          <div class="form-group">
+            <label>رقم الواتساب للتواصل</label>
+            <input type="tel" id="whatsappNumber" placeholder="01xxxxxxxxx" required dir="ltr" style="text-align: right;">
+          </div>
+          <div class="form-group">
+            <label>المرحلة الدراسية للعام القادم</label>
+            <select id="gradeLevel" required>
+              <option value="" disabled selected>-- اختر الصف --</option>
+              <option value="الصف الرابع">الصف الرابع</option>
+              <option value="الصف الخامس">الصف الخامس</option>
+              <option value="الصف السادس">الصف السادس</option>
+              <option value="الأول الإعدادي">الأول الإعدادي</option>
+              <option value="الثاني الإعدادي">الثاني الإعدادي</option>
+              <option value="الثالث الإعدادي">الثالث الإعدادي</option>
+            </select>
+          </div>
+          <button type="submit" class="btn-submit" id="submitBtn">تسجيل</button>
+        </form>
+        <button class="btn-close-modal" id="closeModalBtn">إغلاق</button>
+      </div>
+      
+      <!-- رسالة النجاح -->
+      <div class="success-box" id="successBox">
+        <div class="success-icon">🎉</div>
+        <div class="success-text">تم تسجيل طلبك بنجاح!</div>
+        <div class="success-detail">
+          سيتم التواصل معك قريباً عبر الواتساب<br>لإدخالك في جروب الكورس.
+        </div>
+        <button class="btn-submit" id="successCloseBtn" style="margin-top: 16px;">حسناً</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function() {
+      window.addEventListener('load', function() {
+        if (!window.firebaseDB) {
+          setTimeout(initApp, 500);
+          return;
+        }
+        initApp();
+      });
+
+      async function initApp() {
+        const db = window.firebaseDB;
+        const collectionRef = window.firestoreCollection;
+        const addDocRef = window.firestoreAddDoc;
+        const serverTimestamp = window.firestoreServerTimestamp;
+        const getDocsRef = window.firestoreGetDocs;
+
+        // العناصر
+        const visitorCountEl = document.getElementById('visitorCount');
+        const floatingBtn = document.getElementById('floatingRegisterBtn');
+        const registerModal = document.getElementById('registerModal');
+        const closeModalBtn = document.getElementById('closeModalBtn');
+        const registrationForm = document.getElementById('registrationForm');
+        const submitBtn = document.getElementById('submitBtn');
+        const formContainer = document.getElementById('formContainer');
+        const successBox = document.getElementById('successBox');
+        const successCloseBtn = document.getElementById('successCloseBtn');
+
+        const studentNameInput = document.getElementById('studentName');
+        const whatsappNumberInput = document.getElementById('whatsappNumber');
+        const gradeLevelSelect = document.getElementById('gradeLevel');
+
+        // ========== عداد الزوار ==========
+        async function fetchRealVisitorCount() {
+          try {
+            const visitorsCol = collectionRef(db, "visitors_dar_fekr");
+            const snapshot = await getDocsRef(visitorsCol);
+            return snapshot.size;
+          } catch (error) {
+            console.error("خطأ في جلب عدد الزوار:", error);
+            return null;
+          }
+        }
+
+        async function updateVisitorDisplay() {
+          const count = await fetchRealVisitorCount();
+          if (count !== null) {
+            visitorCountEl.textContent = count;
+          } else {
+            visitorCountEl.textContent = '...';
+          }
+        }
+
+        async function recordNewVisitor() {
+          try {
+            const visitorsCol = collectionRef(db, "visitors_dar_fekr");
+            await addDocRef(visitorsCol, {
+              visitedAt: serverTimestamp(),
+              page: "مدرسة دار الفكر - كورس البرمجة",
+              school: "دار الفكر الخاصة",
+              userAgent: navigator.userAgent.substring(0, 100)
+            });
+            await updateVisitorDisplay();
+          } catch (error) {
+            console.error("خطأ في تسجيل الزيارة:", error);
+            await updateVisitorDisplay();
+          }
+        }
+
+        async function handleVisitorLogic() {
+          const hasVisitedThisSession = sessionStorage.getItem('darFekrVisitorRecorded');
+          if (!hasVisitedThisSession) {
+            sessionStorage.setItem('darFekrVisitorRecorded', 'true');
+            await recordNewVisitor();
+          } else {
+            await updateVisitorDisplay();
+          }
+        }
+
+        handleVisitorLogic();
+
+        // ========== المودال ==========
+        function openModal() {
+          registerModal.classList.add('active');
+          formContainer.style.display = 'block';
+          successBox.classList.remove('show');
+          registrationForm.reset();
+          document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal() {
+          registerModal.classList.remove('active');
+          document.body.style.overflow = '';
+        }
+
+        floatingBtn.addEventListener('click', openModal);
+        closeModalBtn.addEventListener('click', closeModal);
+        successCloseBtn.addEventListener('click', closeModal);
+
+        registerModal.addEventListener('click', function(e) {
+          if (e.target === registerModal) {
+            closeModal();
+          }
+        });
+
+        document.addEventListener('keydown', function(e) {
+          if (e.key === 'Escape' && registerModal.classList.contains('active')) {
+            closeModal();
+          }
+        });
+
+        // ========== إرسال الفورم ==========
+        registrationForm.addEventListener('submit', async function(e) {
+          e.preventDefault();
+
+          const studentName = studentNameInput.value.trim();
+          const whatsappNumber = whatsappNumberInput.value.trim();
+          const gradeLevel = gradeLevelSelect.value;
+
+          if (!studentName || !whatsappNumber || !gradeLevel) {
+            alert('يرجى ملء جميع الحقول.');
+            return;
+          }
+
+          submitBtn.disabled = true;
+          submitBtn.textContent = 'جاري التسجيل...';
+
+          try {
+            const col = collectionRef(db, "registrations_dar_fekr");
+            await addDocRef(col, {
+              studentName: studentName,
+              phoneNumber: whatsappNumber,
+              gradeLevel: gradeLevel,
+              course: "كورس البرمجة - 5 مستويات",
+              school: "دار الفكر الخاصة",
+              submittedAt: serverTimestamp(),
+              source: "صفحة كورس البرمجة - دار الفكر",
+              read: false
+            });
+
+            // إظهار رسالة النجاح
+            formContainer.style.display = 'none';
+            successBox.classList.add('show');
+            registrationForm.reset();
+
+          } catch (error) {
+            console.error('خطأ في التسجيل:', error);
+            alert('حدث خطأ أثناء التسجيل. حاول مرة أخرى.');
+          }
+
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'تسجيل';
+        });
+      }
+    })();
+  </script>
+</body>
+</html>
