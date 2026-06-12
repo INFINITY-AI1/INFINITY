@@ -1,0 +1,927 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
+  <title>م/ إسماعيل عماد | استطلاع رأي وكورسات</title>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-app.js";
+    import { 
+      getFirestore, collection, addDoc, serverTimestamp, 
+      getDoc, setDoc, increment, doc 
+    } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-firestore.js";
+    import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-analytics.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyBysr4ZEHTY_ojej_onmso3d09sz6uU65A",
+      authDomain: "infinity-ai-bd879.firebaseapp.com",
+      projectId: "infinity-ai-bd879",
+      storageBucket: "infinity-ai-bd879.firebasestorage.app",
+      messagingSenderId: "391390244727",
+      appId: "1:391390244727:web:7cc77f13f3ed0e4221fb72",
+      measurementId: "G-XGW87N67WZ"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const analytics = getAnalytics(app);
+    
+    // تعريض الدوال globally
+    window.db = db;
+    window.collection = collection;
+    window.addDoc = addDoc;
+    window.serverTimestamp = serverTimestamp;
+    window.getDoc = getDoc;
+    window.setDoc = setDoc;
+    window.increment = increment;
+    window.docRef = doc;
+    
+    console.log("✅ Firebase جاهز للعمل");
+  </script>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --deep: #1a1a2e;
+      --primary: #16213e;
+      --secondary: #0f3460;
+      --accent: #e94560;
+      --accent2: #f5a623;
+      --accent3: #7c3aed;
+      --accent4: #06b6d4;
+      --light: #f8f9fa;
+      --card: #ffffff;
+      --text: #1a1a2e;
+      --text2: #495057;
+      --text3: #6c757d;
+      --border: #e9ecef;
+      --gradient1: linear-gradient(135deg, #e94560, #f5a623);
+      --gradient2: linear-gradient(135deg, #7c3aed, #06b6d4);
+      --gradient3: linear-gradient(135deg, #16213e, #0f3460);
+      --shadow: 0 4px 20px rgba(0,0,0,0.06);
+      --shadow-lg: 0 12px 35px rgba(0,0,0,0.1);
+    }
+
+    body {
+      background: #f5f5f7;
+      font-family: 'Cairo', 'Segoe UI', sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      min-height: 100vh;
+      padding: 0;
+      direction: rtl;
+      color: var(--text);
+    }
+
+    .main-wrapper {
+      width: 100%;
+      max-width: 500px;
+      position: relative;
+      overflow: hidden;
+      min-height: 100vh;
+    }
+
+    /* ========== شاشة الترحيب ========== */
+    .welcome-screen {
+      min-height: 100vh;
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 30px 20px;
+      text-align: center;
+      background: linear-gradient(160deg, #0f172a 0%, #1e293b 50%, #0f3460 100%);
+      position: relative;
+      overflow: hidden;
+      color: white;
+    }
+
+    .welcome-screen.active { display: flex; }
+
+    .welcome-screen::before {
+      content: '';
+      position: absolute;
+      width: 300px; height: 300px;
+      border-radius: 50%;
+      background: rgba(233, 69, 96, 0.08);
+      top: -80px; right: -80px;
+    }
+
+    .welcome-screen::after {
+      content: '';
+      position: absolute;
+      width: 200px; height: 200px;
+      border-radius: 50%;
+      background: rgba(245, 166, 35, 0.06);
+      bottom: -40px; left: -40px;
+    }
+
+    .welcome-avatar {
+      width: 90px; height: 90px;
+      border-radius: 50%;
+      background: var(--gradient1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 40px;
+      margin-bottom: 20px;
+      box-shadow: 0 10px 30px rgba(233, 69, 96, 0.4);
+      position: relative;
+      z-index: 1;
+    }
+
+    .welcome-title {
+      font-size: 26px;
+      font-weight: 900;
+      margin-bottom: 6px;
+      position: relative;
+      z-index: 1;
+      line-height: 1.4;
+    }
+
+    .welcome-subtitle {
+      font-size: 15px;
+      opacity: 0.85;
+      margin-bottom: 8px;
+      position: relative;
+      z-index: 1;
+      color: #cbd5e1;
+    }
+
+    .welcome-message {
+      font-size: 13px;
+      line-height: 1.8;
+      max-width: 350px;
+      margin: 16px auto 28px;
+      opacity: 0.8;
+      position: relative;
+      z-index: 1;
+      color: #94a3b8;
+    }
+
+    .btn-primary {
+      background: var(--gradient1);
+      color: white;
+      border: none;
+      padding: 15px 40px;
+      border-radius: 30px;
+      font-weight: 800;
+      font-size: 17px;
+      cursor: pointer;
+      font-family: inherit;
+      box-shadow: 0 8px 25px rgba(233, 69, 96, 0.35);
+      transition: all 0.3s;
+      position: relative;
+      z-index: 1;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 14px 35px rgba(233, 69, 96, 0.45);
+    }
+
+    .btn-primary:active {
+      transform: scale(0.96);
+    }
+
+    /* ========== شاشات الأسئلة ========== */
+    .question-screen {
+      display: none;
+      min-height: 100vh;
+      background: var(--light);
+      padding: 20px 16px 40px;
+      flex-direction: column;
+    }
+
+    .question-screen.active { display: flex; }
+
+    .progress-bar-wrap {
+      background: var(--border);
+      border-radius: 10px;
+      height: 6px;
+      margin-bottom: 24px;
+      overflow: hidden;
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      border-radius: 10px;
+      background: var(--gradient1);
+      transition: width 0.4s ease;
+    }
+
+    .step-indicator {
+      font-size: 12px;
+      color: var(--text3);
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+
+    .question-title {
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--text);
+      margin-bottom: 8px;
+      line-height: 1.4;
+    }
+
+    .question-subtitle {
+      font-size: 13px;
+      color: var(--text3);
+      margin-bottom: 20px;
+      line-height: 1.6;
+    }
+
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    .form-group label {
+      display: block;
+      font-weight: 600;
+      font-size: 13px;
+      color: var(--text2);
+      margin-bottom: 6px;
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      width: 100%;
+      padding: 13px 15px;
+      border: 2px solid var(--border);
+      border-radius: 14px;
+      font-size: 14px;
+      font-family: inherit;
+      background: white;
+      color: var(--text);
+      transition: all 0.2s;
+      outline: none;
+      resize: vertical;
+    }
+
+    .form-group textarea {
+      min-height: 100px;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      border-color: var(--accent3);
+      box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.08);
+    }
+
+    .programs-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 6px;
+    }
+
+    .program-chip {
+      padding: 8px 14px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      border: 2px solid var(--border);
+      background: white;
+      color: var(--text2);
+      transition: all 0.2s;
+      user-select: none;
+      white-space: nowrap;
+    }
+
+    .program-chip.selected {
+      background: #f5f3ff;
+      border-color: var(--accent3);
+      color: var(--accent3);
+      font-weight: 700;
+    }
+
+    .nav-buttons {
+      display: flex;
+      gap: 10px;
+      margin-top: auto;
+      padding-top: 20px;
+    }
+
+    .btn-next {
+      flex: 1;
+      padding: 14px;
+      border-radius: 16px;
+      font-weight: 700;
+      font-size: 15px;
+      cursor: pointer;
+      font-family: inherit;
+      border: none;
+      transition: all 0.2s;
+    }
+
+    .btn-next.primary {
+      background: var(--gradient3);
+      color: white;
+      box-shadow: 0 6px 18px rgba(15, 52, 96, 0.3);
+    }
+
+    .btn-next.primary:hover {
+      box-shadow: 0 10px 25px rgba(15, 52, 96, 0.4);
+    }
+
+    .btn-next.secondary {
+      background: white;
+      color: var(--text2);
+      border: 2px solid var(--border);
+    }
+
+    /* ========== شاشة الكورسات ========== */
+    .courses-screen {
+      display: none;
+      min-height: 100vh;
+      background: linear-gradient(160deg, #f8f9fa 0%, #e9ecef 100%);
+      padding: 20px 14px 40px;
+      flex-direction: column;
+    }
+
+    .courses-screen.active { display: flex; }
+
+    .courses-header {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .courses-header .teacher-badge {
+      display: inline-block;
+      background: var(--gradient1);
+      color: white;
+      padding: 6px 18px;
+      border-radius: 20px;
+      font-weight: 700;
+      font-size: 13px;
+      margin-bottom: 10px;
+    }
+
+    .courses-header h2 {
+      font-size: 22px;
+      font-weight: 800;
+      color: var(--text);
+      margin-bottom: 4px;
+    }
+
+    .courses-header .subtitle {
+      font-size: 13px;
+      color: var(--text3);
+      font-weight: 500;
+    }
+
+    .courses-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+
+    .course-card {
+      background: white;
+      border-radius: 18px;
+      padding: 16px;
+      border: 2px solid var(--border);
+      cursor: pointer;
+      transition: all 0.25s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .course-card.selected {
+      border-color: var(--accent3);
+      background: #faf9ff;
+      box-shadow: 0 8px 25px rgba(124, 58, 237, 0.1);
+    }
+
+    .course-card::before {
+      content: '';
+      position: absolute;
+      right: 0; top: 0; bottom: 0;
+      width: 4px;
+      border-radius: 0 2px 2px 0;
+      transition: all 0.3s;
+    }
+
+    .course-card:nth-child(1)::before { background: var(--gradient1); }
+    .course-card:nth-child(2)::before { background: var(--gradient2); }
+    .course-card:nth-child(3)::before { background: linear-gradient(135deg, #06b6d4, #3b82f6); }
+    .course-card:nth-child(4)::before { background: linear-gradient(135deg, #f59e0b, #ef4444); }
+    .course-card:nth-child(5)::before { background: linear-gradient(135deg, #10b981, #059669); }
+
+    .course-card-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 6px;
+    }
+
+    .course-check {
+      width: 22px; height: 22px;
+      border-radius: 50%;
+      border: 2px solid #d4d4d8;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+    }
+
+    .course-card.selected .course-check {
+      background: var(--accent3);
+      border-color: var(--accent3);
+    }
+
+    .course-check::after {
+      content: '✓';
+      color: white;
+      font-weight: 700;
+      font-size: 12px;
+      display: none;
+    }
+
+    .course-card.selected .course-check::after {
+      display: block;
+    }
+
+    .course-name {
+      font-weight: 700;
+      font-size: 15px;
+      color: var(--text);
+    }
+
+    .course-desc {
+      font-size: 12px;
+      color: var(--text3);
+      padding-right: 32px;
+      line-height: 1.5;
+    }
+
+    .course-target {
+      display: inline-block;
+      background: #f1f5f9;
+      color: var(--text2);
+      padding: 3px 10px;
+      border-radius: 10px;
+      font-size: 11px;
+      font-weight: 600;
+      margin-top: 6px;
+      margin-right: 32px;
+    }
+
+    .btn-submit-final {
+      width: 100%;
+      padding: 16px;
+      background: var(--gradient1);
+      color: white;
+      border: none;
+      border-radius: 18px;
+      font-weight: 800;
+      font-size: 17px;
+      cursor: pointer;
+      font-family: inherit;
+      box-shadow: 0 10px 30px rgba(233, 69, 96, 0.35);
+      transition: all 0.3s;
+    }
+
+    .btn-submit-final:hover {
+      box-shadow: 0 14px 38px rgba(233, 69, 96, 0.45);
+      transform: translateY(-2px);
+    }
+
+    .btn-submit-final:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    /* ========== شاشة الشكر ========== */
+    .thank-you-screen {
+      display: none;
+      min-height: 100vh;
+      background: linear-gradient(160deg, #0f172a 0%, #1e293b 100%);
+      color: white;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 30px 20px;
+      flex-direction: column;
+    }
+
+    .thank-you-screen.active { display: flex; }
+
+    .thank-you-icon {
+      font-size: 60px;
+      margin-bottom: 16px;
+      animation: bounce 1.5s infinite;
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-15px); }
+    }
+
+    .thank-you-title {
+      font-size: 26px;
+      font-weight: 900;
+      margin-bottom: 8px;
+    }
+
+    .thank-you-text {
+      font-size: 14px;
+      opacity: 0.8;
+      line-height: 1.8;
+      margin-bottom: 24px;
+      color: #cbd5e1;
+    }
+
+    .visitor-strip-mini {
+      text-align: center;
+      font-size: 12px;
+      color: var(--text3);
+      padding: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      background: white;
+      border-radius: 0 0 16px 16px;
+      margin: 0 14px;
+      box-shadow: var(--shadow);
+      position: relative;
+      z-index: 2;
+    }
+
+    .visitor-strip-mini .count {
+      font-weight: 800;
+      color: var(--accent);
+      font-size: 16px;
+    }
+
+    @media (max-width: 400px) {
+      .welcome-title { font-size: 22px; }
+      .question-title { font-size: 18px; }
+      .courses-header h2 { font-size: 19px; }
+      .program-chip { font-size: 11px; padding: 6px 10px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="main-wrapper" id="mainWrapper">
+    
+    <!-- الخطوة 0: الترحيب -->
+    <div class="welcome-screen active" id="step0">
+      <div class="welcome-avatar">👋</div>
+      <h1 class="welcome-title">أزيك يا طالبنا العزيز!</h1>
+      <p class="welcome-subtitle">م/ إسماعيل عماد</p>
+      <p class="welcome-message">
+        حابب آخد رأيك في حاجات بسيطة بس هتفرق جداً في شغلنا في السنة الجديدة...<br>
+        متكسلش إنك تكمل للآخر 😊
+      </p>
+      <button class="btn-primary" id="startBtn">
+        يلا بينا! ←
+      </button>
+      <div style="margin-top:24px;background:rgba(255,255,255,0.05);padding:10px 16px;border-radius:16px;font-size:13px;color:rgba(255,255,255,0.7);">
+        👁️ زوار الصفحة: <span id="visitorCount" style="color:#f5a623;font-weight:800;font-size:18px;">...</span>
+      </div>
+    </div>
+
+    <!-- الخطوة 1: البيانات الأساسية -->
+    <div class="question-screen" id="step1">
+      <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:10%;"></div></div>
+      <div class="step-indicator">الخطوة 1 من 5</div>
+      <h2 class="question-title">📝 بياناتك الأولية</h2>
+      <p class="question-subtitle">خلينا نتعرف عليك الأول</p>
+      <div class="form-group">
+        <label>الاسم الثلاثي</label>
+        <input type="text" id="studentName" placeholder="أدخل اسمك كاملاً">
+      </div>
+      <div class="form-group">
+        <label>رقم الواتساب</label>
+        <input type="tel" id="whatsappNumber" placeholder="01xxxxxxxxx" dir="ltr" style="text-align:right;">
+      </div>
+      <div class="form-group">
+        <label>المرحلة الدراسية</label>
+        <select id="gradeLevel">
+          <option value="" disabled selected>اختر المرحلة</option>
+          <option value="الصف الرابع">الصف الرابع</option>
+          <option value="الصف الخامس">الصف الخامس</option>
+          <option value="الصف السادس">الصف السادس</option>
+          <option value="الأول الإعدادي">الأول الإعدادي</option>
+          <option value="الثاني الإعدادي">الثاني الإعدادي</option>
+          <option value="الثالث الإعدادي">الثالث الإعدادي</option>
+          <option value="الأول الثانوي">الأول الثانوي</option>
+          <option value="الثاني الثانوي">الثاني الثانوي</option>
+        </select>
+      </div>
+      <div class="nav-buttons">
+        <button class="btn-next secondary" id="backTo0">← رجوع</button>
+        <button class="btn-next primary" id="nextTo2">التالي ←</button>
+      </div>
+    </div>
+
+    <!-- الخطوة 2: السؤال الأول -->
+    <div class="question-screen" id="step2">
+      <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:30%;"></div></div>
+      <div class="step-indicator">الخطوة 2 من 5</div>
+      <h2 class="question-title">🤔 السؤال الأول</h2>
+      <p class="question-subtitle">إيه أكتر مشكلة قابلتك في التعليم خلال فترتك الدراسية؟</p>
+      <div class="form-group">
+        <textarea id="answer1" placeholder="اكتب إجابتك هنا بصراحة..."></textarea>
+      </div>
+      <div class="nav-buttons">
+        <button class="btn-next secondary" id="backTo1">← رجوع</button>
+        <button class="btn-next primary" id="nextTo3">التالي ←</button>
+      </div>
+    </div>
+
+    <!-- الخطوة 3: السؤال الثاني -->
+    <div class="question-screen" id="step3">
+      <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:50%;"></div></div>
+      <div class="step-indicator">الخطوة 3 من 5</div>
+      <h2 class="question-title">💬 السؤال الثاني</h2>
+      <p class="question-subtitle">لو انت من طلابي الأوفلاين أو الأونلاين، إيه أكتر حاجة علقت معاك خلال السنة؟ سواء حلوة أو وحشة ومحتاجة تتصلح؟</p>
+      <div class="form-group">
+        <textarea id="answer2" placeholder="اكتب رأيك بكل صراحة..."></textarea>
+      </div>
+      <div class="nav-buttons">
+        <button class="btn-next secondary" id="backTo2">← رجوع</button>
+        <button class="btn-next primary" id="nextTo4">التالي ←</button>
+      </div>
+    </div>
+
+    <!-- الخطوة 4: السؤال الثالث -->
+    <div class="question-screen" id="step4">
+      <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:70%;"></div></div>
+      <div class="step-indicator">الخطوة 4 من 5</div>
+      <h2 class="question-title">💻 السؤال الثالث</h2>
+      <p class="question-subtitle">بما إني مهندس برمجة، لو فيه برنامج هيساعدك، حابب يكون إيه؟ (تقدر تختار أكتر من برنامج)</p>
+      <div class="programs-grid" id="programsGrid"></div>
+      <div class="nav-buttons">
+        <button class="btn-next secondary" id="backTo3">← رجوع</button>
+        <button class="btn-next primary" id="nextTo5">التالي ←</button>
+      </div>
+    </div>
+
+    <!-- الخطوة 5: الكورسات -->
+    <div class="courses-screen" id="step5">
+      <div class="courses-header">
+        <div class="teacher-badge">م/ إسماعيل عماد</div>
+        <h2>الكورسات المتاحة(اختياري)</h2>
+        <p class="subtitle">هتتوفر من أول شهر 7 - اختار اللي حابب تشترك فيه</p>
+      </div>
+      <div class="courses-grid" id="coursesGrid"></div>
+      <button class="btn-submit-final" id="finalSubmitBtn">
+        🚀 إرسال
+      </button>
+      <p style="text-align:center;font-size:11px;color:#6c757d;margin-top:8px;">
+        اختيار الكورسات اختياري - تقدر ترسل الاستبيان من غير ما تختار كورس
+      </p>
+    </div>
+
+    <!-- شاشة الشكر -->
+    <div class="thank-you-screen" id="thankYouScreen">
+      <div class="thank-you-icon">🎉</div>
+      <h2 class="thank-you-title">شكراً جزيلاً!</h2>
+      <p class="thank-you-text">
+        تم استلام ردك بنجاح ✅<br>
+        لو اخترت كورس، هنتواصل معاك عبر الواتساب قريباً<br>
+        لتوضيح التفاصيل والسعر.
+      </p>
+      <p style="font-size:12px;color:#94a3b8;">م/ إسماعيل عماد | 01122104596</p>
+    </div>
+
+  </div>
+
+  <script>
+    // ========== انتظار تحميل Firebase ثم بدء التطبيق ==========
+    window.addEventListener('load', function() {
+      // انتظار قصير للتأكد من تحميل Firebase
+      setTimeout(function() {
+        if (window.db && window.collection && window.addDoc) {
+          console.log("✅ بدء التطبيق - Firebase متصل");
+          initApp();
+        } else {
+          console.error("❌ Firebase غير متصل - إعادة المحاولة");
+          setTimeout(function() {
+            if (window.db) initApp();
+            else console.error("❌ فشل الاتصال بـ Firebase");
+          }, 1000);
+        }
+      }, 300);
+    });
+
+    function initApp() {
+      // ========== المتغيرات العامة ==========
+      const db = window.db;
+      const col = window.collection;
+      const add = window.addDoc;
+      const sTime = window.serverTimestamp;
+      const getD = window.getDoc;
+      const setD = window.setDoc;
+      const inc = window.increment;
+      const docR = window.docRef;
+
+      // ========== بيانات البرامج ==========
+      const programsList = [
+        "برنامج إدارة وقت المذاكرة", "تطبيق حلول الواجبات", "منصة امتحانات تفاعلية",
+        "برنامج تلخيص الدروس", "تطبيق خرائط ذهنية", "مساعد مراجعة ذكي",
+        "منصة فيديوهات تعليمية", "برنامج متابعة درجات", "تطبيق فلاش كارد",
+        "مساعد كتابة الأبحاث", "برنامج تحويل الصوت لنص", "تطبيق مشاركة ملخصات",
+        "جدول حصص ذكي", "برنامج تصحيح تلقائي", "تطبيق أسئلة وأجوبة",
+        "منصة مشاريع جماعية", "مساعد ترجمة المصطلحات", "تطبيق تذكير بالمهام",
+        "برنامج تحليل أداء الطالب", "تطبيق محاكاة معامل"
+      ];
+
+      const coursesList = [
+        { id: 'course1', name: 'كورس تأسيسي مادة العلوم', desc: 'تأسيس قوي لمادة العلوم استعداداً للعام الجديد', target: 'الصف الرابع حتى الثالث الإعدادي' },
+        { id: 'course2', name: 'كورس تأسيس برمجة وتنمية المهارات', desc: 'كل مرحلة لها منهج خاص – من الأساسيات حتى المشاريع', target: 'الصف الرابع حتى الثاني الثانوي' },
+        { id: 'course3', name: 'كورس تأسيسي علوم متكاملة', desc: 'تحضير شامل لمادة العلوم المتكاملة للعام الجديد', target: 'الصف الأول الثانوي' },
+        { id: 'course4', name: 'كورس تأسيسي في الكيمياء', desc: 'شرح وافي وتأسيس متين لمادة الكيمياء', target: 'الصف الثاني الثانوي' },
+        { id: 'course5', name: 'كورس تأسيسي في الفيزياء', desc: 'فهم عميق وتأسيس قوي لمادة الفيزياء', target: 'الصف الثاني الثانوي' }
+      ];
+
+      let selectedPrograms = [];
+      let selectedCourses = [];
+
+      // ========== تهيئة البرامج ==========
+      const programsGrid = document.getElementById('programsGrid');
+      programsList.forEach((prog) => {
+        const chip = document.createElement('span');
+        chip.className = 'program-chip';
+        chip.textContent = prog;
+        chip.addEventListener('click', function() {
+          this.classList.toggle('selected');
+          if (this.classList.contains('selected')) {
+            selectedPrograms.push(prog);
+          } else {
+            selectedPrograms = selectedPrograms.filter(p => p !== prog);
+          }
+        });
+        programsGrid.appendChild(chip);
+      });
+
+      // ========== تهيئة الكورسات ==========
+      const coursesGrid = document.getElementById('coursesGrid');
+      coursesList.forEach(course => {
+        const card = document.createElement('div');
+        card.className = 'course-card';
+        card.dataset.courseId = course.id;
+        card.innerHTML = `
+          <div class="course-card-header">
+            <div class="course-check"></div>
+            <div class="course-name">${course.name}</div>
+          </div>
+          <div class="course-desc">${course.desc}</div>
+          <div class="course-target">🎯 ${course.target}</div>
+        `;
+        card.addEventListener('click', function() {
+          this.classList.toggle('selected');
+          if (this.classList.contains('selected')) {
+            selectedCourses.push(course.id);
+          } else {
+            selectedCourses = selectedCourses.filter(c => c.id !== course.id);
+          }
+        });
+        coursesGrid.appendChild(card);
+      });
+
+      // ========== دوال التنقل ==========
+      function hideAll() {
+        for (let i = 0; i <= 5; i++) {
+          const el = document.getElementById(`step${i}`);
+          if (el) el.classList.remove('active');
+        }
+        document.getElementById('thankYouScreen').classList.remove('active');
+      }
+
+      function showStep(step) {
+        hideAll();
+        if (step === 5) {
+          document.getElementById('step5').classList.add('active');
+        } else if (step >= 0 && step <= 4) {
+          document.getElementById(`step${step}`).classList.add('active');
+        }
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+
+      function showThankYou() {
+        hideAll();
+        document.getElementById('thankYouScreen').classList.add('active');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+
+      // ========== ربط الأزرار ==========
+      document.getElementById('startBtn').addEventListener('click', function() {
+        showStep(1);
+      });
+
+      document.getElementById('backTo0').addEventListener('click', function() { showStep(0); });
+      document.getElementById('nextTo2').addEventListener('click', function() { showStep(2); });
+      document.getElementById('backTo1').addEventListener('click', function() { showStep(1); });
+      document.getElementById('nextTo3').addEventListener('click', function() { showStep(3); });
+      document.getElementById('backTo2').addEventListener('click', function() { showStep(2); });
+      document.getElementById('nextTo4').addEventListener('click', function() { showStep(4); });
+      document.getElementById('backTo3').addEventListener('click', function() { showStep(3); });
+      document.getElementById('nextTo5').addEventListener('click', function() { showStep(5); });
+
+      // ========== إرسال البيانات ==========
+      document.getElementById('finalSubmitBtn').addEventListener('click', async function() {
+        const btn = this;
+        btn.disabled = true;
+        btn.textContent = '⏳ جاري الإرسال...';
+
+        const name = document.getElementById('studentName').value.trim();
+        const phone = document.getElementById('whatsappNumber').value.trim();
+        const grade = document.getElementById('gradeLevel').value;
+        const answer1 = document.getElementById('answer1').value.trim();
+        const answer2 = document.getElementById('answer2').value.trim();
+
+        if (!name || !phone || !grade) {
+          alert('يرجى ملء الاسم والرقم والمرحلة الدراسية على الأقل.');
+          btn.disabled = false;
+          btn.textContent = '🚀 إرسال';
+          return;
+        }
+
+        try {
+          // حفظ في مجموعة survey_ismail_emad
+          await add(col(db, "survey_ismail_emad"), {
+            studentName: name,
+            phoneNumber: phone,
+            gradeLevel: grade,
+            answer1: answer1 || 'لم يجب',
+            answer2: answer2 || 'لم يجب',
+            selectedPrograms: selectedPrograms,
+            selectedCourses: selectedCourses,
+            submittedAt: sTime(),
+            source: "استبيان م/ إسماعيل عماد"
+          });
+
+          console.log("✅ تم حفظ الاستبيان بنجاح");
+          showThankYou();
+
+        } catch (error) {
+          console.error('❌ خطأ في الحفظ:', error);
+          alert('حدث خطأ أثناء الإرسال. تأكد من اتصال الإنترنت وحاول مرة أخرى.');
+          btn.disabled = false;
+          btn.textContent = '🚀 إرسال';
+        }
+      });
+
+      // ========== عداد الزوار ==========
+      (async function() {
+        try {
+          const STATS_DOC = docR(db, "statistics_ismail_emad", "counters");
+
+          // تهيئة مستند الإحصائيات إذا لم يكن موجوداً
+          const snap = await getD(STATS_DOC);
+          if (!snap.exists()) {
+            await setD(STATS_DOC, {
+              totalVisitors: 0,
+              totalSubmissions: 0,
+              updatedAt: sTime()
+            });
+            console.log("✅ تم إنشاء مستند الإحصائيات");
+          }
+
+          // تسجيل الزيارة إذا كانت جديدة
+          const visited = sessionStorage.getItem('ismailEmadVisited');
+          if (!visited) {
+            sessionStorage.setItem('ismailEmadVisited', '1');
+            
+            await add(col(db, "visitors_ismail_emad"), {
+              visitedAt: sTime(),
+              page: "استبيان وكورسات م/ إسماعيل عماد"
+            });
+            
+            await setD(STATS_DOC, { 
+              totalVisitors: inc(1), 
+              updatedAt: sTime() 
+            }, { merge: true });
+            
+            console.log("✅ تم تسجيل زيارة جديدة");
+          }
+
+          // عرض العدد
+          const updatedSnap = await getD(STATS_DOC);
+          if (updatedSnap.exists()) {
+            document.getElementById('visitorCount').textContent = updatedSnap.data().totalVisitors || 0;
+          }
+        } catch (e) {
+          console.error('❌ خطأ في عداد الزوار:', e);
+          document.getElementById('visitorCount').textContent = '...';
+        }
+      })();
+    }
+  </script>
+</body>
+</html>
