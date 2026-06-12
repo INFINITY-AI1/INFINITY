@@ -59,7 +59,6 @@
       --gradient2: linear-gradient(135deg, #7c3aed, #06b6d4);
       --gradient3: linear-gradient(135deg, #16213e, #0f3460);
       --shadow: 0 4px 20px rgba(0,0,0,0.06);
-      --shadow-lg: 0 12px 35px rgba(0,0,0,0.1);
     }
 
     body {
@@ -80,6 +79,7 @@
       position: relative;
       overflow: hidden;
       min-height: 100vh;
+      padding-bottom: 100px;
     }
 
     /* ========== شاشة الترحيب ========== */
@@ -191,7 +191,7 @@
       display: none;
       min-height: 100vh;
       background: var(--light);
-      padding: 20px 16px 40px;
+      padding: 20px 16px 120px;
       flex-direction: column;
     }
 
@@ -274,6 +274,7 @@
       flex-wrap: wrap;
       gap: 8px;
       margin-bottom: 6px;
+      padding-bottom: 80px;
     }
 
     .program-chip {
@@ -297,47 +298,12 @@
       font-weight: 700;
     }
 
-    .nav-buttons {
-      display: flex;
-      gap: 10px;
-      margin-top: auto;
-      padding-top: 20px;
-    }
-
-    .btn-next {
-      flex: 1;
-      padding: 14px;
-      border-radius: 16px;
-      font-weight: 700;
-      font-size: 15px;
-      cursor: pointer;
-      font-family: inherit;
-      border: none;
-      transition: all 0.2s;
-    }
-
-    .btn-next.primary {
-      background: var(--gradient3);
-      color: white;
-      box-shadow: 0 6px 18px rgba(15, 52, 96, 0.3);
-    }
-
-    .btn-next.primary:hover {
-      box-shadow: 0 10px 25px rgba(15, 52, 96, 0.4);
-    }
-
-    .btn-next.secondary {
-      background: white;
-      color: var(--text2);
-      border: 2px solid var(--border);
-    }
-
     /* ========== شاشة الكورسات ========== */
     .courses-screen {
       display: none;
       min-height: 100vh;
       background: linear-gradient(160deg, #f8f9fa 0%, #e9ecef 100%);
-      padding: 20px 14px 40px;
+      padding: 20px 14px 120px;
       flex-direction: column;
     }
 
@@ -377,6 +343,7 @@
       flex-direction: column;
       gap: 12px;
       margin-bottom: 24px;
+      padding-bottom: 20px;
     }
 
     .course-card {
@@ -402,7 +369,6 @@
       right: 0; top: 0; bottom: 0;
       width: 4px;
       border-radius: 0 2px 2px 0;
-      transition: all 0.3s;
     }
 
     .course-card:nth-child(1)::before { background: var(--gradient1); }
@@ -469,28 +435,6 @@
       margin-right: 32px;
     }
 
-    .btn-submit-final {
-      width: 100%;
-      padding: 16px;
-      background: var(--gradient1);
-      color: white;
-      border: none;
-      border-radius: 18px;
-      font-weight: 800;
-      font-size: 17px;
-      cursor: pointer;
-      font-family: inherit;
-      box-shadow: 0 10px 30px rgba(233, 69, 96, 0.35);
-      transition: all 0.3s;
-    }
-
-    .btn-submit-final:hover {
-      box-shadow: 0 14px 38px rgba(233, 69, 96, 0.45);
-      transform: translateY(-2px);
-    }
-
-    .btn-submit-final:disabled { opacity: 0.6; cursor: not-allowed; }
-
     /* ========== شاشة الشكر ========== */
     .thank-you-screen {
       display: none;
@@ -531,6 +475,63 @@
       color: #cbd5e1;
     }
 
+    /* ========== زرار الإرسال الثابت في الأسفل ========== */
+    .sticky-submit-bar {
+      position: fixed;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100%;
+      max-width: 500px;
+      background: white;
+      padding: 12px 16px 20px;
+      z-index: 100;
+      box-shadow: 0 -8px 30px rgba(0,0,0,0.12);
+      border-radius: 20px 20px 0 0;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .btn-submit-sticky {
+      width: 100%;
+      padding: 16px;
+      background: var(--gradient1);
+      color: white;
+      border: none;
+      border-radius: 18px;
+      font-weight: 800;
+      font-size: 17px;
+      cursor: pointer;
+      font-family: inherit;
+      box-shadow: 0 10px 30px rgba(233, 69, 96, 0.35);
+      transition: all 0.3s;
+      animation: pulse-btn 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse-btn {
+      0%, 100% { box-shadow: 0 10px 30px rgba(233, 69, 96, 0.35); }
+      50% { box-shadow: 0 14px 38px rgba(233, 69, 96, 0.55); }
+    }
+
+    .btn-submit-sticky:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 14px 38px rgba(233, 69, 96, 0.55);
+    }
+
+    .btn-submit-sticky:disabled { 
+      opacity: 0.6; 
+      cursor: not-allowed;
+      animation: none;
+    }
+
+    .sticky-hint {
+      text-align: center;
+      font-size: 11px;
+      color: #6c757d;
+      font-weight: 500;
+    }
+
     .visitor-strip-mini {
       text-align: center;
       font-size: 12px;
@@ -559,6 +560,7 @@
       .question-title { font-size: 18px; }
       .courses-header h2 { font-size: 19px; }
       .program-chip { font-size: 11px; padding: 6px 10px; }
+      .sticky-submit-bar { padding: 10px 12px 16px; }
     }
   </style>
 </head>
@@ -610,9 +612,14 @@
           <option value="الثاني الثانوي">الثاني الثانوي</option>
         </select>
       </div>
-      <div class="nav-buttons">
-        <button class="btn-next secondary" id="backTo0">← رجوع</button>
-        <button class="btn-next primary" id="nextTo2">التالي ←</button>
+      
+      <!-- زرارين التنقل ثابتين -->
+      <div class="sticky-submit-bar">
+        <div class="sticky-hint">الخطوة 1 من 5</div>
+        <div style="display:flex;gap:8px;">
+          <button class="btn-primary" id="backTo0" style="flex:1;background:white;color:#495057;border:2px solid #e9ecef;box-shadow:none;">← رجوع</button>
+          <button class="btn-primary" id="nextTo2" style="flex:1;">التالي ←</button>
+        </div>
       </div>
     </div>
 
@@ -625,9 +632,13 @@
       <div class="form-group">
         <textarea id="answer1" placeholder="اكتب إجابتك هنا بصراحة..."></textarea>
       </div>
-      <div class="nav-buttons">
-        <button class="btn-next secondary" id="backTo1">← رجوع</button>
-        <button class="btn-next primary" id="nextTo3">التالي ←</button>
+      
+      <div class="sticky-submit-bar">
+        <div class="sticky-hint">الخطوة 2 من 5</div>
+        <div style="display:flex;gap:8px;">
+          <button class="btn-primary" id="backTo1" style="flex:1;background:white;color:#495057;border:2px solid #e9ecef;box-shadow:none;">← رجوع</button>
+          <button class="btn-primary" id="nextTo3" style="flex:1;">التالي ←</button>
+        </div>
       </div>
     </div>
 
@@ -636,13 +647,17 @@
       <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:50%;"></div></div>
       <div class="step-indicator">الخطوة 3 من 5</div>
       <h2 class="question-title">💬 السؤال الثاني</h2>
-      <p class="question-subtitle">لو انت من طلابي الأوفلاين أو الأونلاين، إيه أكتر حاجة علقت معاك خلال السنة؟ سواء حلوة أو وحشة ومحتاجة تتصلح؟</p>
+      <p class="question-subtitle">لو انت من طلابي الأوفلاين أو الأونلاين، إيه أكتر حاجة علقت معاك خلال السنة؟</p>
       <div class="form-group">
         <textarea id="answer2" placeholder="اكتب رأيك بكل صراحة..."></textarea>
       </div>
-      <div class="nav-buttons">
-        <button class="btn-next secondary" id="backTo2">← رجوع</button>
-        <button class="btn-next primary" id="nextTo4">التالي ←</button>
+      
+      <div class="sticky-submit-bar">
+        <div class="sticky-hint">الخطوة 3 من 5</div>
+        <div style="display:flex;gap:8px;">
+          <button class="btn-primary" id="backTo2" style="flex:1;background:white;color:#495057;border:2px solid #e9ecef;box-shadow:none;">← رجوع</button>
+          <button class="btn-primary" id="nextTo4" style="flex:1;">التالي ←</button>
+        </div>
       </div>
     </div>
 
@@ -651,11 +666,15 @@
       <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:70%;"></div></div>
       <div class="step-indicator">الخطوة 4 من 5</div>
       <h2 class="question-title">💻 السؤال الثالث</h2>
-      <p class="question-subtitle">بما إني مهندس برمجة، لو فيه برنامج هيساعدك، حابب يكون إيه؟ (تقدر تختار أكتر من برنامج)</p>
+      <p class="question-subtitle">بما إني مهندس برمجة، لو فيه برنامج هيساعدك، حابب يكون إيه؟</p>
       <div class="programs-grid" id="programsGrid"></div>
-      <div class="nav-buttons">
-        <button class="btn-next secondary" id="backTo3">← رجوع</button>
-        <button class="btn-next primary" id="nextTo5">التالي ←</button>
+      
+      <div class="sticky-submit-bar">
+        <div class="sticky-hint">الخطوة 4 من 5 - تقدر تختار أكتر من برنامج</div>
+        <div style="display:flex;gap:8px;">
+          <button class="btn-primary" id="backTo3" style="flex:1;background:white;color:#495057;border:2px solid #e9ecef;box-shadow:none;">← رجوع</button>
+          <button class="btn-primary" id="nextTo5" style="flex:1;">التالي ←</button>
+        </div>
       </div>
     </div>
 
@@ -664,15 +683,17 @@
       <div class="courses-header">
         <div class="teacher-badge">م/ إسماعيل عماد</div>
         <h2>الكورسات المتاحة</h2>
-        <p class="subtitle">هتتوفر من أول شهر 7 - اختار اللي حابب تشترك فيه( اختياري بإشتراك رمزي)</p>
+        <p class="subtitle">هتتوفر من أول شهر 7 - اختار اللي حابب تشترك فيه(اختياري بإشتراك رمزي)</p>
       </div>
       <div class="courses-grid" id="coursesGrid"></div>
-      <button class="btn-submit-final" id="finalSubmitBtn">
-        🚀 إرسال
-      </button>
-      <p style="text-align:center;font-size:11px;color:#6c757d;margin-top:8px;">
-        اختيار الكورسات اختياري - تقدر ترسل الاستبيان من غير ما تختار كورس
-      </p>
+      
+      <!-- زرار إرسال ثابت في الأسفل -->
+      <div class="sticky-submit-bar">
+        <p class="sticky-hint">اختيار الكورسات اختياري - تقدر ترسل من غير ما تختار</p>
+        <button class="btn-submit-sticky" id="finalSubmitBtn">
+          🚀 إرسال الاستبيان
+        </button>
+      </div>
     </div>
 
     <!-- شاشة الشكر -->
@@ -823,7 +844,7 @@
         if (!name || !phone || !grade) {
           alert('يرجى ملء الاسم والرقم والمرحلة الدراسية على الأقل.');
           btn.disabled = false;
-          btn.textContent = '🚀 إرسال';
+          btn.textContent = '🚀 إرسال الاستبيان';
           return;
         }
 
@@ -840,7 +861,6 @@
             source: "استبيان م/ إسماعيل عماد"
           });
 
-          // تحديث عداد التسجيلات
           const STATS_DOC = docR(db, "statistics_ismail_emad", "counters");
           const snap = await getD(STATS_DOC);
           const today = new Date().toDateString();
@@ -868,7 +888,7 @@
           console.error('❌ خطأ:', error);
           alert('حدث خطأ. حاول مرة أخرى.');
           btn.disabled = false;
-          btn.textContent = '🚀 إرسال';
+          btn.textContent = '🚀 إرسال الاستبيان';
         }
       });
 
@@ -877,14 +897,12 @@
         try {
           const STATS_DOC = docR(db, "statistics_ismail_emad", "counters");
 
-          // تسجيل الزيارة في كل دخول
           await add(col(db, "visitors_ismail_emad"), {
             visitedAt: sTime(),
             page: "استبيان وكورسات م/ إسماعيل عماد",
             timestamp: Date.now()
           });
 
-          // تحديث العداد
           const snap = await getD(STATS_DOC);
           if (!snap.exists()) {
             await setD(STATS_DOC, {
@@ -895,13 +913,12 @@
             await setD(STATS_DOC, { totalVisitors: inc(1), updatedAt: sTime() }, { merge: true });
           }
 
-          // عرض العدد
           const updatedSnap = await getD(STATS_DOC);
           if (updatedSnap.exists()) {
             document.getElementById('visitorCount').textContent = updatedSnap.data().totalVisitors || 0;
           }
           
-          console.log("✅ تم تسجيل زيارة جديدة - كل دخول");
+          console.log("✅ تم تسجيل زيارة جديدة");
         } catch (e) {
           console.error('❌ خطأ في عداد الزوار:', e);
           document.getElementById('visitorCount').textContent = '...';
