@@ -26,7 +26,6 @@
     const db = getFirestore(app);
     const analytics = getAnalytics(app);
     
-    // تعريض الدوال globally
     window.db = db;
     window.collection = collection;
     window.addDoc = addDoc;
@@ -185,9 +184,7 @@
       box-shadow: 0 14px 35px rgba(233, 69, 96, 0.45);
     }
 
-    .btn-primary:active {
-      transform: scale(0.96);
-    }
+    .btn-primary:active { transform: scale(0.96); }
 
     /* ========== شاشات الأسئلة ========== */
     .question-screen {
@@ -237,9 +234,7 @@
       line-height: 1.6;
     }
 
-    .form-group {
-      margin-bottom: 16px;
-    }
+    .form-group { margin-bottom: 16px; }
 
     .form-group label {
       display: block;
@@ -265,9 +260,7 @@
       resize: vertical;
     }
 
-    .form-group textarea {
-      min-height: 100px;
-    }
+    .form-group textarea { min-height: 100px; }
 
     .form-group input:focus,
     .form-group select:focus,
@@ -449,9 +442,7 @@
       display: none;
     }
 
-    .course-card.selected .course-check::after {
-      display: block;
-    }
+    .course-card.selected .course-check::after { display: block; }
 
     .course-name {
       font-weight: 700;
@@ -498,10 +489,7 @@
       transform: translateY(-2px);
     }
 
-    .btn-submit-final:disabled {
-      opacity: 0.6;
-      cursor: not-allowed;
-    }
+    .btn-submit-final:disabled { opacity: 0.6; cursor: not-allowed; }
 
     /* ========== شاشة الشكر ========== */
     .thank-you-screen {
@@ -675,8 +663,8 @@
     <div class="courses-screen" id="step5">
       <div class="courses-header">
         <div class="teacher-badge">م/ إسماعيل عماد</div>
-        <h2>الكورسات المتاحة(بإشتراك رمزي و اختياري مش اجباري )</h2>
-        <p class="subtitle">هتتوفر من أول شهر 7 - اختار اللي حابب تشترك فيه</p>
+        <h2>الكورسات المتاحة</h2>
+        <p class="subtitle">هتتوفر من أول شهر 7 - اختار اللي حابب تشترك فيه( اختياري بإشتراك رمزي)</p>
       </div>
       <div class="courses-grid" id="coursesGrid"></div>
       <button class="btn-submit-final" id="finalSubmitBtn">
@@ -702,25 +690,21 @@
   </div>
 
   <script>
-    // ========== انتظار تحميل Firebase ثم بدء التطبيق ==========
     window.addEventListener('load', function() {
-      // انتظار قصير للتأكد من تحميل Firebase
       setTimeout(function() {
         if (window.db && window.collection && window.addDoc) {
-          console.log("✅ بدء التطبيق - Firebase متصل");
+          console.log("✅ بدء التطبيق");
           initApp();
         } else {
-          console.error("❌ Firebase غير متصل - إعادة المحاولة");
+          console.error("❌ Firebase غير متصل");
           setTimeout(function() {
             if (window.db) initApp();
-            else console.error("❌ فشل الاتصال بـ Firebase");
           }, 1000);
         }
       }, 300);
     });
 
     function initApp() {
-      // ========== المتغيرات العامة ==========
       const db = window.db;
       const col = window.collection;
       const add = window.addDoc;
@@ -730,7 +714,6 @@
       const inc = window.increment;
       const docR = window.docRef;
 
-      // ========== بيانات البرامج ==========
       const programsList = [
         "برنامج إدارة وقت المذاكرة", "تطبيق حلول الواجبات", "منصة امتحانات تفاعلية",
         "برنامج تلخيص الدروس", "تطبيق خرائط ذهنية", "مساعد مراجعة ذكي",
@@ -752,7 +735,6 @@
       let selectedPrograms = [];
       let selectedCourses = [];
 
-      // ========== تهيئة البرامج ==========
       const programsGrid = document.getElementById('programsGrid');
       programsList.forEach((prog) => {
         const chip = document.createElement('span');
@@ -769,7 +751,6 @@
         programsGrid.appendChild(chip);
       });
 
-      // ========== تهيئة الكورسات ==========
       const coursesGrid = document.getElementById('coursesGrid');
       coursesList.forEach(course => {
         const card = document.createElement('div');
@@ -788,13 +769,12 @@
           if (this.classList.contains('selected')) {
             selectedCourses.push(course.id);
           } else {
-            selectedCourses = selectedCourses.filter(c => c.id !== course.id);
+            selectedCourses = selectedCourses.filter(c => c !== course.id);
           }
         });
         coursesGrid.appendChild(card);
       });
 
-      // ========== دوال التنقل ==========
       function hideAll() {
         for (let i = 0; i <= 5; i++) {
           const el = document.getElementById(`step${i}`);
@@ -819,11 +799,7 @@
         window.scrollTo({ top: 0, behavior: 'smooth' });
       }
 
-      // ========== ربط الأزرار ==========
-      document.getElementById('startBtn').addEventListener('click', function() {
-        showStep(1);
-      });
-
+      document.getElementById('startBtn').addEventListener('click', function() { showStep(1); });
       document.getElementById('backTo0').addEventListener('click', function() { showStep(0); });
       document.getElementById('nextTo2').addEventListener('click', function() { showStep(2); });
       document.getElementById('backTo1').addEventListener('click', function() { showStep(1); });
@@ -833,7 +809,6 @@
       document.getElementById('backTo3').addEventListener('click', function() { showStep(3); });
       document.getElementById('nextTo5').addEventListener('click', function() { showStep(5); });
 
-      // ========== إرسال البيانات ==========
       document.getElementById('finalSubmitBtn').addEventListener('click', async function() {
         const btn = this;
         btn.disabled = true;
@@ -853,7 +828,6 @@
         }
 
         try {
-          // حفظ في مجموعة survey_ismail_emad
           await add(col(db, "survey_ismail_emad"), {
             studentName: name,
             phoneNumber: phone,
@@ -866,49 +840,59 @@
             source: "استبيان م/ إسماعيل عماد"
           });
 
-          console.log("✅ تم حفظ الاستبيان بنجاح");
-          showThankYou();
+          // تحديث عداد التسجيلات
+          const STATS_DOC = docR(db, "statistics_ismail_emad", "counters");
+          const snap = await getD(STATS_DOC);
+          const today = new Date().toDateString();
+          
+          if (!snap.exists()) {
+            await setD(STATS_DOC, {
+              totalVisitors: 0, totalSubmissions: 1, newSubmissions: 1,
+              todaySubmissions: 1, lastTodayReset: today, updatedAt: sTime()
+            });
+          } else {
+            const data = snap.data();
+            const updates = { totalSubmissions: inc(1), newSubmissions: inc(1), updatedAt: sTime() };
+            if (data.lastTodayReset !== today) {
+              updates.todaySubmissions = 1;
+              updates.lastTodayReset = today;
+            } else {
+              updates.todaySubmissions = inc(1);
+            }
+            await setD(STATS_DOC, updates, { merge: true });
+          }
 
+          console.log("✅ تم حفظ الاستبيان");
+          showThankYou();
         } catch (error) {
-          console.error('❌ خطأ في الحفظ:', error);
-          alert('حدث خطأ أثناء الإرسال. تأكد من اتصال الإنترنت وحاول مرة أخرى.');
+          console.error('❌ خطأ:', error);
+          alert('حدث خطأ. حاول مرة أخرى.');
           btn.disabled = false;
           btn.textContent = '🚀 إرسال';
         }
       });
 
-      // ========== عداد الزوار ==========
+      // ========== عداد الزوار - كل دخول ==========
       (async function() {
         try {
           const STATS_DOC = docR(db, "statistics_ismail_emad", "counters");
 
-          // تهيئة مستند الإحصائيات إذا لم يكن موجوداً
+          // تسجيل الزيارة في كل دخول
+          await add(col(db, "visitors_ismail_emad"), {
+            visitedAt: sTime(),
+            page: "استبيان وكورسات م/ إسماعيل عماد",
+            timestamp: Date.now()
+          });
+
+          // تحديث العداد
           const snap = await getD(STATS_DOC);
           if (!snap.exists()) {
             await setD(STATS_DOC, {
-              totalVisitors: 0,
-              totalSubmissions: 0,
-              updatedAt: sTime()
+              totalVisitors: 1, totalSubmissions: 0, newSubmissions: 0,
+              todaySubmissions: 0, lastTodayReset: new Date().toDateString(), updatedAt: sTime()
             });
-            console.log("✅ تم إنشاء مستند الإحصائيات");
-          }
-
-          // تسجيل الزيارة إذا كانت جديدة
-          const visited = sessionStorage.getItem('ismailEmadVisited');
-          if (!visited) {
-            sessionStorage.setItem('ismailEmadVisited', '1');
-            
-            await add(col(db, "visitors_ismail_emad"), {
-              visitedAt: sTime(),
-              page: "استبيان وكورسات م/ إسماعيل عماد"
-            });
-            
-            await setD(STATS_DOC, { 
-              totalVisitors: inc(1), 
-              updatedAt: sTime() 
-            }, { merge: true });
-            
-            console.log("✅ تم تسجيل زيارة جديدة");
+          } else {
+            await setD(STATS_DOC, { totalVisitors: inc(1), updatedAt: sTime() }, { merge: true });
           }
 
           // عرض العدد
@@ -916,6 +900,8 @@
           if (updatedSnap.exists()) {
             document.getElementById('visitorCount').textContent = updatedSnap.data().totalVisitors || 0;
           }
+          
+          console.log("✅ تم تسجيل زيارة جديدة - كل دخول");
         } catch (e) {
           console.error('❌ خطأ في عداد الزوار:', e);
           document.getElementById('visitorCount').textContent = '...';
