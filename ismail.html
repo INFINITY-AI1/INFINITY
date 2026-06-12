@@ -8,7 +8,7 @@
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-app.js";
     import { 
       getFirestore, collection, addDoc, serverTimestamp, 
-      getDoc, setDoc, increment, doc 
+      getDoc, setDoc, increment, doc, getCountFromServer 
     } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-firestore.js";
     import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-analytics.js";
 
@@ -24,7 +24,6 @@
 
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
-    const analytics = getAnalytics(app);
     
     window.db = db;
     window.collection = collection;
@@ -34,31 +33,21 @@
     window.setDoc = setDoc;
     window.increment = increment;
     window.docRef = doc;
+    window.getCountFromServer = getCountFromServer;
     
-    console.log("✅ Firebase جاهز للعمل");
+    console.log("✅ Firebase جاهز - وضع توفير القراءات");
   </script>
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
     :root {
-      --deep: #1a1a2e;
-      --primary: #16213e;
-      --secondary: #0f3460;
-      --accent: #e94560;
-      --accent2: #f5a623;
-      --accent3: #7c3aed;
-      --accent4: #06b6d4;
-      --light: #f8f9fa;
-      --card: #ffffff;
-      --text: #1a1a2e;
-      --text2: #495057;
-      --text3: #6c757d;
+      --deep: #1a1a2e; --primary: #16213e; --accent: #e94560;
+      --accent2: #f5a623; --accent3: #7c3aed; --light: #f8f9fa;
+      --text: #1a1a2e; --text2: #495057; --text3: #6c757d;
       --border: #e9ecef;
       --gradient1: linear-gradient(135deg, #e94560, #f5a623);
-      --gradient2: linear-gradient(135deg, #7c3aed, #06b6d4);
       --gradient3: linear-gradient(135deg, #16213e, #0f3460);
-      --shadow: 0 4px 20px rgba(0,0,0,0.06);
     }
 
     body {
@@ -77,497 +66,161 @@
       width: 100%;
       max-width: 500px;
       position: relative;
-      overflow: hidden;
       min-height: 100vh;
-      padding-bottom: 100px;
     }
 
-    /* ========== شاشة الترحيب ========== */
     .welcome-screen {
-      min-height: 100vh;
-      display: none;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 30px 20px;
-      text-align: center;
+      min-height: 100vh; display: none; flex-direction: column;
+      align-items: center; justify-content: center; padding: 30px 20px;
+      text-align: center; color: white;
       background: linear-gradient(160deg, #0f172a 0%, #1e293b 50%, #0f3460 100%);
-      position: relative;
-      overflow: hidden;
-      color: white;
+      position: relative; overflow: hidden;
     }
-
     .welcome-screen.active { display: flex; }
 
-    .welcome-screen::before {
-      content: '';
-      position: absolute;
-      width: 300px; height: 300px;
-      border-radius: 50%;
-      background: rgba(233, 69, 96, 0.08);
-      top: -80px; right: -80px;
-    }
-
-    .welcome-screen::after {
-      content: '';
-      position: absolute;
-      width: 200px; height: 200px;
-      border-radius: 50%;
-      background: rgba(245, 166, 35, 0.06);
-      bottom: -40px; left: -40px;
-    }
-
     .welcome-avatar {
-      width: 90px; height: 90px;
-      border-radius: 50%;
-      background: var(--gradient1);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 40px;
-      margin-bottom: 20px;
+      width: 80px; height: 80px; border-radius: 50%;
+      background: var(--gradient1); display: flex;
+      align-items: center; justify-content: center;
+      font-size: 36px; margin-bottom: 16px;
       box-shadow: 0 10px 30px rgba(233, 69, 96, 0.4);
-      position: relative;
-      z-index: 1;
     }
 
-    .welcome-title {
-      font-size: 26px;
-      font-weight: 900;
-      margin-bottom: 6px;
-      position: relative;
-      z-index: 1;
-      line-height: 1.4;
-    }
-
-    .welcome-subtitle {
-      font-size: 15px;
-      opacity: 0.85;
-      margin-bottom: 8px;
-      position: relative;
-      z-index: 1;
-      color: #cbd5e1;
-    }
-
-    .welcome-message {
-      font-size: 13px;
-      line-height: 1.8;
-      max-width: 350px;
-      margin: 16px auto 28px;
-      opacity: 0.8;
-      position: relative;
-      z-index: 1;
-      color: #94a3b8;
-    }
+    .welcome-title { font-size: 24px; font-weight: 900; margin-bottom: 4px; }
+    .welcome-subtitle { font-size: 14px; opacity: 0.85; color: #cbd5e1; margin-bottom: 6px; }
+    .welcome-message { font-size: 12px; line-height: 1.8; max-width: 320px; margin: 12px auto 24px; opacity: 0.8; color: #94a3b8; }
 
     .btn-primary {
-      background: var(--gradient1);
-      color: white;
-      border: none;
-      padding: 15px 40px;
-      border-radius: 30px;
-      font-weight: 800;
-      font-size: 17px;
-      cursor: pointer;
-      font-family: inherit;
+      background: var(--gradient1); color: white; border: none;
+      padding: 14px 36px; border-radius: 28px; font-weight: 800;
+      font-size: 16px; cursor: pointer; font-family: inherit;
       box-shadow: 0 8px 25px rgba(233, 69, 96, 0.35);
-      transition: all 0.3s;
-      position: relative;
-      z-index: 1;
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
     }
 
-    .btn-primary:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 14px 35px rgba(233, 69, 96, 0.45);
-    }
-
-    .btn-primary:active { transform: scale(0.96); }
-
-    /* ========== شاشات الأسئلة ========== */
     .question-screen {
-      display: none;
-      min-height: 100vh;
-      background: var(--light);
-      padding: 20px 16px 120px;
-      flex-direction: column;
+      display: none; min-height: 100vh; background: var(--light);
+      padding: 20px 16px 120px; flex-direction: column;
     }
-
     .question-screen.active { display: flex; }
 
     .progress-bar-wrap {
-      background: var(--border);
-      border-radius: 10px;
-      height: 6px;
-      margin-bottom: 24px;
-      overflow: hidden;
+      background: var(--border); border-radius: 10px;
+      height: 6px; margin-bottom: 20px; overflow: hidden;
     }
-
     .progress-bar-fill {
-      height: 100%;
-      border-radius: 10px;
-      background: var(--gradient1);
-      transition: width 0.4s ease;
+      height: 100%; border-radius: 10px;
+      background: var(--gradient1); transition: width 0.4s;
     }
 
-    .step-indicator {
-      font-size: 12px;
-      color: var(--text3);
-      font-weight: 600;
-      margin-bottom: 6px;
+    .step-indicator { font-size: 11px; color: var(--text3); font-weight: 600; margin-bottom: 4px; }
+    .question-title { font-size: 19px; font-weight: 800; color: var(--text); margin-bottom: 6px; }
+    .question-subtitle { font-size: 12px; color: var(--text3); margin-bottom: 18px; }
+
+    .form-group { margin-bottom: 14px; }
+    .form-group label { display: block; font-weight: 600; font-size: 12px; color: var(--text2); margin-bottom: 5px; }
+    .form-group input, .form-group select, .form-group textarea {
+      width: 100%; padding: 12px 14px; border: 2px solid var(--border);
+      border-radius: 12px; font-size: 14px; font-family: inherit;
+      background: white; color: var(--text); outline: none; resize: vertical;
+    }
+    .form-group textarea { min-height: 90px; }
+    .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+      border-color: var(--accent3); box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.06);
     }
 
-    .question-title {
-      font-size: 20px;
-      font-weight: 800;
-      color: var(--text);
-      margin-bottom: 8px;
-      line-height: 1.4;
-    }
-
-    .question-subtitle {
-      font-size: 13px;
-      color: var(--text3);
-      margin-bottom: 20px;
-      line-height: 1.6;
-    }
-
-    .form-group { margin-bottom: 16px; }
-
-    .form-group label {
-      display: block;
-      font-weight: 600;
-      font-size: 13px;
-      color: var(--text2);
-      margin-bottom: 6px;
-    }
-
-    .form-group input,
-    .form-group select,
-    .form-group textarea {
-      width: 100%;
-      padding: 13px 15px;
-      border: 2px solid var(--border);
-      border-radius: 14px;
-      font-size: 14px;
-      font-family: inherit;
-      background: white;
-      color: var(--text);
-      transition: all 0.2s;
-      outline: none;
-      resize: vertical;
-    }
-
-    .form-group textarea { min-height: 100px; }
-
-    .form-group input:focus,
-    .form-group select:focus,
-    .form-group textarea:focus {
-      border-color: var(--accent3);
-      box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.08);
-    }
-
-    .programs-grid {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-bottom: 6px;
-      padding-bottom: 80px;
-    }
-
+    .programs-grid { display: flex; flex-wrap: wrap; gap: 7px; padding-bottom: 80px; }
     .program-chip {
-      padding: 8px 14px;
-      border-radius: 20px;
-      font-size: 12px;
-      font-weight: 600;
-      cursor: pointer;
-      border: 2px solid var(--border);
-      background: white;
-      color: var(--text2);
-      transition: all 0.2s;
-      user-select: none;
-      white-space: nowrap;
+      padding: 7px 12px; border-radius: 18px; font-size: 11px;
+      font-weight: 600; cursor: pointer; border: 2px solid var(--border);
+      background: white; color: var(--text2); user-select: none;
     }
+    .program-chip.selected { background: #f5f3ff; border-color: var(--accent3); color: var(--accent3); }
 
-    .program-chip.selected {
-      background: #f5f3ff;
-      border-color: var(--accent3);
-      color: var(--accent3);
-      font-weight: 700;
-    }
-
-    /* ========== شاشة الكورسات ========== */
     .courses-screen {
-      display: none;
-      min-height: 100vh;
+      display: none; min-height: 100vh;
       background: linear-gradient(160deg, #f8f9fa 0%, #e9ecef 100%);
-      padding: 20px 14px 120px;
-      flex-direction: column;
+      padding: 20px 14px 120px; flex-direction: column;
     }
-
     .courses-screen.active { display: flex; }
 
-    .courses-header {
-      text-align: center;
-      margin-bottom: 20px;
-    }
-
+    .courses-header { text-align: center; margin-bottom: 18px; }
     .courses-header .teacher-badge {
-      display: inline-block;
-      background: var(--gradient1);
-      color: white;
-      padding: 6px 18px;
-      border-radius: 20px;
-      font-weight: 700;
-      font-size: 13px;
-      margin-bottom: 10px;
+      display: inline-block; background: var(--gradient1); color: white;
+      padding: 5px 16px; border-radius: 18px; font-weight: 700; font-size: 12px; margin-bottom: 8px;
     }
+    .courses-header h2 { font-size: 20px; font-weight: 800; }
+    .courses-header .subtitle { font-size: 12px; color: var(--text3); }
 
-    .courses-header h2 {
-      font-size: 22px;
-      font-weight: 800;
-      color: var(--text);
-      margin-bottom: 4px;
-    }
-
-    .courses-header .subtitle {
-      font-size: 13px;
-      color: var(--text3);
-      font-weight: 500;
-    }
-
-    .courses-grid {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      margin-bottom: 24px;
-      padding-bottom: 20px;
-    }
-
+    .courses-grid { display: flex; flex-direction: column; gap: 10px; }
     .course-card {
-      background: white;
-      border-radius: 18px;
-      padding: 16px;
-      border: 2px solid var(--border);
-      cursor: pointer;
-      transition: all 0.25s;
-      position: relative;
-      overflow: hidden;
+      background: white; border-radius: 16px; padding: 14px;
+      border: 2px solid var(--border); cursor: pointer;
     }
-
-    .course-card.selected {
-      border-color: var(--accent3);
-      background: #faf9ff;
-      box-shadow: 0 8px 25px rgba(124, 58, 237, 0.1);
-    }
-
-    .course-card::before {
-      content: '';
-      position: absolute;
-      right: 0; top: 0; bottom: 0;
-      width: 4px;
-      border-radius: 0 2px 2px 0;
-    }
-
+    .course-card.selected { border-color: var(--accent3); background: #faf9ff; }
+    .course-card::before { content: ''; position: absolute; right: 0; top: 0; bottom: 0; width: 4px; border-radius: 0 2px 2px 0; }
     .course-card:nth-child(1)::before { background: var(--gradient1); }
-    .course-card:nth-child(2)::before { background: var(--gradient2); }
+    .course-card:nth-child(2)::before { background: linear-gradient(135deg, #7c3aed, #06b6d4); }
     .course-card:nth-child(3)::before { background: linear-gradient(135deg, #06b6d4, #3b82f6); }
     .course-card:nth-child(4)::before { background: linear-gradient(135deg, #f59e0b, #ef4444); }
     .course-card:nth-child(5)::before { background: linear-gradient(135deg, #10b981, #059669); }
 
-    .course-card-header {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 6px;
-    }
-
+    .course-card-header { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
     .course-check {
-      width: 22px; height: 22px;
-      border-radius: 50%;
-      border: 2px solid #d4d4d8;
-      flex-shrink: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: all 0.2s;
+      width: 20px; height: 20px; border-radius: 50%;
+      border: 2px solid #d4d4d8; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
     }
-
-    .course-card.selected .course-check {
-      background: var(--accent3);
-      border-color: var(--accent3);
-    }
-
-    .course-check::after {
-      content: '✓';
-      color: white;
-      font-weight: 700;
-      font-size: 12px;
-      display: none;
-    }
-
+    .course-card.selected .course-check { background: var(--accent3); border-color: var(--accent3); }
+    .course-check::after { content: '✓'; color: white; font-weight: 700; font-size: 11px; display: none; }
     .course-card.selected .course-check::after { display: block; }
-
-    .course-name {
-      font-weight: 700;
-      font-size: 15px;
-      color: var(--text);
-    }
-
-    .course-desc {
-      font-size: 12px;
-      color: var(--text3);
-      padding-right: 32px;
-      line-height: 1.5;
-    }
-
+    .course-name { font-weight: 700; font-size: 14px; }
+    .course-desc { font-size: 11px; color: var(--text3); padding-right: 28px; }
     .course-target {
-      display: inline-block;
-      background: #f1f5f9;
-      color: var(--text2);
-      padding: 3px 10px;
-      border-radius: 10px;
-      font-size: 11px;
-      font-weight: 600;
-      margin-top: 6px;
-      margin-right: 32px;
+      display: inline-block; background: #f1f5f9; color: var(--text2);
+      padding: 2px 8px; border-radius: 8px; font-size: 10px; font-weight: 600;
+      margin-top: 4px; margin-right: 28px;
     }
 
-    /* ========== شاشة الشكر ========== */
     .thank-you-screen {
-      display: none;
-      min-height: 100vh;
-      background: linear-gradient(160deg, #0f172a 0%, #1e293b 100%);
-      color: white;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      padding: 30px 20px;
-      flex-direction: column;
+      display: none; min-height: 100vh; background: linear-gradient(160deg, #0f172a 0%, #1e293b 100%);
+      color: white; align-items: center; justify-content: center;
+      text-align: center; padding: 30px 20px; flex-direction: column;
     }
-
     .thank-you-screen.active { display: flex; }
-
-    .thank-you-icon {
-      font-size: 60px;
-      margin-bottom: 16px;
-      animation: bounce 1.5s infinite;
-    }
-
+    .thank-you-icon { font-size: 55px; margin-bottom: 14px; animation: bounce 1.5s infinite; }
     @keyframes bounce {
       0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-15px); }
+      50% { transform: translateY(-12px); }
     }
+    .thank-you-title { font-size: 24px; font-weight: 900; margin-bottom: 6px; }
+    .thank-you-text { font-size: 13px; opacity: 0.8; line-height: 1.7; margin-bottom: 20px; color: #cbd5e1; }
 
-    .thank-you-title {
-      font-size: 26px;
-      font-weight: 900;
-      margin-bottom: 8px;
-    }
-
-    .thank-you-text {
-      font-size: 14px;
-      opacity: 0.8;
-      line-height: 1.8;
-      margin-bottom: 24px;
-      color: #cbd5e1;
-    }
-
-    /* ========== زرار الإرسال الثابت في الأسفل ========== */
     .sticky-submit-bar {
-      position: fixed;
-      bottom: 0;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 100%;
-      max-width: 500px;
-      background: white;
-      padding: 12px 16px 20px;
-      z-index: 100;
-      box-shadow: 0 -8px 30px rgba(0,0,0,0.12);
-      border-radius: 20px 20px 0 0;
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
+      position: fixed; bottom: 0; left: 50%; transform: translateX(-50%);
+      width: 100%; max-width: 500px; background: white;
+      padding: 10px 14px 16px; z-index: 100;
+      box-shadow: 0 -6px 24px rgba(0,0,0,0.1);
+      border-radius: 18px 18px 0 0;
+      display: flex; flex-direction: column; gap: 5px;
     }
-
     .btn-submit-sticky {
-      width: 100%;
-      padding: 16px;
-      background: var(--gradient1);
-      color: white;
-      border: none;
-      border-radius: 18px;
-      font-weight: 800;
-      font-size: 17px;
-      cursor: pointer;
+      width: 100%; padding: 15px; background: var(--gradient1);
+      color: white; border: none; border-radius: 16px;
+      font-weight: 800; font-size: 16px; cursor: pointer;
       font-family: inherit;
-      box-shadow: 0 10px 30px rgba(233, 69, 96, 0.35);
-      transition: all 0.3s;
-      animation: pulse-btn 2s ease-in-out infinite;
     }
-
-    @keyframes pulse-btn {
-      0%, 100% { box-shadow: 0 10px 30px rgba(233, 69, 96, 0.35); }
-      50% { box-shadow: 0 14px 38px rgba(233, 69, 96, 0.55); }
-    }
-
-    .btn-submit-sticky:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 14px 38px rgba(233, 69, 96, 0.55);
-    }
-
-    .btn-submit-sticky:disabled { 
-      opacity: 0.6; 
-      cursor: not-allowed;
-      animation: none;
-    }
-
-    .sticky-hint {
-      text-align: center;
-      font-size: 11px;
-      color: #6c757d;
-      font-weight: 500;
-    }
-
-    .visitor-strip-mini {
-      text-align: center;
-      font-size: 12px;
-      color: var(--text3);
-      padding: 8px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
-      background: white;
-      border-radius: 0 0 16px 16px;
-      margin: 0 14px;
-      box-shadow: var(--shadow);
-      position: relative;
-      z-index: 2;
-    }
-
-    .visitor-strip-mini .count {
-      font-weight: 800;
-      color: var(--accent);
-      font-size: 16px;
-    }
+    .btn-submit-sticky:disabled { opacity: 0.6; cursor: not-allowed; }
+    .sticky-hint { text-align: center; font-size: 10px; color: #6c757d; }
 
     @media (max-width: 400px) {
       .welcome-title { font-size: 22px; }
-      .question-title { font-size: 18px; }
-      .courses-header h2 { font-size: 19px; }
-      .program-chip { font-size: 11px; padding: 6px 10px; }
-      .sticky-submit-bar { padding: 10px 12px 16px; }
+      .question-title { font-size: 17px; }
     }
   </style>
 </head>
 <body>
   <div class="main-wrapper" id="mainWrapper">
     
-    <!-- الخطوة 0: الترحيب -->
     <div class="welcome-screen active" id="step0">
       <div class="welcome-avatar">👋</div>
       <h1 class="welcome-title">أزيك يا طالبنا العزيز!</h1>
@@ -576,46 +229,29 @@
         حابب آخد رأيك في حاجات بسيطة بس هتفرق جداً في شغلنا في السنة الجديدة...<br>
         متكسلش إنك تكمل للآخر 😊
       </p>
-      <button class="btn-primary" id="startBtn">
-        يلا بينا! ←
-      </button>
-      <div style="margin-top:24px;background:rgba(255,255,255,0.05);padding:10px 16px;border-radius:16px;font-size:13px;color:rgba(255,255,255,0.7);">
-        👁️ زوار الصفحة: <span id="visitorCount" style="color:#f5a623;font-weight:800;font-size:18px;">...</span>
+      <button class="btn-primary" id="startBtn">يلا بينا! ←</button>
+      <div style="margin-top:20px;background:rgba(255,255,255,0.05);padding:8px 14px;border-radius:14px;font-size:12px;color:rgba(255,255,255,0.7);">
+        👁️ زوار الصفحة: <span id="visitorCount" style="color:#f5a623;font-weight:800;font-size:16px;">...</span>
       </div>
     </div>
 
-    <!-- الخطوة 1: البيانات الأساسية -->
     <div class="question-screen" id="step1">
       <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:10%;"></div></div>
       <div class="step-indicator">الخطوة 1 من 5</div>
       <h2 class="question-title">📝 بياناتك الأولية</h2>
-      <p class="question-subtitle">خلينا نتعرف عليك الأول</p>
-      <div class="form-group">
-        <label>الاسم الثلاثي</label>
-        <input type="text" id="studentName" placeholder="أدخل اسمك كاملاً">
-      </div>
-      <div class="form-group">
-        <label>رقم الواتساب</label>
-        <input type="tel" id="whatsappNumber" placeholder="01xxxxxxxxx" dir="ltr" style="text-align:right;">
-      </div>
+      <div class="form-group"><label>الاسم الثلاثي</label><input type="text" id="studentName" placeholder="أدخل اسمك كاملاً"></div>
+      <div class="form-group"><label>رقم الواتساب</label><input type="tel" id="whatsappNumber" placeholder="01xxxxxxxxx" dir="ltr" style="text-align:right;"></div>
       <div class="form-group">
         <label>المرحلة الدراسية</label>
         <select id="gradeLevel">
           <option value="" disabled selected>اختر المرحلة</option>
-          <option value="الصف الرابع">الصف الرابع</option>
-          <option value="الصف الخامس">الصف الخامس</option>
-          <option value="الصف السادس">الصف السادس</option>
-          <option value="الأول الإعدادي">الأول الإعدادي</option>
-          <option value="الثاني الإعدادي">الثاني الإعدادي</option>
-          <option value="الثالث الإعدادي">الثالث الإعدادي</option>
-          <option value="الأول الثانوي">الأول الثانوي</option>
-          <option value="الثاني الثانوي">الثاني الثانوي</option>
+          <option value="الصف الرابع">الصف الرابع</option><option value="الصف الخامس">الصف الخامس</option>
+          <option value="الصف السادس">الصف السادس</option><option value="الأول الإعدادي">الأول الإعدادي</option>
+          <option value="الثاني الإعدادي">الثاني الإعدادي</option><option value="الثالث الإعدادي">الثالث الإعدادي</option>
+          <option value="الأول الثانوي">الأول الثانوي</option><option value="الثاني الثانوي">الثاني الثانوي</option>
         </select>
       </div>
-      
-      <!-- زرارين التنقل ثابتين -->
       <div class="sticky-submit-bar">
-        <div class="sticky-hint">الخطوة 1 من 5</div>
         <div style="display:flex;gap:8px;">
           <button class="btn-primary" id="backTo0" style="flex:1;background:white;color:#495057;border:2px solid #e9ecef;box-shadow:none;">← رجوع</button>
           <button class="btn-primary" id="nextTo2" style="flex:1;">التالي ←</button>
@@ -623,18 +259,13 @@
       </div>
     </div>
 
-    <!-- الخطوة 2: السؤال الأول -->
     <div class="question-screen" id="step2">
       <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:30%;"></div></div>
       <div class="step-indicator">الخطوة 2 من 5</div>
       <h2 class="question-title">🤔 السؤال الأول</h2>
       <p class="question-subtitle">إيه أكتر مشكلة قابلتك في التعليم خلال فترتك الدراسية؟</p>
-      <div class="form-group">
-        <textarea id="answer1" placeholder="اكتب إجابتك هنا بصراحة..."></textarea>
-      </div>
-      
+      <div class="form-group"><textarea id="answer1" placeholder="اكتب إجابتك هنا بصراحة..."></textarea></div>
       <div class="sticky-submit-bar">
-        <div class="sticky-hint">الخطوة 2 من 5</div>
         <div style="display:flex;gap:8px;">
           <button class="btn-primary" id="backTo1" style="flex:1;background:white;color:#495057;border:2px solid #e9ecef;box-shadow:none;">← رجوع</button>
           <button class="btn-primary" id="nextTo3" style="flex:1;">التالي ←</button>
@@ -642,18 +273,13 @@
       </div>
     </div>
 
-    <!-- الخطوة 3: السؤال الثاني -->
     <div class="question-screen" id="step3">
       <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:50%;"></div></div>
       <div class="step-indicator">الخطوة 3 من 5</div>
       <h2 class="question-title">💬 السؤال الثاني</h2>
-      <p class="question-subtitle">لو انت من طلابي الأوفلاين أو الأونلاين، إيه أكتر حاجة علقت معاك خلال السنة؟</p>
-      <div class="form-group">
-        <textarea id="answer2" placeholder="اكتب رأيك بكل صراحة..."></textarea>
-      </div>
-      
+      <p class="question-subtitle">لو انت من طلابي، إيه أكتر حاجة علقت معاك خلال السنة؟</p>
+      <div class="form-group"><textarea id="answer2" placeholder="اكتب رأيك بكل صراحة..."></textarea></div>
       <div class="sticky-submit-bar">
-        <div class="sticky-hint">الخطوة 3 من 5</div>
         <div style="display:flex;gap:8px;">
           <button class="btn-primary" id="backTo2" style="flex:1;background:white;color:#495057;border:2px solid #e9ecef;box-shadow:none;">← رجوع</button>
           <button class="btn-primary" id="nextTo4" style="flex:1;">التالي ←</button>
@@ -661,16 +287,13 @@
       </div>
     </div>
 
-    <!-- الخطوة 4: السؤال الثالث -->
     <div class="question-screen" id="step4">
       <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:70%;"></div></div>
       <div class="step-indicator">الخطوة 4 من 5</div>
       <h2 class="question-title">💻 السؤال الثالث</h2>
       <p class="question-subtitle">بما إني مهندس برمجة، لو فيه برنامج هيساعدك، حابب يكون إيه؟</p>
       <div class="programs-grid" id="programsGrid"></div>
-      
       <div class="sticky-submit-bar">
-        <div class="sticky-hint">الخطوة 4 من 5 - تقدر تختار أكتر من برنامج</div>
         <div style="display:flex;gap:8px;">
           <button class="btn-primary" id="backTo3" style="flex:1;background:white;color:#495057;border:2px solid #e9ecef;box-shadow:none;">← رجوع</button>
           <button class="btn-primary" id="nextTo5" style="flex:1;">التالي ←</button>
@@ -678,34 +301,24 @@
       </div>
     </div>
 
-    <!-- الخطوة 5: الكورسات -->
     <div class="courses-screen" id="step5">
       <div class="courses-header">
         <div class="teacher-badge">م/ إسماعيل عماد</div>
         <h2>الكورسات المتاحة</h2>
-        <p class="subtitle">هتتوفر من أول شهر 7 - اختار اللي حابب تشترك فيه(اختياري بإشتراك رمزي)</p>
+        <p class="subtitle">هتتوفر من أول شهر 7</p>
       </div>
       <div class="courses-grid" id="coursesGrid"></div>
-      
-      <!-- زرار إرسال ثابت في الأسفل -->
       <div class="sticky-submit-bar">
-        <p class="sticky-hint">اختيار الكورسات اختياري - تقدر ترسل من غير ما تختار</p>
-        <button class="btn-submit-sticky" id="finalSubmitBtn">
-          🚀 إرسال الاستبيان
-        </button>
+        <p class="sticky-hint">اختيار الكورسات اختياري</p>
+        <button class="btn-submit-sticky" id="finalSubmitBtn">🚀 إرسال الاستبيان</button>
       </div>
     </div>
 
-    <!-- شاشة الشكر -->
     <div class="thank-you-screen" id="thankYouScreen">
       <div class="thank-you-icon">🎉</div>
       <h2 class="thank-you-title">شكراً جزيلاً!</h2>
-      <p class="thank-you-text">
-        تم استلام ردك بنجاح ✅<br>
-        لو اخترت كورس، هنتواصل معاك عبر الواتساب قريباً<br>
-        لتوضيح التفاصيل والسعر.
-      </p>
-      <p style="font-size:12px;color:#94a3b8;">م/ إسماعيل عماد | 01122104596</p>
+      <p class="thank-you-text">تم استلام ردك بنجاح ✅<br>لو اخترت كورس، هنتواصل معاك عبر الواتساب</p>
+      <p style="font-size:11px;color:#94a3b8;">م/ إسماعيل عماد | 01122104596</p>
     </div>
 
   </div>
@@ -713,15 +326,8 @@
   <script>
     window.addEventListener('load', function() {
       setTimeout(function() {
-        if (window.db && window.collection && window.addDoc) {
-          console.log("✅ بدء التطبيق");
-          initApp();
-        } else {
-          console.error("❌ Firebase غير متصل");
-          setTimeout(function() {
-            if (window.db) initApp();
-          }, 1000);
-        }
+        if (window.db) initApp();
+        else setTimeout(function() { if (window.db) initApp(); }, 1000);
       }, 300);
     });
 
@@ -734,6 +340,7 @@
       const setD = window.setDoc;
       const inc = window.increment;
       const docR = window.docRef;
+      const getCount = window.getCountFromServer;
 
       const programsList = [
         "برنامج إدارة وقت المذاكرة", "تطبيق حلول الواجبات", "منصة امتحانات تفاعلية",
@@ -746,118 +353,81 @@
       ];
 
       const coursesList = [
-        { id: 'course1', name: 'كورس تأسيسي مادة العلوم', desc: 'تأسيس قوي لمادة العلوم استعداداً للعام الجديد', target: 'الصف الرابع حتى الثالث الإعدادي' },
-        { id: 'course2', name: 'كورس تأسيس برمجة وتنمية المهارات', desc: 'كل مرحلة لها منهج خاص – من الأساسيات حتى المشاريع', target: 'الصف الرابع حتى الثاني الثانوي' },
-        { id: 'course3', name: 'كورس تأسيسي علوم متكاملة', desc: 'تحضير شامل لمادة العلوم المتكاملة للعام الجديد', target: 'الصف الأول الثانوي' },
-        { id: 'course4', name: 'كورس تأسيسي في الكيمياء', desc: 'شرح وافي وتأسيس متين لمادة الكيمياء', target: 'الصف الثاني الثانوي' },
-        { id: 'course5', name: 'كورس تأسيسي في الفيزياء', desc: 'فهم عميق وتأسيس قوي لمادة الفيزياء', target: 'الصف الثاني الثانوي' }
+        { id: 'course1', name: 'كورس تأسيسي مادة العلوم', desc: 'تأسيس قوي لمادة العلوم', target: 'الصف الرابع حتى الثالث الإعدادي' },
+        { id: 'course2', name: 'كورس تأسيس برمجة وتنمية المهارات', desc: 'منهج خاص لكل مرحلة', target: 'الصف الرابع حتى الثاني الثانوي' },
+        { id: 'course3', name: 'كورس تأسيسي علوم متكاملة', desc: 'تحضير شامل للعلوم المتكاملة', target: 'الصف الأول الثانوي' },
+        { id: 'course4', name: 'كورس تأسيسي في الكيمياء', desc: 'تأسيس متين لمادة الكيمياء', target: 'الصف الثاني الثانوي' },
+        { id: 'course5', name: 'كورس تأسيسي في الفيزياء', desc: 'فهم عميق للفيزياء', target: 'الصف الثاني الثانوي' }
       ];
 
       let selectedPrograms = [];
       let selectedCourses = [];
 
-      const programsGrid = document.getElementById('programsGrid');
-      programsList.forEach((prog) => {
+      const pg = document.getElementById('programsGrid');
+      programsList.forEach(prog => {
         const chip = document.createElement('span');
-        chip.className = 'program-chip';
-        chip.textContent = prog;
+        chip.className = 'program-chip'; chip.textContent = prog;
         chip.addEventListener('click', function() {
           this.classList.toggle('selected');
-          if (this.classList.contains('selected')) {
-            selectedPrograms.push(prog);
-          } else {
-            selectedPrograms = selectedPrograms.filter(p => p !== prog);
-          }
+          if (this.classList.contains('selected')) selectedPrograms.push(prog);
+          else selectedPrograms = selectedPrograms.filter(p => p !== prog);
         });
-        programsGrid.appendChild(chip);
+        pg.appendChild(chip);
       });
 
-      const coursesGrid = document.getElementById('coursesGrid');
+      const cg = document.getElementById('coursesGrid');
       coursesList.forEach(course => {
         const card = document.createElement('div');
-        card.className = 'course-card';
-        card.dataset.courseId = course.id;
+        card.className = 'course-card'; card.dataset.courseId = course.id;
         card.innerHTML = `
-          <div class="course-card-header">
-            <div class="course-check"></div>
-            <div class="course-name">${course.name}</div>
-          </div>
-          <div class="course-desc">${course.desc}</div>
-          <div class="course-target">🎯 ${course.target}</div>
+          <div class="course-card-header"><div class="course-check"></div><div class="course-name">${course.name}</div></div>
+          <div class="course-desc">${course.desc}</div><div class="course-target">🎯 ${course.target}</div>
         `;
         card.addEventListener('click', function() {
           this.classList.toggle('selected');
-          if (this.classList.contains('selected')) {
-            selectedCourses.push(course.id);
-          } else {
-            selectedCourses = selectedCourses.filter(c => c !== course.id);
-          }
+          if (this.classList.contains('selected')) selectedCourses.push(course.id);
+          else selectedCourses = selectedCourses.filter(c => c !== course.id);
         });
-        coursesGrid.appendChild(card);
+        cg.appendChild(card);
       });
 
       function hideAll() {
-        for (let i = 0; i <= 5; i++) {
-          const el = document.getElementById(`step${i}`);
-          if (el) el.classList.remove('active');
-        }
+        for (let i = 0; i <= 5; i++) { const el = document.getElementById(`step${i}`); if (el) el.classList.remove('active'); }
         document.getElementById('thankYouScreen').classList.remove('active');
       }
 
-      function showStep(step) {
+      function showStep(s) {
         hideAll();
-        if (step === 5) {
-          document.getElementById('step5').classList.add('active');
-        } else if (step >= 0 && step <= 4) {
-          document.getElementById(`step${step}`).classList.add('active');
-        }
+        if (s === 5) document.getElementById('step5').classList.add('active');
+        else if (s >= 0 && s <= 4) document.getElementById(`step${s}`).classList.add('active');
         window.scrollTo({ top: 0, behavior: 'smooth' });
       }
 
-      function showThankYou() {
-        hideAll();
-        document.getElementById('thankYouScreen').classList.add('active');
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-      }
-
-      document.getElementById('startBtn').addEventListener('click', function() { showStep(1); });
-      document.getElementById('backTo0').addEventListener('click', function() { showStep(0); });
-      document.getElementById('nextTo2').addEventListener('click', function() { showStep(2); });
-      document.getElementById('backTo1').addEventListener('click', function() { showStep(1); });
-      document.getElementById('nextTo3').addEventListener('click', function() { showStep(3); });
-      document.getElementById('backTo2').addEventListener('click', function() { showStep(2); });
-      document.getElementById('nextTo4').addEventListener('click', function() { showStep(4); });
-      document.getElementById('backTo3').addEventListener('click', function() { showStep(3); });
-      document.getElementById('nextTo5').addEventListener('click', function() { showStep(5); });
+      document.getElementById('startBtn').addEventListener('click', () => showStep(1));
+      document.getElementById('backTo0').addEventListener('click', () => showStep(0));
+      document.getElementById('nextTo2').addEventListener('click', () => showStep(2));
+      document.getElementById('backTo1').addEventListener('click', () => showStep(1));
+      document.getElementById('nextTo3').addEventListener('click', () => showStep(3));
+      document.getElementById('backTo2').addEventListener('click', () => showStep(2));
+      document.getElementById('nextTo4').addEventListener('click', () => showStep(4));
+      document.getElementById('backTo3').addEventListener('click', () => showStep(3));
+      document.getElementById('nextTo5').addEventListener('click', () => showStep(5));
 
       document.getElementById('finalSubmitBtn').addEventListener('click', async function() {
-        const btn = this;
-        btn.disabled = true;
-        btn.textContent = '⏳ جاري الإرسال...';
-
+        const btn = this; btn.disabled = true; btn.textContent = '⏳ جاري...';
         const name = document.getElementById('studentName').value.trim();
         const phone = document.getElementById('whatsappNumber').value.trim();
         const grade = document.getElementById('gradeLevel').value;
-        const answer1 = document.getElementById('answer1').value.trim();
-        const answer2 = document.getElementById('answer2').value.trim();
+        const a1 = document.getElementById('answer1').value.trim();
+        const a2 = document.getElementById('answer2').value.trim();
 
-        if (!name || !phone || !grade) {
-          alert('يرجى ملء الاسم والرقم والمرحلة الدراسية على الأقل.');
-          btn.disabled = false;
-          btn.textContent = '🚀 إرسال الاستبيان';
-          return;
-        }
+        if (!name || !phone || !grade) { alert('يرجى ملء الاسم والرقم والمرحلة.'); btn.disabled = false; btn.textContent = '🚀 إرسال'; return; }
 
         try {
           await add(col(db, "survey_ismail_emad"), {
-            studentName: name,
-            phoneNumber: phone,
-            gradeLevel: grade,
-            answer1: answer1 || 'لم يجب',
-            answer2: answer2 || 'لم يجب',
-            selectedPrograms: selectedPrograms,
-            selectedCourses: selectedCourses,
-            submittedAt: sTime(),
+            studentName: name, phoneNumber: phone, gradeLevel: grade,
+            answer1: a1 || 'لم يجب', answer2: a2 || 'لم يجب',
+            selectedPrograms, selectedCourses, submittedAt: sTime(),
             source: "استبيان م/ إسماعيل عماد"
           });
 
@@ -866,63 +436,39 @@
           const today = new Date().toDateString();
           
           if (!snap.exists()) {
-            await setD(STATS_DOC, {
-              totalVisitors: 0, totalSubmissions: 1, newSubmissions: 1,
-              todaySubmissions: 1, lastTodayReset: today, updatedAt: sTime()
-            });
+            await setD(STATS_DOC, { totalVisitors: 0, totalSubmissions: 1, newSubmissions: 1, todaySubmissions: 1, lastTodayReset: today, updatedAt: sTime() });
           } else {
             const data = snap.data();
             const updates = { totalSubmissions: inc(1), newSubmissions: inc(1), updatedAt: sTime() };
-            if (data.lastTodayReset !== today) {
-              updates.todaySubmissions = 1;
-              updates.lastTodayReset = today;
-            } else {
-              updates.todaySubmissions = inc(1);
-            }
+            updates.todaySubmissions = (data.lastTodayReset !== today) ? 1 : inc(1);
+            if (data.lastTodayReset !== today) updates.lastTodayReset = today;
             await setD(STATS_DOC, updates, { merge: true });
           }
 
-          console.log("✅ تم حفظ الاستبيان");
-          showThankYou();
-        } catch (error) {
-          console.error('❌ خطأ:', error);
-          alert('حدث خطأ. حاول مرة أخرى.');
-          btn.disabled = false;
-          btn.textContent = '🚀 إرسال الاستبيان';
-        }
+          hideAll(); document.getElementById('thankYouScreen').classList.add('active');
+          window.scrollTo({ top: 0 });
+        } catch (e) { console.error(e); alert('خطأ. حاول مرة أخرى.'); btn.disabled = false; btn.textContent = '🚀 إرسال'; }
       });
 
-      // ========== عداد الزوار - كل دخول ==========
+      // ========== عداد زوار محسن (قراءة واحدة فقط) ==========
       (async function() {
         try {
           const STATS_DOC = docR(db, "statistics_ismail_emad", "counters");
 
-          await add(col(db, "visitors_ismail_emad"), {
-            visitedAt: sTime(),
-            page: "استبيان وكورسات م/ إسماعيل عماد",
-            timestamp: Date.now()
-          });
+          // تسجيل زيارة (كتابة واحدة)
+          await add(col(db, "visitors_ismail_emad"), { visitedAt: sTime(), page: "استبيان م/ إسماعيل عماد", timestamp: Date.now() });
 
           const snap = await getD(STATS_DOC);
           if (!snap.exists()) {
-            await setD(STATS_DOC, {
-              totalVisitors: 1, totalSubmissions: 0, newSubmissions: 0,
-              todaySubmissions: 0, lastTodayReset: new Date().toDateString(), updatedAt: sTime()
-            });
+            await setD(STATS_DOC, { totalVisitors: 1, totalSubmissions: 0, newSubmissions: 0, todaySubmissions: 0, lastTodayReset: new Date().toDateString(), updatedAt: sTime() });
           } else {
             await setD(STATS_DOC, { totalVisitors: inc(1), updatedAt: sTime() }, { merge: true });
           }
 
-          const updatedSnap = await getD(STATS_DOC);
-          if (updatedSnap.exists()) {
-            document.getElementById('visitorCount').textContent = updatedSnap.data().totalVisitors || 0;
-          }
-          
-          console.log("✅ تم تسجيل زيارة جديدة");
-        } catch (e) {
-          console.error('❌ خطأ في عداد الزوار:', e);
-          document.getElementById('visitorCount').textContent = '...';
-        }
+          // عرض العدد (قراءة واحدة فقط)
+          const updated = await getD(STATS_DOC);
+          document.getElementById('visitorCount').textContent = updated.exists() ? (updated.data().totalVisitors || 0) : 1;
+        } catch (e) { document.getElementById('visitorCount').textContent = '...'; }
       })();
     }
   </script>
