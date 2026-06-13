@@ -1,0 +1,1003 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
+  <title>لوحة التحكم | م/ إسماعيل عماد</title>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-app.js";
+    import { 
+      getFirestore, collection, query, orderBy, onSnapshot, 
+      deleteDoc, doc, updateDoc, serverTimestamp, 
+      getDoc, setDoc, increment, limit, where, writeBatch 
+    } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-firestore.js";
+    import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-analytics.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyBysr4ZEHTY_ojej_onmso3d09sz6uU65A",
+      authDomain: "infinity-ai-bd879.firebaseapp.com",
+      projectId: "infinity-ai-bd879",
+      storageBucket: "infinity-ai-bd879.firebasestorage.app",
+      messagingSenderId: "391390244727",
+      appId: "1:391390244727:web:7cc77f13f3ed0e4221fb72",
+      measurementId: "G-XGW87N67WZ"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const analytics = getAnalytics(app);
+    
+    window.db = db;
+    window.collection = collection;
+    window.query = query;
+    window.orderBy = orderBy;
+    window.onSnapshot = onSnapshot;
+    window.deleteDoc = deleteDoc;
+    window.doc = doc;
+    window.updateDoc = updateDoc;
+    window.serverTimestamp = serverTimestamp;
+    window.getDoc = getDoc;
+    window.setDoc = setDoc;
+    window.increment = increment;
+    window.limit = limit;
+    window.where = where;
+    window.writeBatch = writeBatch;
+    
+    console.log("✅ Firebase جاهز - لوحة تحكم م/ إسماعيل عماد");
+  </script>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: #f5f5f7;
+      font-family: 'Cairo', 'Segoe UI', sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      min-height: 100vh;
+      padding: 10px;
+      direction: rtl;
+      color: #1a1a2e;
+    }
+
+    .dashboard {
+      width: 100%;
+      max-width: 700px;
+      background: #ffffff;
+      border-radius: 24px;
+      box-shadow: 0 15px 40px rgba(0,0,0,0.08);
+      padding: 20px 14px 24px;
+      border: 1px solid #e9ecef;
+    }
+
+    /* هيدر */
+    .dash-header {
+      text-align: center;
+      margin-bottom: 18px;
+      padding-bottom: 14px;
+      border-bottom: 2px solid #f1f3f5;
+    }
+
+    .dash-avatar {
+      width: 55px; height: 55px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #e94560, #f5a623);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 8px;
+      color: white;
+      font-size: 22px;
+      font-weight: 900;
+    }
+
+    .dash-header h1 {
+      font-size: 20px;
+      font-weight: 800;
+      color: #1a1a2e;
+    }
+
+    .dash-header .subtitle {
+      font-size: 11px;
+      color: #6c757d;
+      font-weight: 600;
+    }
+
+    /* إحصائيات */
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+
+    .stat-box {
+      background: linear-gradient(135deg, #f8f9fa, #f1f3f5);
+      border-radius: 14px;
+      padding: 12px 6px;
+      text-align: center;
+      border: 1px solid #e9ecef;
+      transition: all 0.2s;
+    }
+
+    .stat-box:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    }
+
+    .stat-value {
+      font-size: 24px;
+      font-weight: 900;
+      color: #e94560;
+    }
+
+    .stat-label {
+      font-size: 10px;
+      color: #6c757d;
+      font-weight: 700;
+      margin-top: 2px;
+    }
+
+    /* فلترة وبحث */
+    .controls-row {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 14px;
+      flex-wrap: wrap;
+    }
+
+    .search-box {
+      flex: 1;
+      min-width: 150px;
+      padding: 10px 14px;
+      border: 2px solid #e9ecef;
+      border-radius: 14px;
+      font-size: 13px;
+      font-family: inherit;
+      background: #f8f9fa;
+      outline: none;
+      transition: all 0.2s;
+    }
+
+    .search-box:focus {
+      border-color: #e94560;
+      background: white;
+      box-shadow: 0 0 0 3px rgba(233, 69, 96, 0.06);
+    }
+
+    .filter-select {
+      padding: 10px 12px;
+      border: 2px solid #e9ecef;
+      border-radius: 14px;
+      font-size: 12px;
+      font-family: inherit;
+      background: #f8f9fa;
+      outline: none;
+      cursor: pointer;
+    }
+
+    /* تبويبات */
+    .tabs {
+      display: flex;
+      gap: 4px;
+      margin-bottom: 14px;
+      background: #f8f9fa;
+      padding: 4px;
+      border-radius: 14px;
+      flex-wrap: wrap;
+    }
+
+    .tab-btn {
+      flex: 1;
+      min-width: 60px;
+      padding: 9px 8px;
+      border: none;
+      background: transparent;
+      border-radius: 12px;
+      font-size: 11px;
+      font-weight: 700;
+      color: #6c757d;
+      cursor: pointer;
+      font-family: inherit;
+      white-space: nowrap;
+      transition: all 0.15s;
+    }
+
+    .tab-btn.active {
+      background: white;
+      color: #e94560;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    }
+
+    .tab-btn:hover:not(.active) {
+      color: #495057;
+    }
+
+    .tab-badge {
+      background: #e9ecef;
+      color: #495057;
+      padding: 1px 7px;
+      border-radius: 8px;
+      font-size: 10px;
+      margin-right: 2px;
+      font-weight: 700;
+    }
+
+    .refresh-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+      font-size: 11px;
+      color: #6c757d;
+    }
+
+    .live-badge {
+      background: #d4edda;
+      color: #155724;
+      padding: 4px 10px;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 10px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .live-dot {
+      width: 7px; height: 7px;
+      background: #28a745;
+      border-radius: 50%;
+      animation: pulse 1.5s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+
+    /* أزرار جماعية */
+    .batch-actions {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .batch-btn {
+      padding: 7px 14px;
+      border-radius: 10px;
+      font-size: 11px;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: inherit;
+      border: none;
+      transition: all 0.15s;
+    }
+
+    .batch-read {
+      background: #d4edda;
+      color: #155724;
+    }
+
+    .batch-read:hover { background: #c3e6cb; }
+
+    .batch-delete {
+      background: #f8d7da;
+      color: #721c24;
+    }
+
+    .batch-delete:hover { background: #f5c6cb; }
+
+    /* قوائم */
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+
+    .requests-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      max-height: 50vh;
+      overflow-y: auto;
+      padding-left: 2px;
+    }
+
+    .request-card {
+      background: #ffffff;
+      border-radius: 14px;
+      padding: 14px;
+      border: 2px solid #e9ecef;
+      animation: fadeIn 0.3s ease;
+      transition: all 0.2s;
+    }
+
+    .request-card.new-highlight {
+      border-right: 4px solid #28a745;
+    }
+
+    .request-card.read-highlight {
+      border-right: 4px solid #dee2e6;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 10px;
+    }
+
+    .student-name {
+      font-weight: 700;
+      font-size: 15px;
+      color: #1a1a2e;
+    }
+
+    .card-time {
+      font-size: 10px;
+      color: #adb5bd;
+      font-weight: 500;
+      white-space: nowrap;
+    }
+
+    .card-details {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .detail-row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      color: #495057;
+    }
+
+    .detail-label {
+      font-weight: 600;
+      color: #6c757d;
+      font-size: 10px;
+      min-width: 42px;
+    }
+
+    .detail-value {
+      font-weight: 600;
+      color: #1a1a2e;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: 10px;
+      font-size: 10px;
+      font-weight: 700;
+      margin: 2px;
+    }
+
+    .badge-new { background: #d4edda; color: #155724; }
+    .badge-read { background: #f8f9fa; color: #6c757d; }
+    .badge-course { background: #fff3cd; color: #856404; }
+
+    .programs-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      margin-top: 4px;
+    }
+
+    .program-tag {
+      background: #e9ecef;
+      color: #495057;
+      padding: 2px 8px;
+      border-radius: 8px;
+      font-size: 10px;
+      font-weight: 600;
+    }
+
+    .card-actions {
+      display: flex;
+      gap: 6px;
+      margin-top: 10px;
+      flex-wrap: wrap;
+    }
+
+    .btn-action {
+      padding: 7px 12px;
+      border-radius: 10px;
+      font-size: 11px;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: inherit;
+      border: none;
+      transition: all 0.15s;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .btn-wa { background: #d4edda; color: #155724; }
+    .btn-wa:hover { background: #c3e6cb; }
+    .btn-copy { background: #cce5ff; color: #004085; }
+    .btn-copy:hover { background: #b8daff; }
+    .btn-toggle { background: #fff3cd; color: #856404; }
+    .btn-toggle:hover { background: #ffeaa7; }
+    .btn-del { background: #f8d7da; color: #721c24; }
+    .btn-del:hover { background: #f5c6cb; }
+
+    .empty-state {
+      text-align: center;
+      padding: 40px 16px;
+      color: #adb5bd;
+    }
+
+    .empty-state .icon { font-size: 45px; margin-bottom: 10px; }
+    .empty-state p { font-size: 14px; font-weight: 600; }
+
+    /* مودال */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.6);
+      z-index: 1000;
+      justify-content: center;
+      align-items: center;
+      padding: 16px;
+      backdrop-filter: blur(4px);
+    }
+
+    .modal-overlay.active { display: flex; }
+
+    .modal-box {
+      background: white;
+      border-radius: 20px;
+      padding: 24px 18px;
+      max-width: 380px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 24px 50px rgba(0,0,0,0.3);
+      animation: slideUp 0.3s ease;
+    }
+
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .modal-icon { font-size: 45px; margin-bottom: 10px; }
+    .modal-title { font-size: 19px; font-weight: 800; color: #1a1a2e; margin-bottom: 6px; }
+    .modal-text { font-size: 12px; color: #6c757d; margin-bottom: 6px; }
+    .modal-name { font-weight: 800; color: #1a1a2e; font-size: 15px; margin-bottom: 14px; }
+
+    .modal-actions { display: flex; gap: 8px; justify-content: center; }
+    .modal-btn {
+      padding: 11px 20px;
+      border-radius: 14px;
+      font-size: 13px;
+      font-weight: 700;
+      border: none;
+      cursor: pointer;
+      font-family: inherit;
+    }
+
+    .modal-btn-cancel { background: #f8f9fa; color: #6c757d; }
+    .modal-btn-cancel:hover { background: #e9ecef; }
+    .modal-btn-danger { background: #dc3545; color: white; }
+    .modal-btn-danger:hover { background: #c82333; }
+    .modal-btn-danger:disabled { opacity: 0.6; cursor: not-allowed; }
+
+    .requests-list::-webkit-scrollbar { width: 5px; }
+    .requests-list::-webkit-scrollbar-track { background: #f8f9fa; border-radius: 8px; }
+    .requests-list::-webkit-scrollbar-thumb { background: #dee2e6; border-radius: 8px; }
+
+    .visitor-summary-card {
+      background: linear-gradient(135deg, #f8f9fa, #fff);
+      border-radius: 16px;
+      padding: 16px;
+      margin-bottom: 12px;
+      text-align: center;
+      border: 1px solid #e9ecef;
+    }
+
+    .visitor-big-num {
+      font-size: 40px;
+      font-weight: 900;
+      color: #e94560;
+    }
+
+    .visitor-detail-row {
+      display: flex;
+      justify-content: space-around;
+      margin-top: 10px;
+      padding-top: 10px;
+      border-top: 1px solid #e9ecef;
+    }
+
+    .visitor-entry {
+      background: white;
+      border-radius: 10px;
+      padding: 8px 12px;
+      margin-bottom: 5px;
+      border: 1px solid #e9ecef;
+      font-size: 12px;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    @media (max-width: 500px) {
+      .stats-row { grid-template-columns: repeat(2, 1fr); gap: 6px; }
+      .tab-btn { font-size: 10px; padding: 7px 5px; }
+      .btn-action { font-size: 10px; padding: 6px 9px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- مودال الحذف -->
+  <div class="modal-overlay" id="deleteModal">
+    <div class="modal-box">
+      <div class="modal-icon">⚠️</div>
+      <div class="modal-title">تأكيد الحذف</div>
+      <div class="modal-text">هل أنت متأكد من حذف هذا الطلب؟</div>
+      <div class="modal-name" id="modalStudentName">---</div>
+      <div class="modal-text" style="font-size:10px;color:#dc3545;">لا يمكن التراجع</div>
+      <div class="modal-actions">
+        <button class="modal-btn modal-btn-cancel" id="cancelBtn">إلغاء</button>
+        <button class="modal-btn modal-btn-danger" id="confirmBtn">حذف</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="dashboard">
+    <div class="dash-header">
+      <div class="dash-avatar">ع</div>
+      <h1>لوحة تحكم م/ إسماعيل عماد</h1>
+      <div class="subtitle">استطلاعات الرأي وكورسات البرمجة</div>
+    </div>
+
+    <!-- إحصائيات -->
+    <div class="stats-row">
+      <div class="stat-box">
+        <div class="stat-value" id="statVisitors">0</div>
+        <div class="stat-label">👁️ زوار</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-value" id="statTotal">0</div>
+        <div class="stat-label">📋 استبيانات</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-value" id="statNew">0</div>
+        <div class="stat-label">🆕 جديد</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-value" id="statToday">0</div>
+        <div class="stat-label">📅 اليوم</div>
+      </div>
+    </div>
+
+    <!-- فلترة -->
+    <div class="controls-row">
+      <input type="text" class="search-box" id="searchInput" placeholder="🔍 بحث بالاسم أو الرقم...">
+      <select class="filter-select" id="gradeFilter">
+        <option value="all">كل المراحل</option>
+        <option value="الصف الرابع">رابع</option>
+        <option value="الصف الخامس">خامس</option>
+        <option value="الصف السادس">سادس</option>
+        <option value="الأول الإعدادي">أول إعدادي</option>
+        <option value="الثاني الإعدادي">ثاني إعدادي</option>
+        <option value="الثالث الإعدادي">ثالث إعدادي</option>
+        <option value="الأول الثانوي">أول ثانوي</option>
+        <option value="الثاني الثانوي">ثاني ثانوي</option>
+      </select>
+    </div>
+
+    <!-- تبويبات -->
+    <div class="tabs">
+      <button class="tab-btn active" data-tab="all">الكل <span class="tab-badge" id="badgeAll">0</span></button>
+      <button class="tab-btn" data-tab="new">🆕 جديد <span class="tab-badge" id="badgeNew">0</span></button>
+      <button class="tab-btn" data-tab="read">✅ مقروء</button>
+      <button class="tab-btn" data-tab="withCourses">📚 مختار كورسات</button>
+      <button class="tab-btn" data-tab="visitors">👁️ زوار</button>
+    </div>
+
+    <div class="refresh-row">
+      <span>آخر تحديث: <span id="lastUpdate">الآن</span></span>
+      <span class="live-badge"><span class="live-dot"></span>مباشر</span>
+    </div>
+
+    <!-- محتوى التبويبات -->
+    <div class="tab-content active" id="tab-all"><div class="requests-list" id="listAll"></div></div>
+    <div class="tab-content" id="tab-new"><div class="requests-list" id="listNew"></div></div>
+    <div class="tab-content" id="tab-read"><div class="requests-list" id="listRead"></div></div>
+    <div class="tab-content" id="tab-withCourses"><div class="requests-list" id="listCourses"></div></div>
+    <div class="tab-content" id="tab-visitors"><div class="requests-list" id="listVisitors"></div></div>
+  </div>
+
+  <script>
+    (function() {
+      window.addEventListener('load', function() {
+        if (!window.db) { setTimeout(initDashboard, 600); return; }
+        initDashboard();
+      });
+
+      function initDashboard() {
+        const db = window.db;
+        const col = window.collection;
+        const q = window.query;
+        const order = window.orderBy;
+        const onSnap = window.onSnapshot;
+        const delDoc = window.deleteDoc;
+        const docR = window.doc;
+        const updDoc = window.updateDoc;
+        const sTime = window.serverTimestamp;
+        const getD = window.getDoc;
+        const setD = window.setDoc;
+        const inc = window.increment;
+        const lim = window.limit;
+
+        // عناصر الواجهة
+        const els = {
+          statVisitors: document.getElementById('statVisitors'),
+          statTotal: document.getElementById('statTotal'),
+          statNew: document.getElementById('statNew'),
+          statToday: document.getElementById('statToday'),
+          badgeAll: document.getElementById('badgeAll'),
+          badgeNew: document.getElementById('badgeNew'),
+          lastUpdate: document.getElementById('lastUpdate'),
+          searchInput: document.getElementById('searchInput'),
+          gradeFilter: document.getElementById('gradeFilter'),
+          listAll: document.getElementById('listAll'),
+          listNew: document.getElementById('listNew'),
+          listRead: document.getElementById('listRead'),
+          listCourses: document.getElementById('listCourses'),
+          listVisitors: document.getElementById('listVisitors'),
+          modal: document.getElementById('deleteModal'),
+          modalName: document.getElementById('modalStudentName'),
+          cancelBtn: document.getElementById('cancelBtn'),
+          confirmBtn: document.getElementById('confirmBtn'),
+        };
+
+        let activeTab = 'all';
+        let allRequests = [];
+        let allVisitors = [];
+        let deleteTargetId = null;
+        let searchTerm = '';
+        let gradeFilter = 'all';
+
+        const STATS_DOC = docR(db, "statistics_ismail_emad", "counters");
+
+        // تحميل الإحصائيات
+        async function loadStats() {
+          try {
+            const snap = await getD(STATS_DOC);
+            if (snap.exists()) {
+              const data = snap.data();
+              const today = new Date().toDateString();
+              
+              if (data.lastTodayReset !== today) {
+                await setD(STATS_DOC, {
+                  totalVisitors: data.totalVisitors || 0,
+                  totalSubmissions: data.totalSubmissions || 0,
+                  newSubmissions: data.newSubmissions || 0,
+                  todaySubmissions: 0,
+                  lastTodayReset: today,
+                  updatedAt: sTime()
+                }, { merge: true });
+                data.todaySubmissions = 0;
+              }
+
+              els.statVisitors.textContent = data.totalVisitors || 0;
+              els.statTotal.textContent = data.totalSubmissions || 0;
+              els.statNew.textContent = data.newSubmissions || 0;
+              els.statToday.textContent = data.todaySubmissions || 0;
+            }
+          } catch (e) { console.error('خطأ الإحصائيات:', e); }
+        }
+
+        // تبويبات
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+          btn.addEventListener('click', function() {
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+            activeTab = this.dataset.tab;
+            document.querySelectorAll('.tab-content').forEach(tc => tc.classList.remove('active'));
+            document.getElementById(`tab-${activeTab}`).classList.add('active');
+          });
+        });
+
+        // بحث وفلترة
+        els.searchInput.addEventListener('input', function() {
+          searchTerm = this.value.toLowerCase();
+          renderAll();
+        });
+
+        els.gradeFilter.addEventListener('change', function() {
+          gradeFilter = this.value;
+          renderAll();
+        });
+
+        function filterReqs(requests) {
+          return requests.filter(req => {
+            const nameMatch = !searchTerm || 
+              (req.studentName && req.studentName.toLowerCase().includes(searchTerm)) ||
+              (req.phoneNumber && req.phoneNumber.includes(searchTerm));
+            const gradeMatch = gradeFilter === 'all' || req.gradeLevel === gradeFilter;
+            return nameMatch && gradeMatch;
+          });
+        }
+
+        // استماع للتسجيلات
+        const surveyCol = col(db, "survey_ismail_emad");
+        const surveyQuery = q(surveyCol, order("submittedAt", "desc"), lim(100));
+
+        onSnap(surveyQuery, (snapshot) => {
+          const requests = [];
+          snapshot.forEach((doc) => {
+            requests.push({ id: doc.id, ...doc.data() });
+          });
+          allRequests = requests;
+
+          const newReqs = requests.filter(r => !r.read);
+          const withCourses = requests.filter(r => r.selectedCourses && r.selectedCourses.length > 0);
+          
+          els.badgeAll.textContent = requests.length;
+          els.badgeNew.textContent = newReqs.length;
+
+          loadStats();
+          renderAll();
+          updateTime();
+        }, (error) => {
+          console.error("خطأ في جلب التسجيلات:", error);
+        });
+
+        // استماع للزوار
+        const visCol = col(db, "visitors_ismail_emad");
+        const visQuery = q(visCol, order("visitedAt", "desc"), lim(50));
+
+        onSnap(visQuery, (snapshot) => {
+          const visitors = [];
+          snapshot.forEach((doc) => {
+            visitors.push({ id: doc.id, ...doc.data() });
+          });
+          allVisitors = visitors;
+          renderVisitors();
+        }, (error) => {
+          console.error("خطأ في جلب الزوار:", error);
+        });
+
+        function updateTime() {
+          els.lastUpdate.textContent = new Date().toLocaleTimeString('ar-EG', { 
+            hour: '2-digit', minute: '2-digit', second: '2-digit' 
+          });
+        }
+
+        function renderAll() {
+          const newReqs = allRequests.filter(r => !r.read);
+          const readReqs = allRequests.filter(r => r.read);
+          const withCourses = allRequests.filter(r => r.selectedCourses && r.selectedCourses.length > 0);
+
+          renderList(els.listAll, allRequests);
+          renderList(els.listNew, newReqs);
+          renderList(els.listRead, readReqs);
+          renderList(els.listCourses, withCourses);
+        }
+
+        function renderList(container, requests) {
+          const filtered = filterReqs(requests);
+          
+          if (filtered.length === 0) {
+            container.innerHTML = `<div class="empty-state"><div class="icon">📋</div><p>لا توجد طلبات</p></div>`;
+            return;
+          }
+
+          container.innerHTML = filtered.map((req, i) => {
+            const isNew = !req.read;
+            let timeDisplay = 'غير محدد';
+            if (req.submittedAt) {
+              const d = req.submittedAt.toDate ? req.submittedAt.toDate() : new Date(req.submittedAt);
+              timeDisplay = d.toLocaleDateString('ar-EG', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' });
+            }
+            const phone = req.phoneNumber || '';
+            const programs = req.selectedPrograms || [];
+            const courses = req.selectedCourses || [];
+            const courseNames = {
+              'course1': 'علوم',
+              'course2': 'برمجة',
+              'course3': 'علوم متكاملة',
+              'course4': 'كيمياء',
+              'course5': 'فيزياء'
+            };
+
+            return `
+              <div class="request-card ${isNew ? 'new-highlight' : 'read-highlight'}" style="animation-delay:${i*0.02}s">
+                <div class="card-header">
+                  <span class="student-name">${req.studentName || 'غير محدد'}</span>
+                  <span class="card-time">${timeDisplay}</span>
+                </div>
+                <div class="card-details">
+                  <div class="detail-row">
+                    <span class="detail-label">📞</span>
+                    <span class="detail-value" dir="ltr">${phone}</span>
+                  </div>
+                  <div class="detail-row">
+                    <span class="detail-label">🎒</span>
+                    <span class="detail-value">${req.gradeLevel || 'غير محدد'}</span>
+                  </div>
+                  <div>
+                    <span class="badge ${isNew ? 'badge-new' : 'badge-read'}">${isNew ? '🆕 جديد' : '✅ مقروء'}</span>
+                    ${courses.length > 0 ? courses.map(c => `<span class="badge badge-course">📚 ${courseNames[c] || c}</span>`).join('') : ''}
+                  </div>
+                  ${programs.length > 0 ? `
+                    <div class="programs-tags">
+                      ${programs.slice(0, 3).map(p => `<span class="program-tag">💻 ${p}</span>`).join('')}
+                      ${programs.length > 3 ? `<span class="program-tag">+${programs.length - 3}</span>` : ''}
+                    </div>
+                  ` : ''}
+                  ${req.answer1 ? `
+                    <div style="font-size:11px;color:#6c757d;margin-top:4px;">
+                      <strong>س1:</strong> ${req.answer1.substring(0, 80)}${req.answer1.length > 80 ? '...' : ''}
+                    </div>
+                  ` : ''}
+                  ${req.answer2 ? `
+                    <div style="font-size:11px;color:#6c757d;">
+                      <strong>س2:</strong> ${req.answer2.substring(0, 80)}${req.answer2.length > 80 ? '...' : ''}
+                    </div>
+                  ` : ''}
+                </div>
+                <div class="card-actions">
+                  ${phone ? `
+                    <button class="btn-action btn-wa" data-wa="${phone}">💬 واتساب</button>
+                    <button class="btn-action btn-copy" data-copy="${phone}">📋 نسخ</button>
+                  ` : ''}
+                  <button class="btn-action btn-toggle" data-id="${req.id}" data-read="${isNew ? 'mark' : 'unmark'}">
+                    ${isNew ? '✅ مقروء' : '🔄 غير مقروء'}
+                  </button>
+                  <button class="btn-action btn-del" data-id="${req.id}" data-name="${req.studentName || 'غير محدد'}">🗑️ حذف</button>
+                </div>
+              </div>
+            `;
+          }).join('');
+
+          attachEvents(container);
+        }
+
+        function attachEvents(container) {
+          container.querySelectorAll('.btn-wa').forEach(b => {
+            b.addEventListener('click', (e) => {
+              e.stopPropagation();
+              window.open(`https://wa.me/2${b.dataset.wa.replace(/^0/, '')}`, '_blank');
+            });
+          });
+          container.querySelectorAll('.btn-copy').forEach(b => {
+            b.addEventListener('click', (e) => {
+              e.stopPropagation();
+              navigator.clipboard.writeText(b.dataset.copy).then(() => alert('📋 تم النسخ!'));
+            });
+          });
+          container.querySelectorAll('.btn-toggle').forEach(b => {
+            b.addEventListener('click', async (e) => {
+              e.stopPropagation();
+              const id = b.dataset.id;
+              const read = b.dataset.read === 'mark';
+              try {
+                await updDoc(docR(db, "survey_ismail_emad", id), { read });
+                if (read) {
+                  await setD(STATS_DOC, { newSubmissions: inc(-1) }, { merge: true });
+                } else {
+                  await setD(STATS_DOC, { newSubmissions: inc(1) }, { merge: true });
+                }
+              } catch (err) { console.error(err); }
+            });
+          });
+          container.querySelectorAll('.btn-del').forEach(b => {
+            b.addEventListener('click', (e) => {
+              e.stopPropagation();
+              deleteTargetId = b.dataset.id;
+              els.modalName.textContent = b.dataset.name;
+              els.modal.classList.add('active');
+              els.confirmBtn.disabled = false;
+              els.confirmBtn.textContent = 'حذف';
+            });
+          });
+        }
+
+        function renderVisitors() {
+          const container = els.listVisitors;
+          if (allVisitors.length === 0) {
+            container.innerHTML = `<div class="empty-state"><div class="icon">👁️</div><p>لا توجد زيارات</p></div>`;
+            return;
+          }
+
+          const today = new Date().toDateString();
+          const todayVisitors = allVisitors.filter(v => {
+            if (!v.visitedAt) return false;
+            const d = v.visitedAt.toDate ? v.visitedAt.toDate() : new Date(v.visitedAt);
+            return d.toDateString() === today;
+          });
+
+          container.innerHTML = `
+            <div class="visitor-summary-card">
+              <div class="visitor-big-num">${allVisitors.length}</div>
+              <div style="font-size:12px;color:#6c757d;font-weight:600;">إجمالي الزوار</div>
+              <div class="visitor-detail-row">
+                <div><div style="font-weight:800;font-size:16px;">${todayVisitors.length}</div><div style="font-size:10px;color:#6c757d;">اليوم</div></div>
+                <div><div style="font-weight:800;font-size:16px;">${allRequests.length}</div><div style="font-size:10px;color:#6c757d;">استبيان</div></div>
+                <div><div style="font-weight:800;font-size:16px;">${allVisitors.length > 0 ? Math.round((allRequests.length / allVisitors.length) * 100) : 0}%</div><div style="font-size:10px;color:#6c757d;">تحويل</div></div>
+              </div>
+            </div>
+            <div style="font-weight:700;font-size:13px;margin-bottom:8px;">آخر الزيارات</div>
+            ${allVisitors.slice(0, 20).map((v, i) => {
+              let t = 'غير محدد';
+              if (v.visitedAt) {
+                const d = v.visitedAt.toDate ? v.visitedAt.toDate() : new Date(v.visitedAt);
+                t = d.toLocaleDateString('ar-EG', { day:'numeric', month:'short', hour:'2-digit', minute:'2-digit' });
+              }
+              return `<div class="visitor-entry"><span>👤 زائر ${allVisitors.length - i}</span><span style="color:#adb5bd;font-size:11px;">${t}</span></div>`;
+            }).join('')}
+          `;
+        }
+
+        // مودال الحذف
+        els.cancelBtn.addEventListener('click', () => {
+          els.modal.classList.remove('active');
+          deleteTargetId = null;
+        });
+
+        els.modal.addEventListener('click', (e) => {
+          if (e.target === els.modal) {
+            els.modal.classList.remove('active');
+            deleteTargetId = null;
+          }
+        });
+
+        els.confirmBtn.addEventListener('click', async () => {
+          if (!deleteTargetId) return;
+          els.confirmBtn.disabled = true;
+          els.confirmBtn.textContent = 'جاري...';
+          
+          try {
+            const reqSnap = await getD(docR(db, "survey_ismail_emad", deleteTargetId));
+            const reqData = reqSnap.data();
+            
+            await delDoc(docR(db, "survey_ismail_emad", deleteTargetId));
+            
+            const updates = { totalSubmissions: inc(-1) };
+            if (reqData && !reqData.read) updates.newSubmissions = inc(-1);
+            if (reqData && reqData.submittedAt) {
+              const d = reqData.submittedAt.toDate ? reqData.submittedAt.toDate() : new Date(reqData.submittedAt);
+              if (d.toDateString() === new Date().toDateString()) updates.todaySubmissions = inc(-1);
+            }
+            await setD(STATS_DOC, updates, { merge: true });
+            
+            els.modal.classList.remove('active');
+            deleteTargetId = null;
+          } catch (err) {
+            console.error(err);
+            alert('خطأ في الحذف');
+            els.confirmBtn.disabled = false;
+            els.confirmBtn.textContent = 'حذف';
+          }
+        });
+
+        document.addEventListener('keydown', (e) => {
+          if (e.key === 'Escape' && els.modal.classList.contains('active')) {
+            els.modal.classList.remove('active');
+            deleteTargetId = null;
+          }
+        });
+
+        // بدء
+        loadStats();
+      }
+    })();
+  </script>
+</body>
+</html>
