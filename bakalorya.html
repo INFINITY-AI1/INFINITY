@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, shrink-to-fit=no">
+    <title>دليلك لنظام البكالوريا المصرية - أ/ إسماعيل عماد</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-navy: #0B243B;
+            --accent-lime: #A9C933;
+            --secondary-green: #1E5D38;
+            --bg-cream: #F5F2E8;
+            --gold-highlight: #C5AA6A;
+            --text-dark: #1A2530;
+            --white: #FFFFFF;
+            --card-shadow: 0 10px 30px rgba(11, 36, 59, 0.06);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Tajawal', sans-serif;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: var(--bg-cream);
+            color: var(--text-dark);
+            line-height: 1.8;
+            font-size: 16px;
+            overflow-x: hidden;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .top-bar {
+            background-color: var(--primary-navy);
+            height: 4px;
+            width: 100%;
+        }
+
+        /* هيدر مناسب للموبايل */
+        header {
+            background: linear-gradient(135deg, var(--primary-navy) 0%, #163654 100%);
+            color: var(--white);
+            padding: 40px 16px 60px 16px;
+            text-align: center;
+            position: relative;
+            border-bottom: 4px solid var(--gold-highlight);
+        }
+
+        header::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background-color: var(--accent-lime);
+        }
+
+        .instructor-tag {
+            background-color: rgba(169, 201, 51, 0.15);
+            color: var(--accent-lime);
+            display: inline-block;
+            padding: 6px 16px;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 13px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(169, 201, 51, 0.3);
+            letter-spacing: 0.5px;
+        }
+
+        header h1 {
+            font-size: 24px;
+            font-weight: 900;
+            margin-bottom: 12px;
+            color: var(--white);
+            line-height: 1.5;
+        }
+
+        header p {
+            font-size: 16px;
+            color: #E2E8F0;
+            max-width: 100%;
+            margin: 0 auto 24px auto;
+            font-weight: 500;
+            padding: 0 5px;
+        }
+
+        .contact-pill {
+            display: inline-flex;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.08);
+            padding: 10px 18px;
+            border-radius: 30px;
+            border: 1px solid rgba(197, 170, 106, 0.4);
+            color: var(--gold-highlight);
+            font-weight: 700;
+            font-size: 14px;
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .contact-pill:active {
+            background: var(--gold-highlight);
+            color: var(--primary-navy);
+        }
+
+        .container {
+            max-width: 600px;
+            margin: -30px auto 40px auto;
+            padding: 0 12px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .section-block {
+            background-color: var(--white);
+            border-radius: 16px;
+            padding: 24px 18px;
+            box-shadow: var(--card-shadow);
+            margin-bottom: 24px;
+            border-right: 5px solid var(--gold-highlight);
+        }
+
+        .section-block h2 {
+            font-size: 20px;
+            color: var(--primary-navy);
+            margin-bottom: 20px;
+            font-weight: 800;
+            position: relative;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #EEF2F6;
+        }
+
+        .section-block h2::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            right: 0;
+            width: 50px;
+            height: 3px;
+            background-color: var(--gold-highlight);
+        }
+
+        .year-one-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        .subject-tag {
+            background-color: #FAFBFD;
+            border: 1px dashed #D2Dbe5;
+            border-radius: 10px;
+            padding: 12px 8px;
+            text-align: center;
+            font-weight: 700;
+            font-size: 14px;
+            color: var(--secondary-green);
+        }
+
+        .important-note {
+            background-color: rgba(197, 170, 106, 0.08);
+            border: 1px solid rgba(197, 170, 106, 0.3);
+            border-radius: 12px;
+            padding: 16px;
+            margin-top: 20px;
+        }
+
+        .important-note h4 {
+            color: #8C6D23;
+            font-weight: 700;
+            margin-bottom: 8px;
+            font-size: 16px;
+        }
+
+        .grades-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .grade-card {
+            background-color: #FFFFFF;
+            border: 1px solid #E2E8F0;
+            border-radius: 14px;
+            padding: 18px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .grade-card .title-area {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+
+        .grade-card .icon-placeholder {
+            width: 36px;
+            height: 36px;
+            background-color: rgba(169, 201, 51, 0.12);
+            color: var(--secondary-green);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 900;
+            font-size: 15px;
+            flex-shrink: 0;
+        }
+
+        .grade-card h4 {
+            font-size: 16px;
+            color: var(--primary-navy);
+            font-weight: 700;
+        }
+
+        .track-badge {
+            display: inline-block;
+            padding: 4px 10px;
+            background-color: #EEF2F6;
+            color: var(--primary-navy);
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 700;
+            margin-top: 5px;
+            align-self: flex-start;
+        }
+
+        .share-banner {
+            background: linear-gradient(135deg, var(--secondary-green) 0%, #113620 100%);
+            color: var(--white);
+            border-radius: 12px;
+            padding: 20px 16px;
+            text-align: center;
+            margin: 30px 0;
+        }
+
+        .share-banner h3 {
+            font-size: 18px;
+            margin-bottom: 8px;
+            font-weight: 700;
+        }
+
+        .share-banner p {
+            font-size: 14px;
+            opacity: 0.9;
+            margin-bottom: 0;
+        }
+
+        /* قسم الروابط المجمعة في الأسفل */
+        .links-footer-section {
+            background-color: var(--white);
+            border-radius: 16px;
+            padding: 24px 16px;
+            margin: 30px 0;
+            box-shadow: var(--card-shadow);
+            border-top: 4px solid var(--accent-lime);
+        }
+
+        .links-footer-section h2 {
+            font-size: 20px;
+            color: var(--primary-navy);
+            margin-bottom: 20px;
+            font-weight: 800;
+            text-align: center;
+        }
+
+        .links-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .footer-link-item {
+            background-color: #F8F9FA;
+            border: 1px solid #E2E8F0;
+            border-radius: 12px;
+            padding: 14px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            text-decoration: none;
+            color: var(--text-dark);
+            font-weight: 600;
+            font-size: 15px;
+            transition: var(--transition);
+        }
+
+        .footer-link-item:active {
+            background-color: #EEF2F6;
+            border-color: var(--accent-lime);
+        }
+
+        .footer-link-item span {
+            color: var(--secondary-green);
+            font-size: 13px;
+            font-weight: 700;
+            background-color: rgba(169, 201, 51, 0.15);
+            padding: 4px 10px;
+            border-radius: 20px;
+        }
+
+        /* بطاقة التواصل مع الأستاذ */
+        .teacher-contact-card {
+            background: linear-gradient(135deg, var(--primary-navy) 0%, #163654 100%);
+            color: var(--white);
+            border-radius: 16px;
+            padding: 24px 18px;
+            text-align: center;
+            margin: 24px 0;
+            border: 2px solid var(--gold-highlight);
+        }
+
+        .teacher-contact-card h3 {
+            font-size: 20px;
+            margin-bottom: 8px;
+            color: var(--accent-lime);
+            font-weight: 800;
+        }
+
+        .teacher-contact-card .phone-number {
+            font-size: 26px;
+            font-weight: 900;
+            color: var(--white);
+            letter-spacing: 1px;
+            margin: 12px 0;
+            direction: ltr;
+            display: inline-block;
+        }
+
+        .teacher-contact-card .whatsapp-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #25D366;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 16px;
+            margin-top: 12px;
+            gap: 8px;
+            transition: var(--transition);
+        }
+
+        .teacher-contact-card .whatsapp-btn:active {
+            background-color: #128C7E;
+            transform: scale(0.96);
+        }
+
+        footer {
+            background-color: var(--primary-navy);
+            color: var(--white);
+            text-align: center;
+            padding: 30px 16px;
+            font-size: 14px;
+            border-top: 4px solid var(--accent-lime);
+            margin-top: 20px;
+        }
+
+        footer p {
+            opacity: 0.8;
+            margin-bottom: 8px;
+        }
+
+        footer .credits {
+            color: var(--accent-lime);
+            font-weight: 700;
+            text-decoration: none;
+        }
+
+        ul {
+            padding-right: 18px;
+        }
+
+        li {
+            margin-bottom: 6px;
+            font-size: 15px;
+        }
+
+        p {
+            font-size: 15px;
+            margin-bottom: 12px;
+        }
+
+        strong {
+            color: var(--primary-navy);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="top-bar"></div>
+
+    <header>
+        <span class="instructor-tag"> الأستاذ إسماعيل عماد 
+</span>
+        <h1>دليلك  لنظام البكالوريا المصرية الجديد 2027</h1>
+        <p>مساحتك المتكاملة لفهم خريطة الثانوية العامة الجديدة، ومتابعة المحتوى التعليمي التخصصي والمجاني خطوة بخطوة طوال العام الدراسي.</p>
+        <a href="https://wa.me/201122104596" class="contact-pill" target="_blank">
+            للتواصل المباشر: 01122104596 📱
+        </a>
+    </header>
+
+    <div class="container">
+
+        <div class="section-block">
+            <h2>ما هو نظام البكالوريا المصرية الجديد؟</h2>
+            <p>نظام البكالوريا المصرية يمثل بديلاً متطوراً ومرناً لنظام الثانوية العامة التقليدي الموحد، ويهدف بشكل أساسي لتخفيف العبء الأكاديمي وتوزيع التقييم بشكل عادل وتراكمي. يعتمد النظام الجديد على نظام <strong>العامين الدراسيين الفعليين</strong> في احتساب المجموع (الصف الثاني والثالث الثانوي) بمجموع كلي 700 درجة، مما يضمن تقييماً عادلاً ومستقراً للطالب.</p>
+            
+            <p><strong>أهم ركائز النظام:</strong></p>
+            <ul>
+                <li><strong>إلغاء الشعب التقليدية:</strong> لم يعد هناك نظام "علمي وأدبي" بالشكل القديم، بل تم استبدالها بـ 4 مسارات تخصصية دقيقة تناسب طموحك الجامعي.</li>
+                <li><strong>فرص التحسين المتاحة:</strong> يتيح النظام الجديد دورتين للامتحانات في كل عام دراسي؛ فرصة أولى أساسية ومجانية، وفرصة ثانية اختيارية لتحسين المجموع في أي مادة برسوم رمزية (500 جنيه للمادة)، مما يقضي على رهبة الامتحان الواحد والفرصة الوحيدة.</li>
+            </ul>
+        </div>
+
+        <div class="section-block">
+            <h2>دليل السنة الأولى التمهيدية (الصف الأول الثانوي)</h2>
+            <p>تعتبر السنة الأولى بمثابة <strong>المرحلة التمهيدية الأساسية</strong> لنظام البكالوريا، وهي سنة هامة جداً لبناء الأساس العلمي القوي، وموادها لا تضاف للمجموع التراكمي النهائي للثانوية العامة ولكنها مواد نجاح ورسوب إلزامية لتأهيلك لاختيار مسارك التخصصي لاحقاً.</p>
+            
+            <p><strong>المواد الأساسية الإلزامية التي يدرسها الطالب في العام الأول:</strong></p>
+            <div class="year-one-grid">
+                <div class="subject-tag">العلوم المتكاملة</div>
+                <div class="subject-tag">الرياضيات المطورّة</div>
+                <div class="subject-tag">اللغة العربية</div>
+                <div class="subject-tag">اللغة الأجنبية الأولى</div>
+                <div class="subject-tag">التاريخ المصري</div>
+                <div class="subject-tag">الفلسفة والمنطق</div>
+                <div class="subject-tag">التربية الدينية</div>
+            </div>
+
+            <div class="important-note">
+                <h4>💡 تنويه هام لطلاب الصف الأول الثانوي:</h4>
+                <p style="font-size: 14px; color: #5c4308;">يدرس الطالب أيضاً في هذه السنة مواداً تكميلية هامة لتنمية المهارات التقنية كـ (البرمجة وعلوم الحاسب) واللغة الأجنبية الثانية كمواد نجاح ورسوب خارج المجموع، لتسهل عليه تحديد ميوله الأكاديمية قبل الانتقال للمرحلة التراكمية في الصف الثاني الثانوي.</p>
+            </div>
+        </div>
+
+        <div class="section-block">
+            <h2>المسارات الأكاديمية الأربعة المتاحة بعد العام التمهيدي</h2>
+            <p>عند انتقالك للصف الثاني الثانوي، تختار مساراً واحداً من المسارات التالية، حيث تدرس 4 مواد فقط في الصف الثاني و 3 مواد في الصف الثالث مرتبطة مباشرة بمسارك:</p>
+            
+            <div class="grades-grid">
+                <div class="grade-card" style="border-top: 4px solid var(--secondary-green);">
+                    <div class="title-area">
+                        <div class="icon-placeholder">🩺</div>
+                        <h4>مسار الطب وعلوم الحياة</h4>
+                    </div>
+                    <p style="font-size: 14px; color: #475569; margin-bottom: 10px;">يؤهلك لكليات القطاع الطبي (الطب البشري، طب الأسنان، الصيدلة، العلاج الطبيعي، والعلوم الحيوية).</p>
+                    <span class="track-badge">المواد التخصصية: الرياضيات / الفيزياء</span>
+                </div>
+
+                <div class="grade-card" style="border-top: 4px solid var(--accent-lime);">
+                    <div class="title-area">
+                        <div class="icon-placeholder">💻</div>
+                        <h4>مسار الهندسة وعلوم الحاسب</h4>
+                    </div>
+                    <p style="font-size: 14px; color: #475569; margin-bottom: 10px;">يؤهلك لكليات الهندسة، الحاسبات والمعلومات، الذكاء الاصطناعي، والفنون التطبيقية.</p>
+                    <span class="track-badge">المواد التخصصية: الكيمياء / البرمجة</span>
+                </div>
+
+                <div class="grade-card" style="border-top: 4px solid var(--gold-highlight);">
+                    <div class="title-area">
+                        <div class="icon-placeholder">📊</div>
+                        <h4>مسار الأعمال والاقتصاد</h4>
+                    </div>
+                    <p style="font-size: 14px; color: #475569; margin-bottom: 10px;">يؤهلك لكليات التجارة، إدارة الأعمال، الاقتصاد والعلوم السياسية، ونظم المعلومات الإدارية.</p>
+                    <span class="track-badge">المواد التخصصية: المحاسبة / إدارة الأعمال</span>
+                </div>
+
+                <div class="grade-card" style="border-top: 4px solid var(--primary-navy);">
+                    <div class="title-area">
+                        <div class="icon-placeholder">🎨</div>
+                        <h4>مسار الآداب والفنون</h4>
+                    </div>
+                    <p style="font-size: 14px; color: #475569; margin-bottom: 10px;">يؤهلك لكليات الألسن، الإعلام، الآداب، الحقوق، الفنون الجميلة، والتربية.</p>
+                    <span class="track-badge">المواد التخصصية: علم النفس / اللغة الثانية</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="share-banner">
+            <h3>📢 الدال على الخير كفاعله</h3>
+            <p>شارك هذه الصفحة وهذا الدليل الشامل الموثق مع أصدقائك وزملائك في المجموعات المختلفة لتعم الفائدة ويستفيد الجميع من الشروحات والمتابعات المجانية طوال العام.</p>
+        </div>
+
+        <!-- بطاقة تواصل الأستاذ إسماعيل عماد -->
+        <div class="teacher-contact-card">
+            <h3>👨‍🏫 أ/ إسماعيل عماد</h3>
+            <p style="opacity: 0.9; margin-bottom: 4px;">للتواصل المباشر والاستفسارات</p>
+            <div class="phone-number">01122104596</div>
+            <br>
+            <a href="https://wa.me/201122104596" class="whatsapp-btn" target="_blank">
+                💬 تواصل واتساب
+            </a>
+        </div>
+
+        <!-- قسم الروابط المجمعة في نهاية الصفحة -->
+        <div class="links-footer-section">
+            <h2>وديه لينكات جروبات لو هتفيدك حاجة منهم :</h2>
+            <div class="links-group">
+                <a href="https://whatsapp.com/channel/0029Vb7MJA97tkj6m1DOHA2S" class="footer-link-item" target="_blank">
+                    🎓 بكالوريا 1 ثانوي
+                    <span>انضم</span>
+                </a>
+                <a href="https://whatsapp.com/channel/0029VbDOsMT0G0Xil4iCsy2M" class="footer-link-item" target="_blank">
+                    🔹 الصف الثالث الإعدادي (علوم)
+                    <span>انضم</span>
+                </a>
+                <a href="https://whatsapp.com/channel/0029VbCl3JiJUM2aiYaTCR1w" class="footer-link-item" target="_blank">
+                    🔹 الصف الثاني الإعدادي (علوم)
+                    <span>انضم</span>
+                </a>
+                <a href="https://whatsapp.com/channel/0029Vb7zUzDDZ4LZQDOSKm2w" class="footer-link-item" target="_blank">
+                    🔹 الصف الأول الإعدادي (علوم)
+                    <span>انضم</span>
+                </a>
+                <a href="https://whatsapp.com/channel/0029VbCpD6c4SpkDNNV5Pc1e" class="footer-link-item" target="_blank">
+                    🔹 الصف السادس الابتدائي (علوم)
+                    <span>انضم</span>
+                </a>
+                <a href="https://whatsapp.com/channel/0029VbDKrkX3gvWUUtgW741U" class="footer-link-item" target="_blank">
+                    🔹 الصف الخامس الابتدائي (علوم)
+                    <span>انضم</span>
+                </a>
+                <a href="https://whatsapp.com/channel/0029VbCmeX6DzgTFa2Rat032" class="footer-link-item" target="_blank">
+                    🔹 الصف الرابع الابتدائي (علوم)
+                    <span>انضم</span>
+                </a>
+            </div>
+            <p style="text-align: center; margin-top: 20px; font-size: 13px; color: #64748B; font-weight: 500;">
+                ✅ شرح مجاني | مراجعات وامتحانات | متابعة مستمرة طوال العام
+            </p>
+            <p style="text-align: center; margin-top: 8px; font-size: 14px; color: var(--secondary-green); font-weight: 700;">
+                شارك الرسالة مع أصدقائك ليستفيد الجميع 🤍
+            </p>
+        </div>
+
+    </div>
+
+    <footer>
+        <p>جميع الحقوق محفوظة © 2026 | أ/ إسماعيل عماد</p>
+        <p>   <a href="https://wa.me/201122104596" class="credits" target="_blank">أستاذ إسماعيل عماد - 01122104596</a></p>
+    </footer>
+
+</body>
+</html>
