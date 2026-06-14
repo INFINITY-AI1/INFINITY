@@ -1,0 +1,1032 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
+  <title>Happy Land Language School | Programming Course Survey</title>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-app.js";
+    import { 
+      getFirestore, collection, addDoc, serverTimestamp, 
+      getDoc, setDoc, increment, doc 
+    } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-firestore.js";
+    import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-analytics.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyBysr4ZEHTY_ojej_onmso3d09sz6uU65A",
+      authDomain: "infinity-ai-bd879.firebaseapp.com",
+      projectId: "infinity-ai-bd879",
+      storageBucket: "infinity-ai-bd879.firebasestorage.app",
+      messagingSenderId: "391390244727",
+      appId: "1:391390244727:web:7cc77f13f3ed0e4221fb72",
+      measurementId: "G-XGW87N67WZ"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    
+    window.db = db;
+    window.collection = collection;
+    window.addDoc = addDoc;
+    window.serverTimestamp = serverTimestamp;
+    window.getDoc = getDoc;
+    window.setDoc = setDoc;
+    window.increment = increment;
+    window.docRef = doc;
+    
+    console.log("✅ Firebase Ready - Happy Land Survey");
+  </script>
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary-navy: #0B243B;
+      --accent-lime: #A9C933;
+      --secondary-green: #1E5D38;
+      --bg-cream: #F5F2E8;
+      --gold-highlight: #C5AA6A;
+      --border-radius-main: 12px;
+      --font-family: 'Tajawal', 'Poppins', sans-serif;
+      --header-gradient: linear-gradient(135deg, #0B243B, #1a3a5a);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: var(--bg-cream);
+      font-family: var(--font-family);
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      min-height: 100vh;
+      padding: 0;
+      direction: rtl;
+      color: var(--primary-navy);
+    }
+
+    .main-wrapper {
+      width: 100%;
+      max-width: 520px;
+      position: relative;
+      padding-bottom: 40px;
+    }
+
+    /* ========== الهيرو ========== */
+    .hero-section {
+      background: var(--header-gradient);
+      padding: 32px 20px 44px;
+      text-align: center;
+      color: white;
+      border-radius: 0 0 36px 36px;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 20px 50px rgba(11, 36, 59, 0.35);
+    }
+
+    .hero-pattern {
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      opacity: 0.04;
+      background-image: 
+        radial-gradient(circle at 20% 80%, white 1px, transparent 1px),
+        radial-gradient(circle at 80% 20%, white 1px, transparent 1px),
+        radial-gradient(circle at 50% 50%, white 2px, transparent 2px);
+      background-size: 40px 40px, 50px 50px, 60px 60px;
+      background-position: 0 0, 20px 20px, 10px 10px;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 1;
+    }
+
+    .school-crest {
+      width: 80px; height: 80px;
+      background: linear-gradient(135deg, var(--accent-lime), #bddb4a);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 14px;
+      font-size: 30px;
+      font-weight: 900;
+      color: var(--primary-navy);
+      box-shadow: 0 10px 30px rgba(169, 201, 51, 0.35);
+      border: 3px solid rgba(255,255,255,0.2);
+      letter-spacing: -1px;
+    }
+
+    .school-name-en {
+      font-family: 'Poppins', sans-serif;
+      font-size: 22px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      color: var(--accent-lime);
+      text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+    }
+
+    .school-name-ar {
+      font-size: 17px;
+      font-weight: 700;
+      opacity: 0.9;
+      margin-bottom: 6px;
+    }
+
+    .hero-divider {
+      width: 60px; height: 3px;
+      background: var(--gold-highlight);
+      margin: 12px auto;
+      border-radius: 2px;
+    }
+
+    .hero-badge {
+      display: inline-block;
+      background: rgba(169, 201, 51, 0.12);
+      color: var(--accent-lime);
+      padding: 6px 18px;
+      border-radius: 22px;
+      font-size: 12px;
+      font-weight: 700;
+      border: 1px solid rgba(169, 201, 51, 0.2);
+      backdrop-filter: blur(10px);
+    }
+
+    /* ========== شريط الزوار ========== */
+    .visitor-strip {
+      background: white;
+      margin: -18px 14px 0;
+      border-radius: 16px;
+      padding: 12px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.06);
+      position: relative;
+      z-index: 5;
+      border: 1px solid #e8e4d8;
+      font-size: 13px;
+      color: #5c5c5c;
+      font-weight: 600;
+    }
+
+    .visitor-icon-wrap {
+      background: #f5f7f0;
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+    }
+
+    .visitor-count {
+      font-weight: 900;
+      font-size: 22px;
+      color: var(--primary-navy);
+    }
+
+    /* ========== المحتوى ========== */
+    .content-section {
+      padding: 20px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .section-card {
+      background: white;
+      border-radius: 18px;
+      padding: 20px 16px;
+      box-shadow: 0 3px 16px rgba(0,0,0,0.04);
+      border: 1px solid #e8e4d8;
+      transition: all 0.2s;
+    }
+
+    .section-card:hover {
+      box-shadow: 0 6px 24px rgba(0,0,0,0.06);
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .section-icon {
+      width: 42px; height: 42px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #f5f7f0, #eef5e0);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      flex-shrink: 0;
+    }
+
+    .section-title {
+      font-size: 17px;
+      font-weight: 800;
+      color: var(--primary-navy);
+    }
+
+    .section-title-en {
+      font-family: 'Poppins', sans-serif;
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--secondary-green);
+      letter-spacing: 0.5px;
+    }
+
+    .section-desc {
+      font-size: 12px;
+      color: #5c5c5c;
+      line-height: 1.8;
+      margin-bottom: 14px;
+    }
+
+    /* ========== المهارات ========== */
+    .skill-card {
+      background: #fafbf6;
+      border-radius: 14px;
+      padding: 14px 16px;
+      border: 1px solid #e8e4d8;
+      margin-bottom: 10px;
+      border-right: 4px solid var(--accent-lime);
+      transition: all 0.2s;
+    }
+
+    .skill-card:hover {
+      border-right-color: var(--secondary-green);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+    }
+
+    .skill-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 6px;
+    }
+
+    .skill-number {
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      background: var(--accent-lime);
+      color: var(--primary-navy);
+      text-align: center;
+      line-height: 28px;
+      font-weight: 900;
+      font-size: 13px;
+      flex-shrink: 0;
+    }
+
+    .skill-title {
+      font-weight: 700;
+      font-size: 14px;
+      color: var(--primary-navy);
+    }
+
+    .skill-title-en {
+      font-family: 'Poppins', sans-serif;
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--secondary-green);
+      margin-bottom: 8px;
+      padding-right: 36px;
+    }
+
+    .skill-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      padding-right: 36px;
+    }
+
+    .skill-list li {
+      font-size: 11px;
+      color: #4a4a4a;
+      line-height: 1.6;
+      padding-right: 16px;
+      position: relative;
+    }
+
+    .skill-list li::before {
+      content: '▸';
+      position: absolute;
+      right: 0;
+      color: var(--secondary-green);
+      font-size: 10px;
+    }
+
+    /* ========== معلومات إضافية ========== */
+    .info-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .info-item {
+      background: #fafbf6;
+      border-radius: 14px;
+      padding: 14px 10px;
+      text-align: center;
+      border: 1px solid #e8e4d8;
+      transition: all 0.2s;
+    }
+
+    .info-item:hover {
+      background: #f0f5e5;
+      transform: translateY(-2px);
+    }
+
+    .info-icon {
+      font-size: 24px;
+      margin-bottom: 4px;
+    }
+
+    .info-value {
+      font-weight: 800;
+      font-size: 14px;
+      color: var(--primary-navy);
+    }
+
+    .info-label {
+      font-size: 10px;
+      color: #6b7280;
+      font-weight: 600;
+    }
+
+    .platform-card {
+      background: linear-gradient(135deg, #fafbf6, #f5f8ee);
+      border-radius: 14px;
+      padding: 14px;
+      margin-top: 12px;
+      border: 2px solid var(--gold-highlight);
+    }
+
+    .platform-title {
+      font-weight: 700;
+      font-size: 13px;
+      color: var(--primary-navy);
+      margin-bottom: 2px;
+    }
+
+    .platform-title-en {
+      font-family: 'Poppins', sans-serif;
+      font-size: 10px;
+      color: var(--secondary-green);
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+
+    .platform-desc {
+      font-size: 11px;
+      color: #4a4a4a;
+      line-height: 1.6;
+    }
+
+    .price-card {
+      background: linear-gradient(135deg, #1E5D38, #0B243B);
+      border-radius: 16px;
+      padding: 16px;
+      text-align: center;
+      margin-top: 12px;
+      color: white;
+    }
+
+    .price-value {
+      font-size: 36px;
+      font-weight: 900;
+      color: var(--accent-lime);
+    }
+
+    .price-label {
+      font-size: 12px;
+      color: rgba(255,255,255,0.8);
+      font-weight: 600;
+    }
+
+    /* ========== قسم التصويت ========== */
+    .voting-section {
+      background: white;
+      border-radius: 20px;
+      padding: 24px 16px;
+      box-shadow: 0 8px 30px rgba(11, 36, 59, 0.08);
+      border: 2px solid var(--primary-navy);
+      position: relative;
+      scroll-margin-top: 20px;
+    }
+
+    .voting-section::before {
+      content: '';
+      position: absolute;
+      top: -2px; right: -2px; left: -2px;
+      height: 4px;
+      background: linear-gradient(90deg, var(--accent-lime), var(--secondary-green), var(--gold-highlight));
+      border-radius: 2px 2px 0 0;
+    }
+
+    .voting-title {
+      font-size: 19px;
+      font-weight: 800;
+      color: var(--primary-navy);
+      text-align: center;
+      margin-bottom: 2px;
+    }
+
+    .voting-title-en {
+      font-family: 'Poppins', sans-serif;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--secondary-green);
+      text-align: center;
+      margin-bottom: 18px;
+    }
+
+    .vote-options {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+
+    .vote-btn {
+      flex: 1;
+      padding: 16px 12px;
+      border-radius: 16px;
+      font-weight: 700;
+      font-size: 15px;
+      cursor: pointer;
+      font-family: inherit;
+      border: 3px solid #e8e4d8;
+      background: white;
+      color: var(--primary-navy);
+      transition: all 0.25s;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .vote-btn::after {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      opacity: 0;
+      transition: opacity 0.25s;
+    }
+
+    .vote-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+    }
+
+    .vote-btn.selected-for {
+      background: #e8f5e9;
+      border-color: #4caf50;
+      color: #2e7d32;
+      font-weight: 800;
+      box-shadow: 0 4px 16px rgba(76, 175, 80, 0.2);
+    }
+
+    .vote-btn.selected-against {
+      background: #fce4ec;
+      border-color: #e53935;
+      color: #c62828;
+      font-weight: 800;
+      box-shadow: 0 4px 16px rgba(229, 57, 53, 0.2);
+    }
+
+    .vote-emoji {
+      font-size: 28px;
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    .vote-label-en {
+      font-family: 'Poppins', sans-serif;
+      font-size: 10px;
+      font-weight: 600;
+      display: block;
+      opacity: 0.8;
+    }
+
+    .form-group {
+      margin-bottom: 14px;
+    }
+
+    .form-group label {
+      display: block;
+      font-weight: 600;
+      font-size: 13px;
+      color: var(--primary-navy);
+      margin-bottom: 5px;
+    }
+
+    .form-group label .en {
+      font-family: 'Poppins', sans-serif;
+      font-size: 10px;
+      font-weight: 500;
+      color: #6b7280;
+    }
+
+    .form-group input, .form-group textarea {
+      width: 100%;
+      padding: 12px 15px;
+      border: 2px solid #e8e4d8;
+      border-radius: 14px;
+      font-size: 14px;
+      font-family: inherit;
+      background: #fdfdf9;
+      color: var(--primary-navy);
+      outline: none;
+      resize: vertical;
+      transition: all 0.2s;
+    }
+
+    .form-group textarea { min-height: 80px; }
+
+    .form-group input:focus, .form-group textarea:focus {
+      border-color: var(--accent-lime);
+      box-shadow: 0 0 0 4px rgba(169, 201, 51, 0.1);
+      background: white;
+    }
+
+    .btn-submit {
+      width: 100%;
+      padding: 16px;
+      background: var(--accent-lime);
+      color: var(--primary-navy);
+      border: none;
+      border-radius: 16px;
+      font-weight: 800;
+      font-size: 16px;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all 0.25s;
+      box-shadow: 0 8px 22px rgba(169, 201, 51, 0.3);
+      letter-spacing: 0.3px;
+    }
+
+    .btn-submit:hover {
+      background: #b8d94a;
+      transform: translateY(-2px);
+      box-shadow: 0 12px 28px rgba(169, 201, 51, 0.4);
+    }
+
+    .btn-submit:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .success-message {
+      display: none;
+      text-align: center;
+      padding: 24px 16px;
+      background: #e8f5e9;
+      border-radius: 16px;
+      border: 2px solid #4caf50;
+      animation: fadeInUp 0.4s ease;
+    }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .success-message.show { display: block; }
+
+    .success-icon { font-size: 50px; margin-bottom: 10px; }
+    .success-text { font-size: 17px; font-weight: 800; color: #2e7d32; }
+    .success-text-en { font-family: 'Poppins', sans-serif; font-size: 12px; color: #4caf50; font-weight: 600; }
+
+    /* ========== زر عائم ========== */
+    .floating-vote-btn {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--accent-lime);
+      color: var(--primary-navy);
+      border: none;
+      padding: 14px 28px;
+      border-radius: 30px;
+      font-weight: 800;
+      font-size: 15px;
+      cursor: pointer;
+      z-index: 100;
+      font-family: inherit;
+      box-shadow: 0 10px 30px rgba(169, 201, 51, 0.5);
+      animation: floatBtn 2.5s ease-in-out infinite;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    @keyframes floatBtn {
+      0%, 100% { transform: translateX(-50%) translateY(0); }
+      50% { transform: translateX(-50%) translateY(-8px); }
+    }
+
+    .floating-vote-btn:hover {
+      background: #b8d94a;
+      box-shadow: 0 14px 35px rgba(169, 201, 51, 0.6);
+    }
+
+    .floating-vote-btn .en {
+      font-family: 'Poppins', sans-serif;
+      font-size: 10px;
+      font-weight: 600;
+      opacity: 0.8;
+    }
+
+    .footer-note {
+      text-align: center;
+      padding: 16px;
+      font-size: 11px;
+      color: #8b7d9b;
+      font-weight: 500;
+    }
+
+    @media (max-width: 400px) {
+      .school-name-en { font-size: 19px; }
+      .section-title { font-size: 15px; }
+      .info-grid { grid-template-columns: 1fr; }
+      .price-value { font-size: 30px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="main-wrapper">
+    
+    <!-- الهيرو -->
+    <div class="hero-section">
+      <div class="hero-pattern"></div>
+      <div class="hero-content">
+        <div class="school-crest">HL</div>
+        <div class="school-name-en">Happy Land Language School</div>
+        <div class="school-name-ar">مدرسة هابي لاند للغات</div>
+        <div class="hero-divider"></div>
+        <div class="hero-badge">📋 Parent Survey | استطلاع رأي أولياء الأمور</div>
+      </div>
+    </div>
+
+    <!-- الزوار -->
+    <div class="visitor-strip">
+      <div class="visitor-icon-wrap">👁️</div>
+      <span style="font-size:12px;">Visitors | الزوار</span>
+      <span class="visitor-count" id="visitorCount">...</span>
+    </div>
+
+    <!-- المحتوى -->
+    <div class="content-section">
+      
+      <!-- عن الكورس -->
+      <div class="section-card">
+        <div class="section-header">
+          <div class="section-icon"></div>
+          <div>
+            <div class="section-title">عن كورس البرمجة</div>
+            <div class="section-title-en">About the Programming Course</div>
+          </div>
+        </div>
+        <p class="section-desc">
+          صُمم كورس البرمجة ليصاحب الطالب خطوة بخطوة خلال رحلته التعليمية، بدءًا من المفاهيم الأساسية وصولًا إلى المهارات المتقدمة المطلوبة في المستقبل الدراسي والمهني.
+        </p>
+        <p class="section-desc" style="font-weight:700;color:var(--secondary-green);text-align:center;">
+          ينقسم البرنامج إلى 5 مستويات متدرجة<br>
+          <span style="font-family:'Poppins',sans-serif;font-size:10px;font-weight:600;">5 Progressive Levels</span>
+        </p>
+
+        <div class="skill-card">
+          <div class="skill-header">
+            <div class="skill-number">1</div>
+            <div class="skill-title"> تنمية التفكير وحل المشكلات</div>
+          </div>
+          <div class="skill-title-en">Critical Thinking & Problem Solving</div>
+          <ul class="skill-list">
+            <li>تحليل المشكلات وتحويلها لخطوات منظمة</li>
+            <li>تنمية التفكير المنطقي في الرياضيات والعلوم</li>
+            <li>البحث عن أكثر من حل وتعزيز الإبداع</li>
+            <li>اكتشاف الأخطاء وتصحيحها ذاتياً</li>
+          </ul>
+        </div>
+
+        <div class="skill-card">
+          <div class="skill-header">
+            <div class="skill-number">2</div>
+            <div class="skill-title"> مهارات المستقبل والعصر الرقمي</div>
+          </div>
+          <div class="skill-title-en">Future Skills & Digital Readiness</div>
+          <ul class="skill-list">
+            <li>من استخدام التكنولوجيا إلى فهمها وصناعتها</li>
+            <li>تصميم الألعاب والقصص التفاعلية والمشروعات</li>
+            <li>فهم عمل الأجهزة والتطبيقات والأنظمة الرقمية</li>
+            <li>تكوين أساس قوي للتخصصات التقنية المطلوبة</li>
+          </ul>
+        </div>
+
+        <div class="skill-card">
+          <div class="skill-header">
+            <div class="skill-number">3</div>
+            <div class="skill-title"> الاستعداد الأكاديمي</div>
+          </div>
+          <div class="skill-title-en">Academic Preparation</div>
+          <ul class="skill-list">
+            <li>تأسيس قوي لمادة البرمجة بالمرحلة الثانوية</li>
+            <li>قاعدة معرفية للمجالات التقنية والهندسية</li>
+          </ul>
+        </div>
+
+        <div class="skill-card">
+          <div class="skill-header">
+            <div class="skill-number">4</div>
+            <div class="skill-title"> بناء الشخصية والمهارات الحياتية</div>
+          </div>
+          <div class="skill-title-en">Character Building & Life Skills</div>
+          <ul class="skill-list">
+            <li>تعزيز الثقة عبر تحويل الأفكار لمشروعات حقيقية</li>
+            <li>تنمية التواصل والعمل الجماعي</li>
+            <li>التفكير المنظم وتحمل المسؤولية</li>
+          </ul>
+        </div>
+
+        <div style="background:linear-gradient(135deg,#f0f9e8,#f5fbe8);border-radius:14px;padding:14px;margin-top:10px;border:2px solid var(--accent-lime);text-align:center;">
+          <div style="font-weight:800;font-size:15px;color:var(--primary-navy);"> في نهاية المستوى الخامس</div>
+          <div style="font-family:'Poppins',sans-serif;font-size:10px;font-weight:600;color:var(--secondary-green);margin-bottom:6px;">By the end of Level 5</div>
+          <p style="font-size:12px;color:#4a4a4a;line-height:1.7;">
+            يكون الطالب قد تعلم أساسيات <strong style="color:var(--secondary-green);">Python</strong> و <strong style="color:var(--secondary-green);">Java</strong> مع قاعدة قوية للتطوير المستقبلي.
+          </p>
+        </div>
+      </div>
+
+      <!-- تفاصيل إضافية -->
+      <div class="section-card">
+        <div class="section-header">
+          <div class="section-icon"></div>
+          <div>
+            <div class="section-title">تفاصيل الكورس</div>
+            <div class="section-title-en">Course Details</div>
+          </div>
+        </div>
+        
+        <div class="info-grid">
+          <div class="info-item">
+            <div class="info-icon">📅</div>
+            <div class="info-value">2 / أسبوع</div>
+            <div class="info-label">Sessions | سيشن</div>
+          </div>
+          <div class="info-item">
+            <div class="info-icon">⏱️</div>
+            <div class="info-value">1.5 - 2 ساعة</div>
+            <div class="info-label">Duration | المدة</div>
+          </div>
+          <div class="info-item">
+            <div class="info-icon">🖥️</div>
+            <div class="info-value">عملي + نظري</div>
+            <div class="info-label">Practical + Theory</div>
+          </div>
+          <div class="info-item">
+            <div class="info-icon">📆</div>
+            <div class="info-value">1.5 - 2 شهر</div>
+            <div class="info-label">Per Level | لكل مستوى</div>
+          </div>
+        </div>
+
+        <div class="platform-card">
+          <div class="platform-title">🎓 منصة تعلم إضافية مجانية</div>
+          <div class="platform-title-en">Free Supplementary Learning Platform</div>
+          <p class="platform-desc">
+            يتم تسليم الطالب كارت به كود وكلمة مرور للدخول إلى منصة تعلم إضافية مجانية بها امتحانات وشرح إضافي لكل سيشن ومدعومة بالذكاء الاصطناعي.
+          </p>
+        </div>
+
+        <div class="price-card">
+          <div class="price-label">Course Price | سعر الكورس</div>
+          <div class="price-value">350 ج.م</div>
+          <div class="price-label">Monthly | شهرياً</div>
+        </div>
+      </div>
+
+      <!-- قسم التصويت -->
+      <div class="voting-section" id="votingSection">
+        <div class="voting-title">🗳️ استطلاع رأي أولياء الأمور</div>
+        <div class="voting-title-en">Parent Survey - Summer Programming Course</div>
+
+        <div id="votingFormContainer">
+          <form id="votingForm">
+            <div style="margin-bottom:16px;">
+              <label style="font-weight:700;font-size:15px;display:block;margin-bottom:10px;color:var(--primary-navy);text-align:center;">
+                مع ادخال الكورس في الصيف؟
+                <span style="font-family:'Poppins',sans-serif;font-size:10px;display:block;color:#6b7280;font-weight:500;">Include the course this summer?</span>
+              </label>
+              <div class="vote-options">
+                <button type="button" class="vote-btn" data-vote="for" id="voteForBtn">
+                  <span class="vote-emoji">👍</span>
+                  مع | For
+                  <span class="vote-label-en">I agree</span>
+                </button>
+                <button type="button" class="vote-btn" data-vote="against" id="voteAgainstBtn">
+                  <span class="vote-emoji">👎</span>
+                  ضد | Against
+                  <span class="vote-label-en">I disagree</span>
+                </button>
+              </div>
+              <input type="hidden" id="voteValue" value="">
+            </div>
+
+            <div class="form-group">
+              <label>👤 اسم ولي الأمر <span class="en">Parent Name</span></label>
+              <input type="text" id="parentName" placeholder="الاسم الكامل | Full Name" required>
+            </div>
+
+            <div class="form-group">
+              <label>📱 رقم الواتساب <span class="en">WhatsApp Number</span></label>
+              <input type="tel" id="whatsappNumber" placeholder="01xxxxxxxxx" dir="ltr" style="text-align:right;" required>
+            </div>
+
+            <div class="form-group">
+              <label>💬 اقتراح أو رأي <span class="en">Suggestion or Opinion (Optional)</span></label>
+              <textarea id="suggestion" placeholder="اكتب اقتراحك أو رأيك هنا... | Write your suggestion here..."></textarea>
+            </div>
+
+            <button type="submit" class="btn-submit" id="submitBtn">
+              📩 إرسال التصويت | Submit Vote
+            </button>
+          </form>
+        </div>
+
+        <div class="success-message" id="successMessage">
+          <div class="success-icon">✅</div>
+          <div class="success-text">تم تسجيل تصويتك بنجاح!</div>
+          <div class="success-text-en">Your vote has been recorded successfully!</div>
+          <p style="font-size:12px;color:#4a4a4a;margin-top:8px;">شكراً لمشاركتكم | Thank you for your participation</p>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- زر عائم -->
+    <button class="floating-vote-btn" id="floatingVoteBtn">
+      🗳️ اضغط هنا للتصويت
+      <span class="en">Vote Now</span>
+    </button>
+
+    <div class="footer-note">
+      Happy Land Language School © 2025 | جميع الحقوق محفوظة
+    </div>
+
+  </div>
+
+  <script>
+    window.addEventListener('load', function() {
+      setTimeout(function() {
+        if (window.db) initApp();
+        else setTimeout(function() { if (window.db) initApp(); }, 800);
+      }, 300);
+    });
+
+    function initApp() {
+      const db = window.db;
+      const col = window.collection;
+      const add = window.addDoc;
+      const sTime = window.serverTimestamp;
+      const getD = window.getDoc;
+      const setD = window.setDoc;
+      const inc = window.increment;
+      const docR = window.docRef;
+
+      const STATS_DOC = docR(db, "statistics_happy_land", "counters");
+      const VOTES_COL = "votes_happy_land";
+      const VISITORS_COL = "visitors_happy_land";
+
+      let selectedVote = '';
+
+      // عناصر
+      const visitorCountEl = document.getElementById('visitorCount');
+      const voteForBtn = document.getElementById('voteForBtn');
+      const voteAgainstBtn = document.getElementById('voteAgainstBtn');
+      const voteValue = document.getElementById('voteValue');
+      const votingForm = document.getElementById('votingForm');
+      const submitBtn = document.getElementById('submitBtn');
+      const successMessage = document.getElementById('successMessage');
+      const votingFormContainer = document.getElementById('votingFormContainer');
+      const floatingVoteBtn = document.getElementById('floatingVoteBtn');
+      const votingSection = document.getElementById('votingSection');
+
+      // زر عائم - توجيه للتصويت
+      floatingVoteBtn.addEventListener('click', function() {
+        votingSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        // إضافة تأثير نبض خفيف على قسم التصويت
+        votingSection.style.boxShadow = '0 0 0 6px rgba(169, 201, 51, 0.3)';
+        setTimeout(() => {
+          votingSection.style.boxShadow = '0 8px 30px rgba(11, 36, 59, 0.08)';
+        }, 1500);
+      });
+
+      // اختيار التصويت      voteForBtn.addEventListener('click', function() {
+        selectedVote = 'for';
+        voteValue.value = 'for';
+        voteForBtn.classList.add('selected-for');
+        voteAgainstBtn.classList.remove('selected-against');
+      });
+
+      voteAgainstBtn.addEventListener('click', function() {
+        selectedVote = 'against';
+        voteValue.value = 'against';
+        voteAgainstBtn.classList.add('selected-against');
+        voteForBtn.classList.remove('selected-for');
+      });
+
+      // إرسال
+      votingForm.addEventListener('submit', async function(e) {
+        e.preventDefault();
+
+        if (!selectedVote) {
+          alert('يرجى اختيار مع أو ضد | Please select For or Against');
+          return;
+        }
+
+        const name = document.getElementById('parentName').value.trim();
+        const phone = document.getElementById('whatsappNumber').value.trim();
+        const suggestion = document.getElementById('suggestion').value.trim();
+
+        if (!name || !phone) {
+          alert('يرجى ملء الاسم والرقم | Please fill in name and number');
+          return;
+        }
+
+        submitBtn.disabled = true;
+        submitBtn.textContent = '⏳ جاري الإرسال... | Submitting...';
+
+        try {
+          await add(col(db, VOTES_COL), {
+            parentName: name,
+            phoneNumber: phone,
+            vote: selectedVote,
+            suggestion: suggestion || '',
+            submittedAt: sTime(),
+            school: "Happy Land Language School"
+          });
+
+          // تحديث الإحصائيات (بدون عرض النتائج)
+          const snap = await getD(STATS_DOC);
+          if (!snap.exists()) {
+            await setD(STATS_DOC, {
+              totalVisitors: 0, totalVotes: 1, 
+              votesFor: selectedVote === 'for' ? 1 : 0,
+              votesAgainst: selectedVote === 'against' ? 1 : 0, 
+              updatedAt: sTime()
+            });
+          } else {
+            const updates = { totalVotes: inc(1), updatedAt: sTime() };
+            if (selectedVote === 'for') updates.votesFor = inc(1);
+            else updates.votesAgainst = inc(1);
+            await setD(STATS_DOC, updates, { merge: true });
+          }
+
+          // عرض رسالة نجاح فقط - بدون نتائج
+          votingFormContainer.style.display = 'none';
+          successMessage.classList.add('show');
+          
+          // إخفاء الزر العائم بعد التصويت
+          floatingVoteBtn.style.display = 'none';
+
+        } catch (err) {
+          console.error('خطأ:', err);
+          alert('حدث خطأ. حاول مرة أخرى. | Error. Please try again.');
+          submitBtn.disabled = false;
+          submitBtn.textContent = '📩 إرسال التصويت | Submit Vote';
+        }
+      });
+
+      // عداد زوار فقط
+      (async function() {
+        try {
+          await add(col(db, VISITORS_COL), {
+            visitedAt: sTime(),
+            page: "Happy Land - Survey",
+            timestamp: Date.now()
+          });
+
+          const snap = await getD(STATS_DOC);
+          if (!snap.exists()) {
+            await setD(STATS_DOC, {
+              totalVisitors: 1, totalVotes: 0, votesFor: 0, votesAgainst: 0, updatedAt: sTime()
+            });
+          } else {
+            await setD(STATS_DOC, { totalVisitors: inc(1), updatedAt: sTime() }, { merge: true });
+          }
+
+          const updated = await getD(STATS_DOC);
+          if (updated.exists()) {
+            visitorCountEl.textContent = updated.data().totalVisitors || 0;
+          }
+        } catch (e) {
+          visitorCountEl.textContent = '...';
+        }
+      })();
+    }
+  </script>
+</body>
+</html>
