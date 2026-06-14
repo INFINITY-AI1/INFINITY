@@ -34,7 +34,7 @@
     window.increment = increment;
     window.docRef = doc;
     
-    console.log("✅ Firebase Ready");
+    console.log("✅ Firebase Ready - Happy Land + Device Tracker");
   </script>
   <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
@@ -321,7 +321,6 @@
     .price-value { font-size: 32px; font-weight: 900; color: var(--accent-lime); }
     .price-label { font-size: 11px; color: rgba(255,255,255,0.8); font-weight: 600; }
 
-    /* قسم التصويت */
     .voting-section {
       background: white;
       border-radius: 18px;
@@ -731,7 +730,7 @@
     </button>
 
     <div class="footer-note">
-      Happy Land Language School © 2026 | جميع and EduEgyالحقوق محفوظة
+      Happy Land Language School © 2025 | جميع الحقوق محفوظة
     </div>
 
   </div>
@@ -748,18 +747,14 @@
       const forBtn = document.getElementById('voteForBtn');
       const againstBtn = document.getElementById('voteAgainstBtn');
       
-      // إزالة التحديد من الكل
       forBtn.classList.remove('selected-for');
       againstBtn.classList.remove('selected-against');
       
-      // إضافة التحديد للزر المختار
       if (vote === 'for') {
         forBtn.classList.add('selected-for');
       } else {
         againstBtn.classList.add('selected-against');
       }
-      
-      console.log('✅ تم اختيار:', vote === 'for' ? 'مع' : 'ضد');
     };
 
     // ========== دالة التمرير للتصويت ==========
@@ -814,7 +809,6 @@
           school: "Happy Land Language School"
         });
 
-        // تحديث الإحصائيات
         const snap = await getD(STATS_DOC);
         if (!snap.exists()) {
           await setD(STATS_DOC, {
@@ -830,7 +824,6 @@
           await setD(STATS_DOC, updates, { merge: true });
         }
 
-        // إظهار رسالة النجاح
         document.getElementById('votingFormContainer').style.display = 'none';
         document.getElementById('successMessage').classList.add('show');
         document.getElementById('floatingVoteBtn').style.display = 'none';
@@ -845,7 +838,7 @@
       }
     };
 
-    // ========== عداد الزوار ==========
+    // ========== عداد الزوار + تتبع الموبايل ==========
     (async function() {
       try {
         const db = window.db;
@@ -859,6 +852,117 @@
 
         const STATS_DOC = docR(db, "statistics_happy_land", "counters");
 
+        // ========== تحليل نوع الجهاز ==========
+        const ua = navigator.userAgent;
+        let deviceType = 'Unknown';
+        let deviceBrand = 'Unknown';
+        let deviceOS = 'Unknown';
+        let browser = 'Unknown';
+
+        // تحديد نوع الجهاز والماركة
+        if (/iPhone/.test(ua)) {
+          deviceType = 'Mobile';
+          deviceBrand = 'Apple';
+          deviceOS = 'iOS';
+        } else if (/iPad/.test(ua)) {
+          deviceType = 'Tablet';
+          deviceBrand = 'Apple';
+          deviceOS = 'iOS';
+        } else if (/Android/.test(ua)) {
+          deviceOS = 'Android';
+          if (/Mobile/.test(ua)) deviceType = 'Mobile';
+          else if (/Tablet/.test(ua)) deviceType = 'Tablet';
+          else deviceType = 'Mobile';
+          
+          if (/Samsung|SM-/.test(ua)) deviceBrand = 'Samsung';
+          else if (/Huawei|HONOR|HW-/.test(ua)) deviceBrand = 'Huawei';
+          else if (/Xiaomi|Redmi|POCO|Mi /i.test(ua)) deviceBrand = 'Xiaomi';
+          else if (/OPPO|CPH/.test(ua)) deviceBrand = 'OPPO';
+          else if (/vivo|V[0-9]/.test(ua)) deviceBrand = 'Vivo';
+          else if (/OnePlus/.test(ua)) deviceBrand = 'OnePlus';
+          else if (/realme|RMX/.test(ua)) deviceBrand = 'Realme';
+          else if (/Infinix|X[0-9]/.test(ua)) deviceBrand = 'Infinix';
+          else if (/TECNO/.test(ua)) deviceBrand = 'TECNO';
+          else if (/Nokia/.test(ua)) deviceBrand = 'Nokia';
+          else if (/Motorola|Moto/.test(ua)) deviceBrand = 'Motorola';
+          else if (/Sony/.test(ua)) deviceBrand = 'Sony';
+          else if (/LG/.test(ua)) deviceBrand = 'LG';
+          else deviceBrand = 'Other Android';
+        } else if (/Windows/.test(ua)) {
+          deviceType = 'Desktop';
+          deviceOS = 'Windows';
+          deviceBrand = 'PC';
+        } else if (/Macintosh|Mac OS/.test(ua)) {
+          deviceType = 'Desktop';
+          deviceOS = 'macOS';
+          deviceBrand = 'Apple';
+        }
+
+        // تحديد المتصفح
+        if (/Chrome/.test(ua) && !/Edg/.test(ua) && !/OPR/.test(ua)) browser = 'Chrome';
+        else if (/Safari/.test(ua) && !/Chrome/.test(ua)) browser = 'Safari';
+        else if (/Firefox/.test(ua)) browser = 'Firefox';
+        else if (/Edg/.test(ua)) browser = 'Edge';
+        else if (/OPR|Opera/.test(ua)) browser = 'Opera';
+        else if (/SamsungBrowser/.test(ua)) browser = 'Samsung Internet';
+
+        // تسجيل الجهاز
+        await add(col(db, "device_tracking"), {
+          deviceType: deviceType,
+          deviceBrand: deviceBrand,
+          deviceOS: deviceOS,
+          browser: browser,
+          userAgent: ua.substring(0, 200),
+          screenSize: window.innerWidth + 'x' + window.innerHeight,
+          visitedAt: sTime(),
+          page: "Happy Land - Survey"
+        });
+
+        // تحديث إحصائيات الأجهزة
+        const DEVICE_STATS = docR(db, "statistics_happy_land", "device_stats");
+        const deviceSnap = await getD(DEVICE_STATS);
+        
+        if (!deviceSnap.exists()) {
+          await setD(DEVICE_STATS, {
+            totalDevices: 1,
+            Apple: deviceBrand === 'Apple' ? 1 : 0,
+            Samsung: deviceBrand === 'Samsung' ? 1 : 0,
+            Huawei: deviceBrand === 'Huawei' ? 1 : 0,
+            Xiaomi: deviceBrand === 'Xiaomi' ? 1 : 0,
+            OPPO: deviceBrand === 'OPPO' ? 1 : 0,
+            Vivo: deviceBrand === 'Vivo' ? 1 : 0,
+            OnePlus: deviceBrand === 'OnePlus' ? 1 : 0,
+            Realme: deviceBrand === 'Realme' ? 1 : 0,
+            Infinix: deviceBrand === 'Infinix' ? 1 : 0,
+            TECNO: deviceBrand === 'TECNO' ? 1 : 0,
+            OtherAndroid: deviceBrand === 'Other Android' ? 1 : 0,
+            iOS: deviceOS === 'iOS' ? 1 : 0,
+            Android: deviceOS === 'Android' ? 1 : 0,
+            Desktop: deviceType === 'Desktop' ? 1 : 0,
+            updatedAt: sTime()
+          });
+        } else {
+          const updates = { totalDevices: inc(1), updatedAt: sTime() };
+          if (deviceBrand === 'Apple') updates.Apple = inc(1);
+          if (deviceBrand === 'Samsung') updates.Samsung = inc(1);
+          if (deviceBrand === 'Huawei') updates.Huawei = inc(1);
+          if (deviceBrand === 'Xiaomi') updates.Xiaomi = inc(1);
+          if (deviceBrand === 'OPPO') updates.OPPO = inc(1);
+          if (deviceBrand === 'Vivo') updates.Vivo = inc(1);
+          if (deviceBrand === 'OnePlus') updates.OnePlus = inc(1);
+          if (deviceBrand === 'Realme') updates.Realme = inc(1);
+          if (deviceBrand === 'Infinix') updates.Infinix = inc(1);
+          if (deviceBrand === 'TECNO') updates.TECNO = inc(1);
+          if (deviceBrand === 'Other Android') updates.OtherAndroid = inc(1);
+          if (deviceOS === 'iOS') updates.iOS = inc(1);
+          if (deviceOS === 'Android') updates.Android = inc(1);
+          if (deviceType === 'Desktop') updates.Desktop = inc(1);
+          await setD(DEVICE_STATS, updates, { merge: true });
+        }
+
+        console.log(`📱 جهاز: ${deviceBrand} | ${deviceOS} | ${browser}`);
+
+        // زوار عادي
         await add(col(db, "visitors_happy_land"), {
           visitedAt: sTime(),
           page: "Happy Land - Survey",
@@ -876,6 +980,7 @@
 
         const updated = await getD(STATS_DOC);
         document.getElementById('visitorCount').textContent = updated.exists() ? (updated.data().totalVisitors || 0) : 1;
+        
       } catch (e) {
         document.getElementById('visitorCount').textContent = '...';
       }
