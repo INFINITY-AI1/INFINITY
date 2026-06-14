@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
+  <title>لوحة التحكم | Happy Land Language School</title>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-app.js";
+    import { 
+      getFirestore, collection, query, orderBy, 
+      deleteDoc, doc, updateDoc, serverTimestamp, 
+      getDoc, setDoc, getDocs 
+    } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-firestore.js";
+    import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-analytics.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyBysr4ZEHTY_ojej_onmso3d09sz6uU65A",
+      authDomain: "infinity-ai-bd879.firebaseapp.com",
+      projectId: "infinity-ai-bd879",
+      storageBucket: "infinity-ai-bd879.firebasestorage.app",
+      messagingSenderId: "391390244727",
+      appId: "1:391390244727:web:7cc77f13f3ed0e4221fb72",
+      measurementId: "G-XGW87N67WZ"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    
+    window.db = db;
+    window.collection = collection;
+    window.query = query;
+    window.orderBy = orderBy;
+    window.deleteDoc = deleteDoc;
+    window.doc = doc;
+    window.updateDoc = updateDoc;
+    window.serverTimestamp = serverTimestamp;
+    window.getDoc = getDoc;
+    window.setDoc = setDoc;
+    window.getDocs = getDocs;
+    
+    console.log("✅ Firebase Ready - Happy Land Dashboard");
+  </script>
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary-navy: #0B243B;
+      --accent-lime: #A9C933;
+      --secondary-green: #1E5D38;
+      --bg-cream: #F5F2E8;
+      --gold-highlight: #C5AA6A;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: var(--bg-cream);
+      font-family: 'Tajawal', 'Poppins', sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      min-height: 100vh;
+      padding: 10px;
+      direction: rtl;
+      color: var(--primary-navy);
+    }
+
+    .dashboard {
+      width: 100%;
+      max-width: 700px;
+      background: white;
+      border-radius: 24px;
+      box-shadow: 0 16px 40px rgba(11, 36, 59, 0.12);
+      padding: 20px 14px 24px;
+      border: 1px solid #e8e4d8;
+    }
+
+    .dash-header {
+      text-align: center;
+      margin-bottom: 18px;
+      padding-bottom: 14px;
+      border-bottom: 2px solid #f0ede0;
+    }
+
+    .dash-logo {
+      width: 56px; height: 56px;
+      background: linear-gradient(135deg, var(--accent-lime), #bddb4a);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 8px;
+      font-size: 22px;
+      font-weight: 900;
+      color: var(--primary-navy);
+    }
+
+    .dash-header h1 { font-size: 20px; font-weight: 800; }
+    .dash-header .subtitle { font-size: 11px; color: #6b7280; font-weight: 600; }
+    .school-name-en { font-family: 'Poppins', sans-serif; font-size: 14px; font-weight: 700; color: var(--secondary-green); }
+
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+
+    .stat-box {
+      background: linear-gradient(135deg, #fafbf6, #f5f7f0);
+      border-radius: 14px;
+      padding: 12px 4px;
+      text-align: center;
+      border: 1px solid #e8e4d8;
+    }
+
+    .stat-value { font-size: 24px; font-weight: 900; }
+    .stat-value.green { color: var(--secondary-green); }
+    .stat-value.red { color: #e53935; }
+    .stat-value.navy { color: var(--primary-navy); }
+    .stat-value.gold { color: #b8860b; }
+    .stat-label { font-size: 9px; color: #6b7280; font-weight: 700; margin-top: 2px; }
+
+    .tabs {
+      display: flex; gap: 4px; margin-bottom: 14px;
+      background: #f5f7f0; padding: 4px; border-radius: 14px; flex-wrap: wrap;
+    }
+
+    .tab-btn {
+      flex: 1; min-width: 65px; padding: 9px 8px; border: none;
+      background: transparent; border-radius: 12px;
+      font-size: 10px; font-weight: 700; color: #6b7280;
+      cursor: pointer; font-family: inherit; white-space: nowrap;
+    }
+
+    .tab-btn.active {
+      background: white; color: var(--primary-navy);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06); border: 1px solid var(--accent-lime);
+    }
+
+    .tab-badge {
+      background: #e8e4d8; color: var(--primary-navy);
+      padding: 1px 6px; border-radius: 8px; font-size: 9px;
+      margin-right: 2px; font-weight: 700;
+    }
+
+    .refresh-row {
+      display: flex; justify-content: space-between; align-items: center;
+      margin-bottom: 12px; font-size: 11px; color: #6b7280;
+    }
+
+    .refresh-btn {
+      padding: 8px 16px; background: var(--accent-lime);
+      color: var(--primary-navy); border: none; border-radius: 12px;
+      font-weight: 700; font-size: 11px; cursor: pointer; font-family: inherit;
+    }
+
+    .refresh-btn:hover { background: #b8d94a; }
+    .refresh-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+
+    .list-container {
+      display: flex; flex-direction: column; gap: 10px;
+      max-height: 55vh; overflow-y: auto; padding-left: 2px;
+    }
+
+    .vote-card {
+      background: white; border-radius: 14px; padding: 14px;
+      border: 2px solid #e8e4d8; animation: fadeIn 0.2s ease;
+    }
+
+    .vote-card.for { border-right: 4px solid #4caf50; }
+    .vote-card.against { border-right: 4px solid #e53935; }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .card-header {
+      display: flex; justify-content: space-between;
+      align-items: flex-start; margin-bottom: 8px;
+    }
+
+    .parent-name { font-weight: 700; font-size: 15px; color: var(--primary-navy); }
+    .card-time { font-size: 10px; color: #9ca3af; font-weight: 500; white-space: nowrap; }
+
+    .card-details { display: flex; flex-direction: column; gap: 4px; }
+
+    .detail-row {
+      display: flex; align-items: center; gap: 6px;
+      font-size: 12px; color: #4a4a4a;
+    }
+
+    .detail-label { font-weight: 600; color: #6b7280; font-size: 10px; min-width: 40px; }
+    .detail-value { font-weight: 600; color: var(--primary-navy); }
+
+    .vote-badge {
+      display: inline-block; padding: 4px 12px; border-radius: 12px;
+      font-size: 11px; font-weight: 700;
+    }
+
+    .vote-badge.for { background: #e8f5e9; color: #2e7d32; }
+    .vote-badge.against { background: #fce4ec; color: #c62828; }
+
+    .suggestion-box {
+      margin-top: 8px; background: #fafbf6; border-radius: 10px;
+      padding: 10px 12px; border: 1px solid #e8e4d8;
+      font-size: 11px; color: #4a4a4a; line-height: 1.6;
+      white-space: pre-wrap; word-break: break-word;
+    }
+
+    .suggestion-empty { color: #9ca3af; font-style: italic; font-size: 11px; }
+
+    .card-actions {
+      display: flex; gap: 6px; margin-top: 10px; flex-wrap: wrap;
+    }
+
+    .btn-action {
+      padding: 7px 12px; border-radius: 10px; font-size: 11px;
+      font-weight: 700; cursor: pointer; font-family: inherit;
+      border: none; display: flex; align-items: center; gap: 4px;
+    }
+
+    .btn-wa { background: #e8f5e9; color: #2e7d32; }
+    .btn-copy { background: #e3f2fd; color: #1565c0; }
+    .btn-del { background: #fce4ec; color: #c62828; }
+
+    .modal-overlay {
+      display: none; position: fixed; top: 0; left: 0;
+      width: 100%; height: 100%; background: rgba(11, 36, 59, 0.7);
+      z-index: 1000; justify-content: center; align-items: center;
+      padding: 16px; backdrop-filter: blur(4px);
+    }
+
+    .modal-overlay.active { display: flex; }
+
+    .modal-box {
+      background: white; border-radius: 20px; padding: 24px 18px;
+      max-width: 380px; width: 100%; text-align: center;
+      box-shadow: 0 24px 50px rgba(0,0,0,0.3); animation: slideUp 0.3s ease;
+    }
+
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .modal-icon { font-size: 45px; margin-bottom: 10px; }
+    .modal-title { font-size: 19px; font-weight: 800; color: var(--primary-navy); margin-bottom: 6px; }
+    .modal-text { font-size: 12px; color: #6b7280; margin-bottom: 6px; }
+    .modal-name { font-weight: 800; color: var(--primary-navy); font-size: 15px; margin-bottom: 14px; }
+
+    .modal-actions { display: flex; gap: 8px; justify-content: center; }
+    .modal-btn {
+      padding: 11px 20px; border-radius: 14px; font-size: 13px;
+      font-weight: 700; border: none; cursor: pointer; font-family: inherit;
+    }
+
+    .modal-btn-cancel { background: #f3f4f6; color: #6b7280; }
+    .modal-btn-danger { background: #e53935; color: white; }
+    .modal-btn-danger:disabled { opacity: 0.6; cursor: not-allowed; }
+
+    .results-card {
+      background: linear-gradient(135deg, #fafbf6, white);
+      border-radius: 16px; padding: 18px; margin-bottom: 14px;
+      border: 2px solid var(--gold-highlight); text-align: center;
+    }
+
+    .results-title { font-size: 16px; font-weight: 800; color: var(--primary-navy); margin-bottom: 4px; }
+    .results-subtitle { font-family: 'Poppins', sans-serif; font-size: 10px; color: var(--secondary-green); font-weight: 600; margin-bottom: 14px; }
+
+    .results-bar-wrap { display: flex; gap: 12px; align-items: stretch; }
+
+    .result-item {
+      flex: 1; background: white; border-radius: 14px;
+      padding: 14px; border: 2px solid #e8e4d8;
+    }
+
+    .result-item.for { border-color: #4caf50; background: #f1f8f4; }
+    .result-item.against { border-color: #e53935; background: #fef5f5; }
+
+    .result-emoji { font-size: 32px; margin-bottom: 4px; }
+    .result-count { font-size: 32px; font-weight: 900; }
+    .result-count.green { color: #2e7d32; }
+    .result-count.red { color: #c62828; }
+    .result-label { font-size: 11px; color: #6b7280; font-weight: 600; }
+    .result-percent { font-size: 13px; font-weight: 800; margin-top: 4px; }
+
+    .empty-state { text-align: center; padding: 40px 16px; color: #9ca3af; }
+    .empty-state .icon { font-size: 45px; margin-bottom: 10px; }
+    .empty-state p { font-size: 14px; font-weight: 600; }
+
+    .list-container::-webkit-scrollbar { width: 5px; }
+    .list-container::-webkit-scrollbar-track { background: #f5f7f0; border-radius: 8px; }
+    .list-container::-webkit-scrollbar-thumb { background: #d4d0c4; border-radius: 8px; }
+
+    @media (max-width: 500px) {
+      .stats-row { grid-template-columns: repeat(3, 1fr); gap: 6px; }
+      .tab-btn { font-size: 9px; padding: 7px 5px; }
+      .results-bar-wrap { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="modal-overlay" id="deleteModal">
+    <div class="modal-box">
+      <div class="modal-icon">⚠️</div>
+      <div class="modal-title">تأكيد الحذف</div>
+      <div class="modal-text">هل أنت متأكد من حذف هذا التصويت؟</div>
+      <div class="modal-name" id="modalItemName">---</div>
+      <div class="modal-text" style="font-size:10px;color:#e53935;">Confirm Delete - لا يمكن التراجع</div>
+      <div class="modal-actions">
+        <button class="modal-btn modal-btn-cancel" id="cancelBtn">إلغاء</button>
+        <button class="modal-btn modal-btn-danger" id="confirmBtn">حذف</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="dashboard">
+    <div class="dash-header">
+      <div class="dash-logo">HL</div>
+      <div class="school-name-en">Happy Land Language School</div>
+      <h1>📋 لوحة استقبال التصويتات</h1>
+      <div class="subtitle">Parent Survey Dashboard | استطلاع رأي أولياء الأمور</div>
+    </div>
+
+    <!-- نتائج التصويت -->
+    <div class="results-card" id="resultsCard">
+      <div class="results-title">🗳️ نتائج التصويت</div>
+      <div class="results-subtitle">Voting Results - Summer Programming Course</div>
+      <div class="results-bar-wrap">
+        <div class="result-item for">
+          <div class="result-emoji">👍</div>
+          <div class="result-count green" id="resultFor">0</div>
+          <div class="result-label">مع | For</div>
+          <div class="result-percent green" id="percentFor">0%</div>
+        </div>
+        <div class="result-item against">
+          <div class="result-emoji">👎</div>
+          <div class="result-count red" id="resultAgainst">0</div>
+          <div class="result-label">ضد | Against</div>
+          <div class="result-percent red" id="percentAgainst">0%</div>
+        </div>
+      </div>
+      <div style="margin-top:10px;font-size:11px;color:#6b7280;font-weight:600;">
+        إجمالي المصوتين | Total Votes: <strong id="resultTotal" style="color:var(--primary-navy);">0</strong>
+      </div>
+    </div>
+
+    <!-- إحصائيات -->
+    <div class="stats-row">
+      <div class="stat-box">
+        <div class="stat-value navy" id="statVisitors">-</div>
+        <div class="stat-label">👁️ زوار</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-value navy" id="statTotal">-</div>
+        <div class="stat-label">📋 تصويتات</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-value green" id="statFor">-</div>
+        <div class="stat-label">👍 مع</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-value red" id="statAgainst">-</div>
+        <div class="stat-label">👎 ضد</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-value gold" id="statSuggestions">-</div>
+        <div class="stat-label">💬 اقتراحات</div>
+      </div>
+    </div>
+
+    <!-- تبويبات -->
+    <div class="tabs">
+      <button class="tab-btn active" data-tab="all">الكل <span class="tab-badge" id="badgeAll">-</span></button>
+      <button class="tab-btn" data-tab="for">👍 مع</button>
+      <button class="tab-btn" data-tab="against">👎 ضد</button>
+      <button class="tab-btn" data-tab="suggestions">💬 اقتراحات</button>
+    </div>
+
+    <div class="refresh-row">
+      <span>آخر تحديث: <span id="lastUpdate">لم يحدث بعد</span></span>
+      <button class="refresh-btn" id="refreshBtn">🔄 تحديث الآن</button>
+    </div>
+
+    <div class="tab-content active" id="tab-all"><div class="list-container" id="listAll"></div></div>
+    <div class="tab-content" id="tab-for"><div class="list-container" id="listFor"></div></div>
+    <div class="tab-content" id="tab-against"><div class="list-container" id="listAgainst"></div></div>
+    <div class="tab-content" id="tab-suggestions"><div class="list-container" id="listSuggestions"></div></div>
+  </div>
+
+  <script>
+    (function() {
+      window.addEventListener('load', function() {
+        if (!window.db) { 
+          console.log("⏳ انتظار Firebase...");
+          setTimeout(initDashboard, 800); 
+          return; 
+        }
+        initDashboard();
+      });
+
+      function initDashboard() {
+        const db = window.db;
+        const col = window.collection;
+        const q = window.query;
+        const order = window.orderBy;
+        const delDoc = window.deleteDoc;
+        const docR = window.doc;
+        const getD = window.getDoc;
+        const setD = window.setDoc;
+        const getDocs = window.getDocs;
+
+        const VOTES_COL = "votes_happy_land";
+        const STATS_DOC = docR(db, "statistics_happy_land", "counters");
+
+        const els = {
+          resultFor: document.getElementById('resultFor'),
+          resultAgainst: document.getElementById('resultAgainst'),
+          percentFor: document.getElementById('percentFor'),
+          percentAgainst: document.getElementById('percentAgainst'),
+          resultTotal: document.getElementById('resultTotal'),
+          statVisitors: document.getElementById('statVisitors'),
+          statTotal: document.getElementById('statTotal'),
+          statFor: document.getElementById('statFor'),
+          statAgainst: document.getElementById('statAgainst'),
+          statSuggestions: document.getElementById('statSuggestions'),
+          badgeAll: document.getElementById('badgeAll'),
+          lastUpdate: document.getElementById('lastUpdate'),
+          refreshBtn: document.getElementById('refreshBtn'),
+          listAll: document.getElementById('listAll'),
+          listFor: document.getElementById('listFor'),
+          listAgainst: document.getElementById('listAgainst'),
+          listSuggestions: document.getElementById('listSuggestions'),
+          modal: document.getElementById('deleteModal'),
+          modalItemName: document.getElementById('modalItemName'),
+          cancelBtn: document.getElementById('cancelBtn'),
+          confirmBtn: document.getElementById('confirmBtn'),
+        };
+
+        let activeTab = 'all';
+        let allVotes = [];
+        let deleteTargetId = null;
+
+        // تبويبات
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+          btn.addEventListener('click', function() {
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+            activeTab = this.dataset.tab;
+            document.querySelectorAll('.tab-content').forEach(tc => tc.classList.remove('active'));
+            document.getElementById(`tab-${activeTab}`).classList.add('active');
+            renderAllLists();
+          });
+        });
+
+        // تحميل البيانات
+        async function loadData() {
+          els.refreshBtn.disabled = true;
+          els.refreshBtn.textContent = '⏳ جاري...';
+
+          try {
+            console.log("📥 جاري تحميل التصويتات...");
+            
+            // جلب التصويتات
+            const votesQ = q(col(db, VOTES_COL), order("submittedAt", "desc"));
+            const snapshot = await getDocs(votesQ);
+            
+            allVotes = [];
+            snapshot.forEach((doc) => {
+              allVotes.push({ id: doc.id, ...doc.data() });
+            });
+            
+            console.log(`✅ تم تحميل ${allVotes.length} تصويت`);
+
+            // جلب الإحصائيات
+            console.log("📥 جاري تحميل الإحصائيات...");
+            const statsSnap = await getD(STATS_DOC);
+            
+            if (statsSnap.exists()) {
+              const statsData = statsSnap.data();
+              console.log("📊 الإحصائيات:", statsData);
+              
+              els.statVisitors.textContent = statsData.totalVisitors || 0;
+              
+              // نتائج التصويت
+              const totalVotes = statsData.totalVotes || 0;
+              const votesFor = statsData.votesFor || 0;
+              const votesAgainst = statsData.votesAgainst || 0;
+              
+              els.resultFor.textContent = votesFor;
+              els.resultAgainst.textContent = votesAgainst;
+              els.resultTotal.textContent = totalVotes;
+              
+              if (totalVotes > 0) {
+                els.percentFor.textContent = Math.round((votesFor / totalVotes) * 100) + '%';
+                els.percentAgainst.textContent = Math.round((votesAgainst / totalVotes) * 100) + '%';
+              } else {
+                els.percentFor.textContent = '0%';
+                els.percentAgainst.textContent = '0%';
+              }
+              
+              // إحصائيات
+              els.statTotal.textContent = totalVotes;
+              els.statFor.textContent = votesFor;
+              els.statAgainst.textContent = votesAgainst;
+              
+              // الاقتراحات
+              const withSuggestions = allVotes.filter(v => v.suggestion && v.suggestion.trim()).length;
+              els.statSuggestions.textContent = withSuggestions;
+              
+              els.badgeAll.textContent = totalVotes;
+            } else {
+              console.log("⚠️ لا يوجد مستند إحصائيات بعد");
+              // القيم الافتراضية
+              els.statVisitors.textContent = '0';
+              els.statTotal.textContent = '0';
+              els.statFor.textContent = '0';
+              els.statAgainst.textContent = '0';
+              els.statSuggestions.textContent = '0';
+              els.resultFor.textContent = '0';
+              els.resultAgainst.textContent = '0';
+              els.resultTotal.textContent = '0';
+              els.percentFor.textContent = '0%';
+              els.percentAgainst.textContent = '0%';
+              els.badgeAll.textContent = '0';
+            }
+
+            renderAllLists();
+            updateTime();
+            
+          } catch (e) {
+            console.error("❌ خطأ في التحميل:", e);
+            alert("حدث خطأ في تحميل البيانات. تأكد من وجود بيانات في قاعدة البيانات.");
+          }
+
+          els.refreshBtn.disabled = false;
+          els.refreshBtn.textContent = '🔄 تحديث الآن';
+        }
+
+        els.refreshBtn.addEventListener('click', loadData);
+
+        function updateTime() {
+          els.lastUpdate.textContent = new Date().toLocaleTimeString('ar-EG', { 
+            hour: '2-digit', minute: '2-digit', second: '2-digit' 
+          });
+        }
+
+        function renderAllLists() {
+          const forVotes = allVotes.filter(v => v.vote === 'for');
+          const againstVotes = allVotes.filter(v => v.vote === 'against');
+          const withSuggestions = allVotes.filter(v => v.suggestion && v.suggestion.trim());
+
+          renderList(els.listAll, allVotes);
+          renderList(els.listFor, forVotes);
+          renderList(els.listAgainst, againstVotes);
+          renderList(els.listSuggestions, withSuggestions);
+        }
+
+        function renderList(container, votes) {
+          if (votes.length === 0) {
+            container.innerHTML = `<div class="empty-state"><div class="icon">📋</div><p>لا توجد بيانات - اضغط تحديث الآن</p></div>`;
+            return;
+          }
+
+          container.innerHTML = votes.map((v, i) => {
+            const isFor = v.vote === 'for';
+            let timeDisplay = 'غير محدد';
+            if (v.submittedAt) {
+              const d = v.submittedAt.toDate ? v.submittedAt.toDate() : new Date(v.submittedAt);
+              timeDisplay = d.toLocaleDateString('ar-EG', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' });
+            }
+
+            return `
+              <div class="vote-card ${isFor ? 'for' : 'against'}">
+                <div class="card-header">
+                  <span class="parent-name">${v.parentName || 'غير محدد'}</span>
+                  <span class="card-time">${timeDisplay}</span>
+                </div>
+                <div class="card-details">
+                  <div class="detail-row">
+                    <span class="detail-label">📱</span>
+                    <span class="detail-value" dir="ltr">${v.phoneNumber || 'غير محدد'}</span>
+                  </div>
+                  <div>
+                    <span class="vote-badge ${isFor ? 'for' : 'against'}">
+                      ${isFor ? '👍 مع | For' : '👎 ضد | Against'}
+                    </span>
+                  </div>
+                  ${v.suggestion && v.suggestion.trim() ? `
+                    <div class="suggestion-box">
+                      <strong style="color:var(--primary-navy);">💬 الاقتراح:</strong><br>
+                      ${v.suggestion}
+                    </div>
+                  ` : `
+                    <div class="suggestion-empty">لا يوجد اقتراح | No suggestion</div>
+                  `}
+                </div>
+                <div class="card-actions">
+                  ${v.phoneNumber ? `
+                    <button class="btn-action btn-wa" data-wa="${v.phoneNumber}">💬 واتساب</button>
+                    <button class="btn-action btn-copy" data-copy="${v.phoneNumber}">📋 نسخ</button>
+                  ` : ''}
+                  <button class="btn-action btn-del" data-id="${v.id}" data-name="${v.parentName || 'غير محدد'}">🗑️ حذف</button>
+                </div>
+              </div>
+            `;
+          }).join('');
+
+          attachEvents(container);
+        }
+
+        function attachEvents(container) {
+          container.querySelectorAll('.btn-wa').forEach(b => {
+            b.addEventListener('click', (e) => {
+              e.stopPropagation();
+              window.open(`https://wa.me/2${b.dataset.wa.replace(/^0/, '')}`, '_blank');
+            });
+          });
+
+          container.querySelectorAll('.btn-copy').forEach(b => {
+            b.addEventListener('click', (e) => {
+              e.stopPropagation();
+              navigator.clipboard.writeText(b.dataset.copy).then(() => alert('📋 تم نسخ الرقم!'));
+            });
+          });
+
+          container.querySelectorAll('.btn-del').forEach(b => {
+            b.addEventListener('click', (e) => {
+              e.stopPropagation();
+              deleteTargetId = b.dataset.id;
+              els.modalItemName.textContent = b.dataset.name;
+              els.modal.classList.add('active');
+              els.confirmBtn.disabled = false;
+              els.confirmBtn.textContent = 'حذف';
+            });
+          });
+        }
+
+        // مودال الحذف
+        els.cancelBtn.addEventListener('click', () => {
+          els.modal.classList.remove('active');
+          deleteTargetId = null;
+        });
+
+        els.modal.addEventListener('click', (e) => {
+          if (e.target === els.modal) {
+            els.modal.classList.remove('active');
+            deleteTargetId = null;
+          }
+        });
+
+        els.confirmBtn.addEventListener('click', async () => {
+          if (!deleteTargetId) return;
+          els.confirmBtn.disabled = true;
+          els.confirmBtn.textContent = 'جاري...';
+          
+          try {
+            // حذف من Firebase
+            await delDoc(docR(db, VOTES_COL, deleteTargetId));
+            
+            // حذف من المصفوفة المحلية
+            allVotes = allVotes.filter(v => v.id !== deleteTargetId);
+            
+            // تحديث العرض
+            renderAllLists();
+            updateStatsFromLocalData();
+            
+            els.modal.classList.remove('active');
+            deleteTargetId = null;
+            console.log('✅ تم الحذف');
+          } catch (err) {
+            console.error('خطأ:', err);
+            alert('خطأ في الحذف');
+            els.confirmBtn.disabled = false;
+            els.confirmBtn.textContent = 'حذف';
+          }
+        });
+
+        // تحديث الإحصائيات من البيانات المحلية بعد الحذف
+        function updateStatsFromLocalData() {
+          const total = allVotes.length;
+          const forVotes = allVotes.filter(v => v.vote === 'for').length;
+          const againstVotes = allVotes.filter(v => v.vote === 'against').length;
+          const withSuggestions = allVotes.filter(v => v.suggestion && v.suggestion.trim()).length;
+
+          els.resultFor.textContent = forVotes;
+          els.resultAgainst.textContent = againstVotes;
+          els.resultTotal.textContent = total;
+          els.statTotal.textContent = total;
+          els.statFor.textContent = forVotes;
+          els.statAgainst.textContent = againstVotes;
+          els.statSuggestions.textContent = withSuggestions;
+          els.badgeAll.textContent = total;
+
+          if (total > 0) {
+            els.percentFor.textContent = Math.round((forVotes / total) * 100) + '%';
+            els.percentAgainst.textContent = Math.round((againstVotes / total) * 100) + '%';
+          } else {
+            els.percentFor.textContent = '0%';
+            els.percentAgainst.textContent = '0%';
+          }
+        }
+
+        document.addEventListener('keydown', (e) => {
+          if (e.key === 'Escape' && els.modal.classList.contains('active')) {
+            els.modal.classList.remove('active');
+            deleteTargetId = null;
+          }
+        });
+
+        // بدء التشغيل
+        console.log("🚀 بدء لوحة التحكم");
+        loadData();
+      }
+    })();
+  </script>
+</body>
+</html>
