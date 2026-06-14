@@ -7,11 +7,10 @@
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-app.js";
     import { 
-      getFirestore, collection, query, orderBy, 
+      getFirestore, collection, query, limit,
       deleteDoc, doc, updateDoc, serverTimestamp, 
       getDoc, setDoc, getDocs 
     } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-firestore.js";
-    import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-analytics.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyBysr4ZEHTY_ojej_onmso3d09sz6uU65A",
@@ -26,10 +25,11 @@
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
     
+    // ⚠️ لم نعد نُعَرِض orderBy لأننا نرتب برمجياً
     window.db = db;
     window.collection = collection;
     window.query = query;
-    window.orderBy = orderBy;
+    window.limit = limit;
     window.deleteDoc = deleteDoc;
     window.doc = doc;
     window.updateDoc = updateDoc;
@@ -38,7 +38,7 @@
     window.setDoc = setDoc;
     window.getDocs = getDocs;
     
-    console.log("✅ Firebase Ready - Happy Land Dashboard");
+    console.log("✅ Firebase Ready - Happy Land Dashboard (No Indexes)");
   </script>
   <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
@@ -164,6 +164,25 @@
       display: flex; flex-direction: column; gap: 10px;
       max-height: 55vh; overflow-y: auto; padding-left: 2px;
     }
+
+    /* ✅ حالة التحميل الجديدة */
+    .loading-state {
+      text-align: center;
+      padding: 40px 16px;
+      color: var(--secondary-green);
+      animation: pulse 1.5s ease-in-out infinite;
+    }
+    .loading-state .spinner {
+      display: inline-block;
+      width: 40px; height: 40px;
+      border: 4px solid #e8e4d8;
+      border-top-color: var(--accent-lime);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin-bottom: 12px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.5; } }
 
     .vote-card {
       background: white; border-radius: 14px; padding: 14px;
@@ -334,19 +353,19 @@
       <div class="results-bar-wrap">
         <div class="result-item for">
           <div class="result-emoji">👍</div>
-          <div class="result-count green" id="resultFor">0</div>
+          <div class="result-count green" id="resultFor">-</div>
           <div class="result-label">مع | For</div>
-          <div class="result-percent green" id="percentFor">0%</div>
+          <div class="result-percent green" id="percentFor">-</div>
         </div>
         <div class="result-item against">
           <div class="result-emoji">👎</div>
-          <div class="result-count red" id="resultAgainst">0</div>
+          <div class="result-count red" id="resultAgainst">-</div>
           <div class="result-label">ضد | Against</div>
-          <div class="result-percent red" id="percentAgainst">0%</div>
+          <div class="result-percent red" id="percentAgainst">-</div>
         </div>
       </div>
       <div style="margin-top:10px;font-size:11px;color:#6b7280;font-weight:600;">
-        إجمالي المصوتين | Total Votes: <strong id="resultTotal" style="color:var(--primary-navy);">0</strong>
+        إجمالي المصوتين | Total Votes: <strong id="resultTotal" style="color:var(--primary-navy);">-</strong>
       </div>
     </div>
 
@@ -395,24 +414,27 @@
 
   <script>
     (function() {
-      window.addEventListener('load', function() {
-        if (!window.db) { 
-          console.log("⏳ انتظار Firebase...");
-          setTimeout(initDashboard, 800); 
-          return; 
-        }
-        initDashboard();
-      });
+      // ⚠️ انتظار تحميل Firebase
+      function waitForFirebase() {
+        return new Promise((resolve) => {
+          if (window.db) { resolve(); return; }
+          const check = setInterval(() => {
+            if (window.db) { clearInterval(check); resolve(); }
+          }, 200);
+          setTimeout(() => { clearInterval(check); resolve(); }, 5000);
+        });
+      }
 
-      function initDashboard() {
+      async function initDashboard() {
+        await waitForFirebase();
+        
         const db = window.db;
         const col = window.collection;
         const q = window.query;
-        const order = window.orderBy;
+        const lim = window.limit;
         const delDoc = window.deleteDoc;
         const docR = window.doc;
         const getD = window.getDoc;
-        const setD = window.setDoc;
         const getDocs = window.getDocs;
 
         const VOTES_COL = "votes_happy_land";
@@ -453,21 +475,45 @@
             this.classList.add('active');
             activeTab = this.dataset.tab;
             document.querySelectorAll('.tab-content').forEach(tc => tc.classList.remove('active'));
-            document.getElementById(`tab-${activeTab}`).classList.add('active');
+            const targetTab = document.getElementById(`tab-${activeTab}`);
+            if (targetTab) targetTab.classList.add('active');
             renderAllLists();
           });
         });
 
-        // تحميل البيانات
+        // ✅ عرض حالة التحميل
+        function showLoading(container) {
+          if (container) {
+            container.innerHTML = `
+              <div class="loading-state">
+                <div class="spinner"></div>
+                <p style="font-weight:700;color:var(--primary-navy);">⏳ جاري تحميل البيانات...</p>
+                <p style="font-size:10px;color:#6b7280;">Loading data...</p>
+              </div>`;
+          }
+        }
+
+        // ✅ دالة معالجة الأخطاء الموحدة
+        function handleError(context, error) {
+          console.error(`❌ خطأ في ${context}:`, error);
+          const message = error?.message || 'خطأ غير معروف';
+          // لا نستخدم alert لتجنب تجميد الواجهة، نكتفي بالسجل
+          console.warn(`⚠️ ${context}: ${message}`);
+        }
+
+        // ✅ تحميل البيانات - بدون orderBy، مع limit، وترتيب برمجي
         async function loadData() {
           els.refreshBtn.disabled = true;
           els.refreshBtn.textContent = '⏳ جاري...';
 
+          // عرض حالة التحميل في جميع القوائم
+          [els.listAll, els.listFor, els.listAgainst, els.listSuggestions].forEach(showLoading);
+
           try {
             console.log("📥 جاري تحميل التصويتات...");
             
-            // جلب التصويتات
-            const votesQ = q(col(db, VOTES_COL), order("submittedAt", "desc"));
+            // ✅ استعلام بسيط مع limit(50) - بدون orderBy
+            const votesQ = q(col(db, VOTES_COL), lim(50));
             const snapshot = await getDocs(votesQ);
             
             allVotes = [];
@@ -475,7 +521,16 @@
               allVotes.push({ id: doc.id, ...doc.data() });
             });
             
-            console.log(`✅ تم تحميل ${allVotes.length} تصويت`);
+            // ✅ ترتيب برمجي تنازلي حسب وقت الإرسال (الأحدث أولاً)
+            allVotes.sort((a, b) => {
+              const timeA = a.submittedAt?.toDate ? a.submittedAt.toDate().getTime() : 
+                           (a.submittedAt instanceof Date ? a.submittedAt.getTime() : 0);
+              const timeB = b.submittedAt?.toDate ? b.submittedAt.toDate().getTime() : 
+                           (b.submittedAt instanceof Date ? b.submittedAt.getTime() : 0);
+              return timeB - timeA; // تنازلي
+            });
+            
+            console.log(`✅ تم تحميل ${allVotes.length} تصويت (أحدث 50)`);
 
             // جلب الإحصائيات
             console.log("📥 جاري تحميل الإحصائيات...");
@@ -487,7 +542,6 @@
               
               els.statVisitors.textContent = statsData.totalVisitors || 0;
               
-              // نتائج التصويت
               const totalVotes = statsData.totalVotes || 0;
               const votesFor = statsData.votesFor || 0;
               const votesAgainst = statsData.votesAgainst || 0;
@@ -504,50 +558,49 @@
                 els.percentAgainst.textContent = '0%';
               }
               
-              // إحصائيات
               els.statTotal.textContent = totalVotes;
               els.statFor.textContent = votesFor;
               els.statAgainst.textContent = votesAgainst;
               
-              // الاقتراحات
               const withSuggestions = allVotes.filter(v => v.suggestion && v.suggestion.trim()).length;
               els.statSuggestions.textContent = withSuggestions;
-              
               els.badgeAll.textContent = totalVotes;
             } else {
               console.log("⚠️ لا يوجد مستند إحصائيات بعد");
-              // القيم الافتراضية
-              els.statVisitors.textContent = '0';
-              els.statTotal.textContent = '0';
-              els.statFor.textContent = '0';
-              els.statAgainst.textContent = '0';
-              els.statSuggestions.textContent = '0';
-              els.resultFor.textContent = '0';
-              els.resultAgainst.textContent = '0';
-              els.resultTotal.textContent = '0';
-              els.percentFor.textContent = '0%';
-              els.percentAgainst.textContent = '0%';
-              els.badgeAll.textContent = '0';
+              resetStatsToZero();
             }
 
             renderAllLists();
             updateTime();
             
           } catch (e) {
-            console.error("❌ خطأ في التحميل:", e);
-            alert("حدث خطأ في تحميل البيانات. تأكد من وجود بيانات في قاعدة البيانات.");
+            handleError('تحميل البيانات', e);
+            resetStatsToZero();
           }
 
           els.refreshBtn.disabled = false;
           els.refreshBtn.textContent = '🔄 تحديث الآن';
         }
 
+        function resetStatsToZero() {
+          ['0','0','0','0','0','0','0','0%','0%','0'].forEach((val, i) => {
+            const keys = ['statVisitors','statTotal','statFor','statAgainst','statSuggestions',
+                         'resultFor','resultAgainst','percentFor','percentAgainst','resultTotal'];
+            if (els[keys[i]]) els[keys[i]].textContent = val;
+          });
+          if (els.badgeAll) els.badgeAll.textContent = '0';
+        }
+
         els.refreshBtn.addEventListener('click', loadData);
 
         function updateTime() {
-          els.lastUpdate.textContent = new Date().toLocaleTimeString('ar-EG', { 
-            hour: '2-digit', minute: '2-digit', second: '2-digit' 
-          });
+          try {
+            els.lastUpdate.textContent = new Date().toLocaleTimeString('ar-EG', { 
+              hour: '2-digit', minute: '2-digit', second: '2-digit' 
+            });
+          } catch (e) {
+            els.lastUpdate.textContent = '---';
+          }
         }
 
         function renderAllLists() {
@@ -562,39 +615,53 @@
         }
 
         function renderList(container, votes) {
+          if (!container) return;
+          
           if (votes.length === 0) {
             container.innerHTML = `<div class="empty-state"><div class="icon">📋</div><p>لا توجد بيانات - اضغط تحديث الآن</p></div>`;
             return;
           }
 
-          container.innerHTML = votes.map((v, i) => {
+          container.innerHTML = votes.map((v) => {
             const isFor = v.vote === 'for';
             let timeDisplay = 'غير محدد';
-            if (v.submittedAt) {
-              const d = v.submittedAt.toDate ? v.submittedAt.toDate() : new Date(v.submittedAt);
-              timeDisplay = d.toLocaleDateString('ar-EG', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' });
+            
+            try {
+              if (v.submittedAt) {
+                const d = v.submittedAt.toDate ? v.submittedAt.toDate() : new Date(v.submittedAt);
+                if (!isNaN(d.getTime())) {
+                  timeDisplay = d.toLocaleDateString('ar-EG', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' });
+                }
+              }
+            } catch (e) {
+              // تجاهل أخطاء التاريخ
             }
+
+            const safeName = String(v.parentName || 'غير محدد').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+            const safePhone = String(v.phoneNumber || 'غير محدد').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+            const safeSuggestion = v.suggestion ? String(v.suggestion).replace(/</g, '&lt;').replace(/>/g, '&gt;') : '';
+            const safeId = String(v.id || '').replace(/"/g, '&quot;');
 
             return `
               <div class="vote-card ${isFor ? 'for' : 'against'}">
                 <div class="card-header">
-                  <span class="parent-name">${v.parentName || 'غير محدد'}</span>
+                  <span class="parent-name">${safeName}</span>
                   <span class="card-time">${timeDisplay}</span>
                 </div>
                 <div class="card-details">
                   <div class="detail-row">
                     <span class="detail-label">📱</span>
-                    <span class="detail-value" dir="ltr">${v.phoneNumber || 'غير محدد'}</span>
+                    <span class="detail-value" dir="ltr">${safePhone}</span>
                   </div>
                   <div>
                     <span class="vote-badge ${isFor ? 'for' : 'against'}">
                       ${isFor ? '👍 مع | For' : '👎 ضد | Against'}
                     </span>
                   </div>
-                  ${v.suggestion && v.suggestion.trim() ? `
+                  ${safeSuggestion ? `
                     <div class="suggestion-box">
                       <strong style="color:var(--primary-navy);">💬 الاقتراح:</strong><br>
-                      ${v.suggestion}
+                      ${safeSuggestion}
                     </div>
                   ` : `
                     <div class="suggestion-empty">لا يوجد اقتراح | No suggestion</div>
@@ -602,10 +669,10 @@
                 </div>
                 <div class="card-actions">
                   ${v.phoneNumber ? `
-                    <button class="btn-action btn-wa" data-wa="${v.phoneNumber}">💬 واتساب</button>
-                    <button class="btn-action btn-copy" data-copy="${v.phoneNumber}">📋 نسخ</button>
+                    <button class="btn-action btn-wa" data-wa="${safePhone}">💬 واتساب</button>
+                    <button class="btn-action btn-copy" data-copy="${safePhone}">📋 نسخ</button>
                   ` : ''}
-                  <button class="btn-action btn-del" data-id="${v.id}" data-name="${v.parentName || 'غير محدد'}">🗑️ حذف</button>
+                  <button class="btn-action btn-del" data-id="${safeId}" data-name="${safeName}">🗑️ حذف</button>
                 </div>
               </div>
             `;
@@ -615,17 +682,22 @@
         }
 
         function attachEvents(container) {
+          if (!container) return;
+
           container.querySelectorAll('.btn-wa').forEach(b => {
             b.addEventListener('click', (e) => {
               e.stopPropagation();
-              window.open(`https://wa.me/2${b.dataset.wa.replace(/^0/, '')}`, '_blank');
+              const num = b.dataset.wa.replace(/^0/, '');
+              window.open(`https://wa.me/2${num}`, '_blank');
             });
           });
 
           container.querySelectorAll('.btn-copy').forEach(b => {
             b.addEventListener('click', (e) => {
               e.stopPropagation();
-              navigator.clipboard.writeText(b.dataset.copy).then(() => alert('📋 تم نسخ الرقم!'));
+              navigator.clipboard.writeText(b.dataset.copy)
+                .then(() => console.log('📋 تم نسخ الرقم'))
+                .catch(() => alert('تعذر النسخ'));
             });
           });
 
@@ -660,28 +732,20 @@
           els.confirmBtn.textContent = 'جاري...';
           
           try {
-            // حذف من Firebase
             await delDoc(docR(db, VOTES_COL, deleteTargetId));
-            
-            // حذف من المصفوفة المحلية
             allVotes = allVotes.filter(v => v.id !== deleteTargetId);
-            
-            // تحديث العرض
             renderAllLists();
             updateStatsFromLocalData();
-            
             els.modal.classList.remove('active');
             deleteTargetId = null;
             console.log('✅ تم الحذف');
           } catch (err) {
-            console.error('خطأ:', err);
-            alert('خطأ في الحذف');
+            handleError('حذف التصويت', err);
             els.confirmBtn.disabled = false;
             els.confirmBtn.textContent = 'حذف';
           }
         });
 
-        // تحديث الإحصائيات من البيانات المحلية بعد الحذف
         function updateStatsFromLocalData() {
           const total = allVotes.length;
           const forVotes = allVotes.filter(v => v.vote === 'for').length;
@@ -714,9 +778,11 @@
         });
 
         // بدء التشغيل
-        console.log("🚀 بدء لوحة التحكم");
+        console.log("🚀 بدء لوحة التحكم (بدون فهارس)");
         loadData();
       }
+
+      window.addEventListener('load', initDashboard);
     })();
   </script>
 </body>
