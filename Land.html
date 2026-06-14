@@ -10,7 +10,6 @@
       getFirestore, collection, addDoc, serverTimestamp, 
       getDoc, setDoc, increment, doc 
     } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-firestore.js";
-    import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-analytics.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyBysr4ZEHTY_ojej_onmso3d09sz6uU65A",
@@ -34,7 +33,7 @@
     window.increment = increment;
     window.docRef = doc;
     
-    console.log("✅ Firebase Ready - Happy Land + Device Tracker");
+    console.log("✅ Firebase Ready - Happy Land Survey");
   </script>
   <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
@@ -44,7 +43,6 @@
       --secondary-green: #1E5D38;
       --bg-cream: #F5F2E8;
       --gold-highlight: #C5AA6A;
-      --border-radius-main: 12px;
       --font-family: 'Tajawal', 'Poppins', sans-serif;
       --header-gradient: linear-gradient(135deg, #0B243B, #1a3a5a);
     }
@@ -72,54 +70,42 @@
 
     .hero-section {
       background: var(--header-gradient);
-      padding: 28px 18px 44px;
+      padding: 24px 16px 40px;
       text-align: center;
       color: white;
-      border-radius: 0 0 36px 36px;
+      border-radius: 0 0 32px 32px;
       position: relative;
       overflow: hidden;
-      box-shadow: 0 20px 50px rgba(11, 36, 59, 0.35);
+      box-shadow: 0 16px 40px rgba(11, 36, 59, 0.3);
     }
 
     .hero-content { position: relative; z-index: 1; }
 
     .school-crest {
-      width: 75px; height: 75px;
+      width: 70px; height: 70px;
       background: linear-gradient(135deg, var(--accent-lime), #bddb4a);
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
-      margin: 0 auto 12px;
-      font-size: 28px;
+      margin: 0 auto 10px;
+      font-size: 26px;
       font-weight: 900;
       color: var(--primary-navy);
-      box-shadow: 0 10px 30px rgba(169, 201, 51, 0.35);
+      box-shadow: 0 8px 24px rgba(169, 201, 51, 0.3);
       border: 3px solid rgba(255,255,255,0.2);
     }
 
     .school-name-en {
       font-family: 'Poppins', sans-serif;
-      font-size: 21px;
+      font-size: 20px;
       font-weight: 800;
-      letter-spacing: -0.5px;
       color: var(--accent-lime);
-      text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+      text-shadow: 0 2px 8px rgba(0,0,0,0.3);
     }
 
-    .school-name-ar {
-      font-size: 16px;
-      font-weight: 700;
-      opacity: 0.9;
-      margin-bottom: 4px;
-    }
-
-    .hero-divider {
-      width: 50px; height: 3px;
-      background: var(--gold-highlight);
-      margin: 10px auto;
-      border-radius: 2px;
-    }
+    .school-name-ar { font-size: 15px; font-weight: 700; opacity: 0.9; }
+    .hero-divider { width: 50px; height: 3px; background: var(--gold-highlight); margin: 8px auto; border-radius: 2px; }
 
     .hero-badge {
       display: inline-block;
@@ -127,21 +113,21 @@
       color: var(--accent-lime);
       padding: 5px 16px;
       border-radius: 20px;
-      font-size: 12px;
+      font-size: 11px;
       font-weight: 700;
       border: 1px solid rgba(169, 201, 51, 0.2);
     }
 
     .visitor-strip {
       background: white;
-      margin: -16px 14px 0;
+      margin: -14px 14px 0;
       border-radius: 14px;
       padding: 10px 16px;
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 8px;
-      box-shadow: 0 6px 20px rgba(0,0,0,0.06);
+      box-shadow: 0 4px 16px rgba(0,0,0,0.05);
       position: relative;
       z-index: 5;
       border: 1px solid #e8e4d8;
@@ -159,173 +145,102 @@
       border-radius: 10px;
     }
 
-    .content-section {
-      padding: 18px 12px;
-      display: flex;
-      flex-direction: column;
-      gap: 14px;
-    }
+    .content-section { padding: 16px 12px; display: flex; flex-direction: column; gap: 12px; }
 
     .section-card {
       background: white;
-      border-radius: 18px;
-      padding: 18px 14px;
-      box-shadow: 0 3px 16px rgba(0,0,0,0.04);
+      border-radius: 16px;
+      padding: 16px 14px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.03);
       border: 1px solid #e8e4d8;
     }
 
-    .section-header {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 10px;
-    }
-
+    .section-header { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
     .section-icon {
-      width: 40px; height: 40px;
-      border-radius: 12px;
+      width: 36px; height: 36px;
+      border-radius: 10px;
       background: linear-gradient(135deg, #f5f7f0, #eef5e0);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 18px;
+      font-size: 16px;
       flex-shrink: 0;
     }
 
-    .section-title {
-      font-size: 16px;
-      font-weight: 800;
-      color: var(--primary-navy);
-    }
-
-    .section-title-en {
-      font-family: 'Poppins', sans-serif;
-      font-size: 10px;
-      font-weight: 600;
-      color: var(--secondary-green);
-    }
-
-    .section-desc {
-      font-size: 12px;
-      color: #5c5c5c;
-      line-height: 1.7;
-      margin-bottom: 12px;
-    }
+    .section-title { font-size: 15px; font-weight: 800; color: var(--primary-navy); }
+    .section-title-en { font-family: 'Poppins', sans-serif; font-size: 9px; font-weight: 600; color: var(--secondary-green); }
+    .section-desc { font-size: 11px; color: #5c5c5c; line-height: 1.7; margin-bottom: 10px; }
 
     .skill-card {
       background: #fafbf6;
-      border-radius: 12px;
-      padding: 12px 14px;
+      border-radius: 10px;
+      padding: 10px 12px;
       border: 1px solid #e8e4d8;
-      margin-bottom: 8px;
-      border-right: 4px solid var(--accent-lime);
+      margin-bottom: 6px;
+      border-right: 3px solid var(--accent-lime);
     }
 
-    .skill-header {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      margin-bottom: 4px;
-    }
-
+    .skill-header { display: flex; align-items: center; gap: 6px; margin-bottom: 2px; }
     .skill-number {
-      width: 26px; height: 26px;
+      width: 24px; height: 24px;
       border-radius: 50%;
       background: var(--accent-lime);
       color: var(--primary-navy);
       text-align: center;
-      line-height: 26px;
+      line-height: 24px;
       font-weight: 900;
-      font-size: 12px;
+      font-size: 11px;
       flex-shrink: 0;
     }
 
-    .skill-title {
-      font-weight: 700;
-      font-size: 13px;
-      color: var(--primary-navy);
-    }
+    .skill-title { font-weight: 700; font-size: 12px; color: var(--primary-navy); }
+    .skill-title-en { font-family: 'Poppins', sans-serif; font-size: 8px; color: var(--secondary-green); padding-right: 30px; margin-bottom: 4px; }
+    .skill-list { list-style: none; padding-right: 30px; }
+    .skill-list li { font-size: 10px; color: #4a4a4a; line-height: 1.5; padding-right: 12px; position: relative; }
+    .skill-list li::before { content: '▸'; position: absolute; right: 0; color: var(--secondary-green); font-size: 8px; }
 
-    .skill-title-en {
-      font-family: 'Poppins', sans-serif;
-      font-size: 9px;
-      font-weight: 600;
-      color: var(--secondary-green);
-      margin-bottom: 6px;
-      padding-right: 34px;
-    }
-
-    .skill-list {
-      list-style: none;
-      display: flex;
-      flex-direction: column;
-      gap: 3px;
-      padding-right: 34px;
-    }
-
-    .skill-list li {
-      font-size: 11px;
-      color: #4a4a4a;
-      line-height: 1.5;
-      padding-right: 14px;
-      position: relative;
-    }
-
-    .skill-list li::before {
-      content: '▸';
-      position: absolute;
-      right: 0;
-      color: var(--secondary-green);
-      font-size: 9px;
-    }
-
-    .info-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 8px;
-    }
-
+    .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
     .info-item {
       background: #fafbf6;
-      border-radius: 12px;
-      padding: 12px 8px;
+      border-radius: 10px;
+      padding: 10px 6px;
       text-align: center;
       border: 1px solid #e8e4d8;
     }
 
-    .info-icon { font-size: 22px; margin-bottom: 2px; }
-    .info-value { font-weight: 800; font-size: 13px; color: var(--primary-navy); }
-    .info-label { font-size: 9px; color: #6b7280; font-weight: 600; }
+    .info-icon { font-size: 20px; }
+    .info-value { font-weight: 800; font-size: 12px; color: var(--primary-navy); }
+    .info-label { font-size: 8px; color: #6b7280; font-weight: 600; }
 
     .platform-card {
       background: linear-gradient(135deg, #fafbf6, #f5f8ee);
-      border-radius: 14px;
-      padding: 12px;
-      margin-top: 10px;
+      border-radius: 12px;
+      padding: 10px;
+      margin-top: 8px;
       border: 2px solid var(--gold-highlight);
     }
 
-    .platform-title { font-weight: 700; font-size: 12px; color: var(--primary-navy); }
-    .platform-title-en { font-family: 'Poppins', sans-serif; font-size: 9px; color: var(--secondary-green); font-weight: 600; margin-bottom: 4px; }
-    .platform-desc { font-size: 11px; color: #4a4a4a; line-height: 1.5; }
+    .platform-title { font-weight: 700; font-size: 11px; }
+    .platform-title-en { font-family: 'Poppins', sans-serif; font-size: 8px; color: var(--secondary-green); }
+    .platform-desc { font-size: 10px; color: #4a4a4a; }
 
     .price-card {
       background: linear-gradient(135deg, #1E5D38, #0B243B);
-      border-radius: 14px;
-      padding: 14px;
+      border-radius: 12px;
+      padding: 12px;
       text-align: center;
-      margin-top: 10px;
+      margin-top: 8px;
       color: white;
     }
 
-    .price-value { font-size: 32px; font-weight: 900; color: var(--accent-lime); }
-    .price-label { font-size: 11px; color: rgba(255,255,255,0.8); font-weight: 600; }
+    .price-value { font-size: 28px; font-weight: 900; color: var(--accent-lime); }
+    .price-label { font-size: 10px; color: rgba(255,255,255,0.8); }
 
     .voting-section {
       background: white;
-      border-radius: 18px;
-      padding: 22px 14px;
-      box-shadow: 0 8px 30px rgba(11, 36, 59, 0.08);
+      border-radius: 16px;
+      padding: 20px 14px;
+      box-shadow: 0 6px 24px rgba(11, 36, 59, 0.06);
       border: 2px solid var(--primary-navy);
       position: relative;
       scroll-margin-top: 20px;
@@ -337,189 +252,149 @@
       top: -2px; right: -2px; left: -2px;
       height: 4px;
       background: linear-gradient(90deg, var(--accent-lime), var(--secondary-green), var(--gold-highlight));
-      border-radius: 2px 2px 0 0;
+      border-radius: 2px;
     }
 
-    .voting-title {
-      font-size: 18px;
-      font-weight: 800;
-      color: var(--primary-navy);
-      text-align: center;
-      margin-bottom: 2px;
-    }
+    .voting-title { font-size: 16px; font-weight: 800; text-align: center; }
+    .voting-title-en { font-family: 'Poppins', sans-serif; font-size: 10px; color: var(--secondary-green); text-align: center; margin-bottom: 14px; }
 
-    .voting-title-en {
-      font-family: 'Poppins', sans-serif;
-      font-size: 11px;
-      font-weight: 600;
-      color: var(--secondary-green);
-      text-align: center;
-      margin-bottom: 16px;
-    }
-
-    .vote-options {
-      display: flex;
-      gap: 10px;
-      margin-bottom: 16px;
-    }
+    .vote-options { display: flex; gap: 8px; margin-bottom: 14px; }
 
     .vote-btn {
       flex: 1;
-      padding: 14px 10px;
-      border-radius: 14px;
+      padding: 12px 8px;
+      border-radius: 12px;
       font-weight: 700;
-      font-size: 14px;
+      font-size: 13px;
       cursor: pointer;
       font-family: inherit;
       border: 3px solid #e8e4d8;
       background: white;
       color: var(--primary-navy);
-      transition: all 0.25s;
       text-align: center;
       -webkit-tap-highlight-color: transparent;
       user-select: none;
+      transition: all 0.2s ease;
     }
 
-    .vote-btn:active {
-      transform: scale(0.97);
-    }
+    .vote-btn.selected-for { background: #e8f5e9; border-color: #4caf50; color: #2e7d32; }
+    .vote-btn.selected-against { background: #fce4ec; border-color: #e53935; color: #c62828; }
+    .vote-emoji { font-size: 22px; display: block; }
+    .vote-label-en { font-family: 'Poppins', sans-serif; font-size: 8px; display: block; }
 
-    .vote-btn.selected-for {
-      background: #e8f5e9;
-      border-color: #4caf50;
-      color: #2e7d32;
-      font-weight: 800;
-      box-shadow: 0 4px 16px rgba(76, 175, 80, 0.25);
-    }
-
-    .vote-btn.selected-against {
-      background: #fce4ec;
-      border-color: #e53935;
-      color: #c62828;
-      font-weight: 800;
-      box-shadow: 0 4px 16px rgba(229, 57, 53, 0.25);
-    }
-
-    .vote-emoji { font-size: 26px; display: block; margin-bottom: 2px; }
-    .vote-label-en { font-family: 'Poppins', sans-serif; font-size: 9px; font-weight: 600; display: block; opacity: 0.8; }
-
-    .form-group { margin-bottom: 12px; }
-
-    .form-group label {
-      display: block;
-      font-weight: 600;
-      font-size: 12px;
-      color: var(--primary-navy);
-      margin-bottom: 4px;
-    }
-
-    .form-group label .en {
-      font-family: 'Poppins', sans-serif;
-      font-size: 9px;
-      font-weight: 500;
-      color: #6b7280;
-    }
+    .form-group { margin-bottom: 10px; }
+    .form-group label { display: block; font-weight: 600; font-size: 11px; color: var(--primary-navy); margin-bottom: 3px; }
+    .form-group label .en { font-family: 'Poppins', sans-serif; font-size: 8px; color: #6b7280; }
 
     .form-group input, .form-group textarea {
       width: 100%;
-      padding: 11px 14px;
+      padding: 10px 12px;
       border: 2px solid #e8e4d8;
-      border-radius: 12px;
-      font-size: 13px;
+      border-radius: 10px;
+      font-size: 12px;
       font-family: inherit;
       background: #fdfdf9;
       color: var(--primary-navy);
       outline: none;
       resize: vertical;
+      transition: border-color 0.2s ease;
     }
 
-    .form-group textarea { min-height: 70px; }
-    .form-group input:focus, .form-group textarea:focus {
-      border-color: var(--accent-lime);
-      box-shadow: 0 0 0 3px rgba(169, 201, 51, 0.1);
-      background: white;
-    }
+    .form-group textarea { min-height: 60px; }
+    .form-group input:focus, .form-group textarea:focus { border-color: var(--accent-lime); background: white; }
 
     .btn-submit {
       width: 100%;
-      padding: 14px;
+      padding: 13px;
       background: var(--accent-lime);
       color: var(--primary-navy);
       border: none;
-      border-radius: 14px;
+      border-radius: 12px;
       font-weight: 800;
-      font-size: 15px;
+      font-size: 14px;
       cursor: pointer;
       font-family: inherit;
-      box-shadow: 0 6px 18px rgba(169, 201, 51, 0.3);
-      transition: all 0.2s;
+      transition: opacity 0.2s ease;
     }
 
-    .btn-submit:hover { background: #b8d94a; }
     .btn-submit:disabled { opacity: 0.6; cursor: not-allowed; }
+
+    /* ✅ حالة التحميل عند الإرسال */
+    .loading-state {
+      display: none;
+      text-align: center;
+      padding: 30px 16px;
+      animation: pulse 1.5s ease-in-out infinite;
+    }
+    .loading-state.show { display: block; }
+    .loading-state .spinner {
+      display: inline-block;
+      width: 36px; height: 36px;
+      border: 4px solid #e8e4d8;
+      border-top-color: var(--accent-lime);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin-bottom: 10px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.5; } }
 
     .success-message {
       display: none;
       text-align: center;
-      padding: 20px;
+      padding: 18px;
       background: #e8f5e9;
-      border-radius: 14px;
+      border-radius: 12px;
       border: 2px solid #4caf50;
     }
 
     .success-message.show { display: block; }
-    .success-icon { font-size: 45px; margin-bottom: 8px; }
-    .success-text { font-size: 16px; font-weight: 800; color: #2e7d32; }
-    .success-text-en { font-family: 'Poppins', sans-serif; font-size: 11px; color: #4caf50; font-weight: 600; }
+    .success-icon { font-size: 40px; margin-bottom: 6px; }
+    .success-text { font-size: 15px; font-weight: 800; color: #2e7d32; }
+    .success-text-en { font-family: 'Poppins', sans-serif; font-size: 10px; color: #4caf50; }
+
+    /* ✅ رسالة خطأ */
+    .error-message {
+      display: none;
+      text-align: center;
+      padding: 14px;
+      background: #fff3f3;
+      border-radius: 12px;
+      border: 2px solid #e53935;
+      color: #c62828;
+      font-size: 12px;
+      font-weight: 600;
+    }
+    .error-message.show { display: block; }
 
     .floating-vote-btn {
       position: fixed;
-      bottom: 18px;
+      bottom: 16px;
       left: 50%;
       transform: translateX(-50%);
       background: var(--accent-lime);
       color: var(--primary-navy);
       border: none;
-      padding: 13px 24px;
-      border-radius: 28px;
+      padding: 12px 22px;
+      border-radius: 26px;
       font-weight: 800;
-      font-size: 14px;
+      font-size: 13px;
       cursor: pointer;
       z-index: 100;
       font-family: inherit;
-      box-shadow: 0 10px 30px rgba(169, 201, 51, 0.5);
+      box-shadow: 0 8px 24px rgba(169, 201, 51, 0.45);
       animation: floatBtn 2.5s ease-in-out infinite;
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: 5px;
     }
 
     @keyframes floatBtn {
       0%, 100% { transform: translateX(-50%) translateY(0); }
-      50% { transform: translateX(-50%) translateY(-7px); }
+      50% { transform: translateX(-50%) translateY(-6px); }
     }
 
-    .floating-vote-btn .en {
-      font-family: 'Poppins', sans-serif;
-      font-size: 9px;
-      font-weight: 600;
-      opacity: 0.8;
-    }
-
-    .footer-note {
-      text-align: center;
-      padding: 14px;
-      font-size: 10px;
-      color: #8b7d9b;
-      font-weight: 500;
-    }
-
-    @media (max-width: 400px) {
-      .school-name-en { font-size: 18px; }
-      .section-title { font-size: 14px; }
-      .info-grid { grid-template-columns: 1fr; }
-      .price-value { font-size: 28px; }
-    }
+    .footer-note { text-align: center; padding: 12px; font-size: 9px; color: #8b7d9b; }
   </style>
 </head>
 <body>
@@ -536,7 +411,7 @@
     </div>
 
     <div class="visitor-strip">
-      <span>👁️ Visitors | الزوار</span>
+      <span>👁️ Visitors</span>
       <span class="visitor-count" id="visitorCount">...</span>
     </div>
 
@@ -550,144 +425,93 @@
             <div class="section-title-en">About the Programming Course</div>
           </div>
         </div>
-        <p class="section-desc">
-          صُمم كورس البرمجة ليصاحب الطالب خطوة بخطوة خلال رحلته التعليمية، بدءًا من المفاهيم الأساسية وصولًا إلى المهارات المتقدمة.
-        </p>
-        <p class="section-desc" style="font-weight:700;color:var(--secondary-green);text-align:center;">
-          ينقسم البرنامج إلى 5 مستويات متدرجة | 5 Progressive Levels
-        </p>
+        <p class="section-desc">صُمم كورس البرمجة ليصاحب الطالب خطوة بخطوة من الأساسيات حتى المهارات المتقدمة. ينقسم البرنامج إلى 5 مستويات متدرجة | 5 Progressive Levels</p>
 
         <div class="skill-card">
-          <div class="skill-header">
-            <div class="skill-number">1</div>
-            <div class="skill-title">🧠 تنمية التفكير وحل المشكلات</div>
-          </div>
+          <div class="skill-header"><div class="skill-number">1</div><div class="skill-title">🧠 تنمية التفكير وحل المشكلات</div></div>
           <div class="skill-title-en">Critical Thinking & Problem Solving</div>
           <ul class="skill-list">
             <li>تحليل المشكلات وتحويلها لخطوات منظمة</li>
-            <li>تنمية التفكير المنطقي</li>
-            <li>البحث عن أكثر من حل</li>
-            <li>اكتشاف الأخطاء وتصحيحها ذاتياً</li>
+            <li>تنمية التفكير المنطقي - البحث عن أكثر من حل</li>
           </ul>
         </div>
 
         <div class="skill-card">
-          <div class="skill-header">
-            <div class="skill-number">2</div>
-            <div class="skill-title">🚀 مهارات المستقبل والعصر الرقمي</div>
-          </div>
+          <div class="skill-header"><div class="skill-number">2</div><div class="skill-title">🚀 مهارات المستقبل والعصر الرقمي</div></div>
           <div class="skill-title-en">Future Skills & Digital Readiness</div>
           <ul class="skill-list">
-            <li>فهم التكنولوجيا وصناعتها</li>
-            <li>تصميم الألعاب والمشروعات التفاعلية</li>
-            <li>فهم عمل التطبيقات والأنظمة</li>
-            <li>تكوين أساس للتخصصات التقنية</li>
+            <li>فهم التكنولوجيا وصناعتها - تصميم المشروعات التفاعلية</li>
           </ul>
         </div>
 
         <div class="skill-card">
-          <div class="skill-header">
-            <div class="skill-number">3</div>
-            <div class="skill-title">📚 الاستعداد الأكاديمي</div>
-          </div>
+          <div class="skill-header"><div class="skill-number">3</div><div class="skill-title">📚 الاستعداد الأكاديمي</div></div>
           <div class="skill-title-en">Academic Preparation</div>
-          <ul class="skill-list">
-            <li>تأسيس قوي لمادة البرمجة بالثانوية</li>
-            <li>قاعدة معرفية للمجالات التقنية</li>
-          </ul>
+          <ul class="skill-list"><li>تأسيس قوي لمادة البرمجة بالثانوية</li></ul>
         </div>
 
         <div class="skill-card">
-          <div class="skill-header">
-            <div class="skill-number">4</div>
-            <div class="skill-title">🌟 بناء الشخصية والمهارات الحياتية</div>
-          </div>
-          <div class="skill-title-en">Character Building & Life Skills</div>
-          <ul class="skill-list">
-            <li>تعزيز الثقة عبر تحويل الأفكار لمشروعات</li>
-            <li>تنمية التواصل والعمل الجماعي</li>
-            <li>التفكير المنظم وتحمل المسؤولية</li>
-          </ul>
+          <div class="skill-header"><div class="skill-number">4</div><div class="skill-title">🌟 بناء الشخصية والمهارات الحياتية</div></div>
+          <div class="skill-title-en">Character Building</div>
+          <ul class="skill-list"><li>تعزيز الثقة - تنمية التواصل - تحمل المسؤولية</li></ul>
         </div>
 
-        <div style="background:linear-gradient(135deg,#f0f9e8,#f5fbe8);border-radius:12px;padding:12px;margin-top:8px;border:2px solid var(--accent-lime);text-align:center;">
-          <div style="font-weight:800;font-size:14px;">🏆 في نهاية المستوى الخامس</div>
-          <div style="font-family:'Poppins',sans-serif;font-size:9px;color:var(--secondary-green);margin-bottom:4px;">By the end of Level 5</div>
-          <p style="font-size:11px;color:#4a4a4a;">
-            يتعلم الطالب أساسيات <strong style="color:var(--secondary-green);">Python</strong> و <strong style="color:var(--secondary-green);">Java</strong>
-          </p>
+        <div style="background:#f0f9e8;border-radius:10px;padding:10px;margin-top:6px;border:2px solid var(--accent-lime);text-align:center;">
+          <div style="font-weight:800;font-size:13px;">🏆 بنهاية المستوى الخامس</div>
+          <p style="font-size:10px;">يتعلم الطالب <strong>Python</strong> و <strong>Java</strong></p>
         </div>
       </div>
 
       <div class="section-card">
         <div class="section-header">
           <div class="section-icon">📋</div>
-          <div>
-            <div class="section-title">تفاصيل الكورس</div>
-            <div class="section-title-en">Course Details</div>
-          </div>
+          <div><div class="section-title">تفاصيل الكورس</div><div class="section-title-en">Course Details</div></div>
         </div>
         
         <div class="info-grid">
-          <div class="info-item">
-            <div class="info-icon">📅</div>
-            <div class="info-value">2 / أسبوع</div>
-            <div class="info-label">Sessions | سيشن</div>
-          </div>
-          <div class="info-item">
-            <div class="info-icon">⏱️</div>
-            <div class="info-value">1.5 - 2 ساعة</div>
-            <div class="info-label">Duration | المدة</div>
-          </div>
-          <div class="info-item">
-            <div class="info-icon">🖥️</div>
-            <div class="info-value">عملي + نظري</div>
-            <div class="info-label">Practical + Theory</div>
-          </div>
-          <div class="info-item">
-            <div class="info-icon">📆</div>
-            <div class="info-value">1.5 - 2 شهر</div>
-            <div class="info-label">Per Level | لكل مستوى</div>
-          </div>
+          <div class="info-item"><div class="info-icon">📅</div><div class="info-value">2/أسبوع</div><div class="info-label">Sessions</div></div>
+          <div class="info-item"><div class="info-icon">⏱️</div><div class="info-value">1.5-2h</div><div class="info-label">Duration</div></div>
+          <div class="info-item"><div class="info-icon">🖥️</div><div class="info-value">عملي+نظري</div><div class="info-label">Type</div></div>
+          <div class="info-item"><div class="info-icon">📆</div><div class="info-value">1.5-2شهر</div><div class="info-label">Per Level</div></div>
         </div>
 
         <div class="platform-card">
           <div class="platform-title">🎓 منصة تعلم إضافية مجانية</div>
-          <div class="platform-title-en">Free Supplementary Learning Platform</div>
-          <p class="platform-desc">
-            كارت به كود وكلمة مرور للدخول إلى منصة تعلم بها امتحانات وشرح إضافي ومدعومة بالذكاء الاصطناعي.
-          </p>
+          <div class="platform-title-en">Free Platform with AI</div>
+          <p class="platform-desc">كارت بكود وpassword لمنصة امتحانات وشرح إضافي مدعوم بالذكاء الاصطناعي</p>
         </div>
 
         <div class="price-card">
-          <div class="price-label">Course Price | سعر الكورس</div>
+          <div class="price-label">السعر الشهري</div>
           <div class="price-value">350 ج.م</div>
-          <div class="price-label">Monthly | شهرياً</div>
         </div>
       </div>
 
-      <!-- قسم التصويت -->
       <div class="voting-section" id="votingSection">
         <div class="voting-title">🗳️ استطلاع رأي أولياء الأمور</div>
-        <div class="voting-title-en">Parent Survey - Summer Programming Course</div>
+        <div class="voting-title-en">Parent Survey - Summer Course</div>
+
+        <!-- ✅ حالة التحميل -->
+        <div class="loading-state" id="loadingState">
+          <div class="spinner"></div>
+          <p style="font-weight:700;color:var(--primary-navy);">⏳ جاري إرسال تصويتك...</p>
+          <p style="font-size:10px;color:#6b7280;">Submitting vote...</p>
+        </div>
+
+        <!-- ✅ رسالة خطأ -->
+        <div class="error-message" id="errorMessage"></div>
 
         <div id="votingFormContainer">
-          <form id="votingForm" onsubmit="return false;">
-            <div style="margin-bottom:14px;">
-              <label style="font-weight:700;font-size:14px;display:block;margin-bottom:10px;color:var(--primary-navy);text-align:center;">
-                مع ادخال الكورس في الصيف؟
-                <span style="font-family:'Poppins',sans-serif;font-size:10px;display:block;color:#6b7280;font-weight:500;">Include the course this summer?</span>
-              </label>
-              <div class="vote-options">
+          <form onsubmit="return false;">
+            <div style="margin-bottom:12px;text-align:center;">
+              <label style="font-weight:700;font-size:14px;">مع ادخال الكورس في الصيف؟</label>
+              <span style="font-family:'Poppins',sans-serif;font-size:9px;color:#6b7280;display:block;">Include this summer?</span>
+              <div class="vote-options" style="margin-top:8px;">
                 <button type="button" class="vote-btn" id="voteForBtn" onclick="selectVote('for')">
-                  <span class="vote-emoji">👍</span>
-                  مع | For
-                  <span class="vote-label-en">I agree</span>
+                  <span class="vote-emoji">👍</span>مع | For
                 </button>
                 <button type="button" class="vote-btn" id="voteAgainstBtn" onclick="selectVote('against')">
-                  <span class="vote-emoji">👎</span>
-                  ضد | Against
-                  <span class="vote-label-en">I disagree</span>
+                  <span class="vote-emoji">👎</span>ضد | Against
                 </button>
               </div>
               <input type="hidden" id="voteValue" value="">
@@ -695,111 +519,112 @@
 
             <div class="form-group">
               <label>👤 اسم ولي الأمر <span class="en">Parent Name</span></label>
-              <input type="text" id="parentName" placeholder="الاسم الكامل | Full Name" required>
+              <input type="text" id="parentName" placeholder="الاسم الكامل" required autocomplete="name">
             </div>
-
             <div class="form-group">
-              <label>📱 رقم الواتساب <span class="en">WhatsApp Number</span></label>
-              <input type="tel" id="whatsappNumber" placeholder="01xxxxxxxxx" dir="ltr" style="text-align:right;" required>
+              <label>📱 رقم الواتساب <span class="en">WhatsApp</span></label>
+              <input type="tel" id="whatsappNumber" placeholder="01xxxxxxxxx" dir="ltr" style="text-align:right;" required autocomplete="tel">
             </div>
-
             <div class="form-group">
-              <label>💬 اقتراح أو رأي <span class="en">Suggestion or Opinion (Optional)</span></label>
-              <textarea id="suggestion" placeholder="اكتب اقتراحك أو رأيك هنا... | Write your suggestion here..."></textarea>
+              <label>💬 اقتراح أو رأي <span class="en">Suggestion (Optional)</span></label>
+              <textarea id="suggestion" placeholder="اكتب اقتراحك..." maxlength="500"></textarea>
             </div>
-
-            <button type="button" class="btn-submit" id="submitBtn" onclick="submitVote()">
-              📩 إرسال التصويت | Submit Vote
-            </button>
+            <button type="button" class="btn-submit" id="submitBtn" onclick="submitVote()">📩 إرسال | Submit</button>
           </form>
         </div>
 
         <div class="success-message" id="successMessage">
           <div class="success-icon">✅</div>
-          <div class="success-text">تم تسجيل تصويتك بنجاح!</div>
-          <div class="success-text-en">Your vote has been recorded successfully!</div>
-          <p style="font-size:12px;color:#4a4a4a;margin-top:6px;">شكراً لمشاركتكم | Thank you for your participation</p>
+          <div class="success-text">تم تسجيل تصويتك!</div>
+          <div class="success-text-en">Vote recorded. Thank you!</div>
         </div>
       </div>
 
     </div>
 
-    <button class="floating-vote-btn" id="floatingVoteBtn" onclick="scrollToVoting()">
-      🗳️ اضغط هنا للتصويت
-      <span class="en">Vote Now</span>
+    <button class="floating-vote-btn" id="floatingVoteBtn" onclick="document.getElementById('votingSection').scrollIntoView({behavior:'smooth',block:'center'})">
+      🗳️ اضغط للتصويت
     </button>
 
-    <div class="footer-note">
-      Happy Land Language School © 2025 | جميع الحقوق محفوظة
-    </div>
+    <div class="footer-note">Happy Land Language School © 2026</div>
 
   </div>
 
   <script>
-    // ========== متغيرات عامة ==========
+    // ✅ دالة معالجة الأخطاء الموحدة
+    function handleError(context, error) {
+      console.error(`❌ خطأ في ${context}:`, error);
+      const errorEl = document.getElementById('errorMessage');
+      if (errorEl) {
+        errorEl.textContent = `⚠️ ${context}: ${error?.message || 'خطأ غير معروف'}`;
+        errorEl.classList.add('show');
+        setTimeout(() => errorEl.classList.remove('show'), 5000);
+      }
+    }
+
     let selectedVoteValue = '';
 
-    // ========== دالة اختيار التصويت ==========
     window.selectVote = function(vote) {
       selectedVoteValue = vote;
       document.getElementById('voteValue').value = vote;
-      
       const forBtn = document.getElementById('voteForBtn');
       const againstBtn = document.getElementById('voteAgainstBtn');
       
-      forBtn.classList.remove('selected-for');
-      againstBtn.classList.remove('selected-against');
-      
       if (vote === 'for') {
         forBtn.classList.add('selected-for');
+        againstBtn.classList.remove('selected-against');
       } else {
         againstBtn.classList.add('selected-against');
+        forBtn.classList.remove('selected-for');
       }
     };
 
-    // ========== دالة التمرير للتصويت ==========
-    window.scrollToVoting = function() {
-      const votingSection = document.getElementById('votingSection');
-      votingSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      votingSection.style.boxShadow = '0 0 0 6px rgba(169, 201, 51, 0.3)';
-      setTimeout(() => {
-        votingSection.style.boxShadow = '0 8px 30px rgba(11, 36, 59, 0.08)';
-      }, 1500);
-    };
-
-    // ========== دالة الإرسال ==========
     window.submitVote = async function() {
       const btn = document.getElementById('submitBtn');
+      const loadingState = document.getElementById('loadingState');
+      const errorEl = document.getElementById('errorMessage');
       
+      // إخفاء رسائل الخطأ السابقة
+      if (errorEl) errorEl.classList.remove('show');
+      
+      // ✅ التحقق من صحة البيانات
       if (!selectedVoteValue) {
-        alert('يرجى اختيار مع أو ضد | Please select For or Against');
+        handleError('التحقق', { message: 'يرجى اختيار مع أو ضد' });
         return;
       }
 
       const name = document.getElementById('parentName').value.trim();
       const phone = document.getElementById('whatsappNumber').value.trim();
 
-      if (!name || !phone) {
-        alert('يرجى ملء الاسم والرقم | Please fill in name and number');
+      if (!name || name.length < 2) {
+        handleError('التحقق', { message: 'يرجى إدخال اسم ولي الأمر بشكل صحيح' });
         return;
       }
 
+      if (!phone || !/^01[0-9]{9}$/.test(phone)) {
+        handleError('التحقق', { message: 'يرجى إدخال رقم واتساب مصري صحيح (01xxxxxxxxx)' });
+        return;
+      }
+
+      // ✅ عرض حالة التحميل
       btn.disabled = true;
-      btn.textContent = '⏳ جاري الإرسال... | Submitting...';
+      btn.textContent = '⏳ جاري...';
+      if (loadingState) loadingState.classList.add('show');
 
       try {
         const db = window.db;
-        const col = window.collection;
         const add = window.addDoc;
         const sTime = window.serverTimestamp;
         const getD = window.getDoc;
         const setD = window.setDoc;
         const inc = window.increment;
         const docR = window.docRef;
+        const col = window.collection;
 
         const suggestion = document.getElementById('suggestion').value.trim();
         const STATS_DOC = docR(db, "statistics_happy_land", "counters");
 
+        // 1. حفظ التصويت
         await add(col(db, "votes_happy_land"), {
           parentName: name,
           phoneNumber: phone,
@@ -808,181 +633,147 @@
           submittedAt: sTime(),
           school: "Happy Land Language School"
         });
+        console.log("✅ تم حفظ التصويت");
 
-        const snap = await getD(STATS_DOC);
-        if (!snap.exists()) {
-          await setD(STATS_DOC, {
-            totalVisitors: 0, totalVotes: 1,
-            votesFor: selectedVoteValue === 'for' ? 1 : 0,
-            votesAgainst: selectedVoteValue === 'against' ? 1 : 0,
-            updatedAt: sTime()
-          });
-        } else {
-          const updates = { totalVotes: inc(1), updatedAt: sTime() };
-          if (selectedVoteValue === 'for') updates.votesFor = inc(1);
-          else updates.votesAgainst = inc(1);
-          await setD(STATS_DOC, updates, { merge: true });
+        // 2. ✅ تحديث الإحصائيات باستخدام increment()
+        try {
+          const snap = await getD(STATS_DOC);
+          if (!snap.exists()) {
+            // إنشاء المستند لأول مرة
+            await setD(STATS_DOC, {
+              totalVisitors: 0,
+              totalVotes: 1,
+              votesFor: selectedVoteValue === 'for' ? 1 : 0,
+              votesAgainst: selectedVoteValue === 'against' ? 1 : 0,
+              updatedAt: sTime()
+            });
+            console.log("✅ تم إنشاء مستند الإحصائيات");
+          } else {
+            // ✅ استخدام increment() للتحديث الآمن
+            const updates = {
+              totalVotes: inc(1),
+              updatedAt: sTime()
+            };
+            if (selectedVoteValue === 'for') {
+              updates.votesFor = inc(1);
+            } else {
+              updates.votesAgainst = inc(1);
+            }
+            await setD(STATS_DOC, updates, { merge: true });
+            console.log("✅ تم تحديث الإحصائيات بـ increment()");
+          }
+        } catch (statsErr) {
+          // ✅ معالجة منفصلة لخطأ الإحصائيات - التصويت تم حفظه بالفعل
+          console.error("⚠️ خطأ في تحديث الإحصائيات (التصويت محفوظ):", statsErr);
         }
 
+        // ✅ إخفاء التحميل وعرض النجاح
+        if (loadingState) loadingState.classList.remove('show');
         document.getElementById('votingFormContainer').style.display = 'none';
         document.getElementById('successMessage').classList.add('show');
         document.getElementById('floatingVoteBtn').style.display = 'none';
-        
-        console.log('✅ تم تسجيل التصويت بنجاح');
 
       } catch (err) {
-        console.error('❌ خطأ:', err);
-        alert('حدث خطأ. حاول مرة أخرى. | Error. Please try again.');
+        // ✅ معالجة الخطأ
+        if (loadingState) loadingState.classList.remove('show');
+        handleError('إرسال التصويت', err);
         btn.disabled = false;
-        btn.textContent = '📩 إرسال التصويت | Submit Vote';
+        btn.textContent = '📩 إرسال | Submit';
       }
     };
 
-    // ========== عداد الزوار + تتبع الموبايل ==========
+    // ✅ عداد زوار + تتبع جهاز - مع async/await و try/catch
     (async function() {
       try {
+        // انتظار تحميل Firebase
+        await new Promise((resolve) => {
+          if (window.db) { resolve(); return; }
+          const check = setInterval(() => {
+            if (window.db) { clearInterval(check); resolve(); }
+          }, 200);
+          setTimeout(() => { clearInterval(check); resolve(); }, 5000);
+        });
+
         const db = window.db;
-        const col = window.collection;
         const add = window.addDoc;
         const sTime = window.serverTimestamp;
         const getD = window.getDoc;
         const setD = window.setDoc;
         const inc = window.increment;
         const docR = window.docRef;
+        const col = window.collection;
 
         const STATS_DOC = docR(db, "statistics_happy_land", "counters");
 
-        // ========== تحليل نوع الجهاز ==========
+        // تتبع الجهاز
         const ua = navigator.userAgent;
-        let deviceType = 'Unknown';
-        let deviceBrand = 'Unknown';
-        let deviceOS = 'Unknown';
-        let browser = 'Unknown';
-
-        // تحديد نوع الجهاز والماركة
-        if (/iPhone/.test(ua)) {
-          deviceType = 'Mobile';
-          deviceBrand = 'Apple';
-          deviceOS = 'iOS';
-        } else if (/iPad/.test(ua)) {
-          deviceType = 'Tablet';
-          deviceBrand = 'Apple';
-          deviceOS = 'iOS';
-        } else if (/Android/.test(ua)) {
-          deviceOS = 'Android';
-          if (/Mobile/.test(ua)) deviceType = 'Mobile';
-          else if (/Tablet/.test(ua)) deviceType = 'Tablet';
-          else deviceType = 'Mobile';
-          
-          if (/Samsung|SM-/.test(ua)) deviceBrand = 'Samsung';
-          else if (/Huawei|HONOR|HW-/.test(ua)) deviceBrand = 'Huawei';
-          else if (/Xiaomi|Redmi|POCO|Mi /i.test(ua)) deviceBrand = 'Xiaomi';
-          else if (/OPPO|CPH/.test(ua)) deviceBrand = 'OPPO';
-          else if (/vivo|V[0-9]/.test(ua)) deviceBrand = 'Vivo';
-          else if (/OnePlus/.test(ua)) deviceBrand = 'OnePlus';
-          else if (/realme|RMX/.test(ua)) deviceBrand = 'Realme';
-          else if (/Infinix|X[0-9]/.test(ua)) deviceBrand = 'Infinix';
-          else if (/TECNO/.test(ua)) deviceBrand = 'TECNO';
-          else if (/Nokia/.test(ua)) deviceBrand = 'Nokia';
-          else if (/Motorola|Moto/.test(ua)) deviceBrand = 'Motorola';
-          else if (/Sony/.test(ua)) deviceBrand = 'Sony';
-          else if (/LG/.test(ua)) deviceBrand = 'LG';
-          else deviceBrand = 'Other Android';
-        } else if (/Windows/.test(ua)) {
-          deviceType = 'Desktop';
-          deviceOS = 'Windows';
-          deviceBrand = 'PC';
-        } else if (/Macintosh|Mac OS/.test(ua)) {
-          deviceType = 'Desktop';
-          deviceOS = 'macOS';
-          deviceBrand = 'Apple';
-        }
-
-        // تحديد المتصفح
-        if (/Chrome/.test(ua) && !/Edg/.test(ua) && !/OPR/.test(ua)) browser = 'Chrome';
-        else if (/Safari/.test(ua) && !/Chrome/.test(ua)) browser = 'Safari';
-        else if (/Firefox/.test(ua)) browser = 'Firefox';
-        else if (/Edg/.test(ua)) browser = 'Edge';
-        else if (/OPR|Opera/.test(ua)) browser = 'Opera';
-        else if (/SamsungBrowser/.test(ua)) browser = 'Samsung Internet';
-
-        // تسجيل الجهاز
-        await add(col(db, "device_tracking"), {
-          deviceType: deviceType,
-          deviceBrand: deviceBrand,
-          deviceOS: deviceOS,
-          browser: browser,
-          userAgent: ua.substring(0, 200),
-          screenSize: window.innerWidth + 'x' + window.innerHeight,
-          visitedAt: sTime(),
-          page: "Happy Land - Survey"
-        });
-
-        // تحديث إحصائيات الأجهزة
-        const DEVICE_STATS = docR(db, "statistics_happy_land", "device_stats");
-        const deviceSnap = await getD(DEVICE_STATS);
+        let deviceBrand = 'Unknown', deviceOS = 'Unknown', deviceType = 'Unknown';
         
-        if (!deviceSnap.exists()) {
-          await setD(DEVICE_STATS, {
-            totalDevices: 1,
-            Apple: deviceBrand === 'Apple' ? 1 : 0,
-            Samsung: deviceBrand === 'Samsung' ? 1 : 0,
-            Huawei: deviceBrand === 'Huawei' ? 1 : 0,
-            Xiaomi: deviceBrand === 'Xiaomi' ? 1 : 0,
-            OPPO: deviceBrand === 'OPPO' ? 1 : 0,
-            Vivo: deviceBrand === 'Vivo' ? 1 : 0,
-            OnePlus: deviceBrand === 'OnePlus' ? 1 : 0,
-            Realme: deviceBrand === 'Realme' ? 1 : 0,
-            Infinix: deviceBrand === 'Infinix' ? 1 : 0,
-            TECNO: deviceBrand === 'TECNO' ? 1 : 0,
-            OtherAndroid: deviceBrand === 'Other Android' ? 1 : 0,
-            iOS: deviceOS === 'iOS' ? 1 : 0,
-            Android: deviceOS === 'Android' ? 1 : 0,
-            Desktop: deviceType === 'Desktop' ? 1 : 0,
-            updatedAt: sTime()
-          });
-        } else {
-          const updates = { totalDevices: inc(1), updatedAt: sTime() };
-          if (deviceBrand === 'Apple') updates.Apple = inc(1);
-          if (deviceBrand === 'Samsung') updates.Samsung = inc(1);
-          if (deviceBrand === 'Huawei') updates.Huawei = inc(1);
-          if (deviceBrand === 'Xiaomi') updates.Xiaomi = inc(1);
-          if (deviceBrand === 'OPPO') updates.OPPO = inc(1);
-          if (deviceBrand === 'Vivo') updates.Vivo = inc(1);
-          if (deviceBrand === 'OnePlus') updates.OnePlus = inc(1);
-          if (deviceBrand === 'Realme') updates.Realme = inc(1);
-          if (deviceBrand === 'Infinix') updates.Infinix = inc(1);
-          if (deviceBrand === 'TECNO') updates.TECNO = inc(1);
-          if (deviceBrand === 'Other Android') updates.OtherAndroid = inc(1);
-          if (deviceOS === 'iOS') updates.iOS = inc(1);
-          if (deviceOS === 'Android') updates.Android = inc(1);
-          if (deviceType === 'Desktop') updates.Desktop = inc(1);
-          await setD(DEVICE_STATS, updates, { merge: true });
+        if (/iPhone|iPad|iPod/.test(ua)) { 
+          deviceBrand = 'Apple'; deviceOS = 'iOS'; 
+          deviceType = /iPad/.test(ua) ? 'Tablet' : 'Mobile'; 
+        } else if (/Android/.test(ua)) {
+          deviceOS = 'Android'; deviceType = 'Mobile';
+          if (/Samsung/.test(ua)) deviceBrand = 'Samsung';
+          else if (/Huawei|HONOR/.test(ua)) deviceBrand = 'Huawei';
+          else if (/Xiaomi|Redmi|POCO/.test(ua)) deviceBrand = 'Xiaomi';
+          else if (/OPPO/.test(ua)) deviceBrand = 'OPPO';
+          else if (/vivo/.test(ua)) deviceBrand = 'Vivo';
+          else if (/realme/.test(ua)) deviceBrand = 'Realme';
+          else if (/Infinix/.test(ua)) deviceBrand = 'Infinix';
+          else if (/TECNO/.test(ua)) deviceBrand = 'TECNO';
+          else deviceBrand = 'Other Android';
+        } else { 
+          deviceType = 'Desktop'; deviceOS = 'Other'; deviceBrand = 'PC'; 
         }
 
-        console.log(`📱 جهاز: ${deviceBrand} | ${deviceOS} | ${browser}`);
+        // تتبع الجهاز - لا نوقف الصفحة إذا فشل
+        try {
+          await add(col(db, "device_tracking"), {
+            deviceBrand, deviceOS, deviceType,
+            visitedAt: sTime(),
+            page: "Happy Land"
+          });
+          console.log("📱 جهاز:", deviceBrand);
+        } catch (trackErr) {
+          console.warn("⚠️ تعذر تتبع الجهاز:", trackErr.message);
+        }
 
-        // زوار عادي
-        await add(col(db, "visitors_happy_land"), {
-          visitedAt: sTime(),
-          page: "Happy Land - Survey",
-          timestamp: Date.now()
-        });
+        // زائر
+        try {
+          await add(col(db, "visitors_happy_land"), { 
+            visitedAt: sTime(), 
+            page: "Happy Land" 
+          });
+        } catch (visitErr) {
+          console.warn("⚠️ تعذر تسجيل الزيارة:", visitErr.message);
+        }
 
+        // ✅ تحديث العداد باستخدام increment()
         const snap = await getD(STATS_DOC);
         if (!snap.exists()) {
-          await setD(STATS_DOC, {
-            totalVisitors: 1, totalVotes: 0, votesFor: 0, votesAgainst: 0, updatedAt: sTime()
+          await setD(STATS_DOC, { 
+            totalVisitors: 1, totalVotes: 0, 
+            votesFor: 0, votesAgainst: 0, 
+            updatedAt: sTime() 
           });
         } else {
-          await setD(STATS_DOC, { totalVisitors: inc(1), updatedAt: sTime() }, { merge: true });
+          // ✅ استخدام increment() بدلاً من setD مع قيمة ثابتة
+          await setD(STATS_DOC, { 
+            totalVisitors: inc(1), 
+            updatedAt: sTime() 
+          }, { merge: true });
         }
 
+        // قراءة القيمة المحدثة
         const updated = await getD(STATS_DOC);
-        document.getElementById('visitorCount').textContent = updated.exists() ? (updated.data().totalVisitors || 0) : 1;
+        const count = updated.exists() ? (updated.data().totalVisitors || 0) : 1;
+        document.getElementById('visitorCount').textContent = count;
+        console.log("✅ زائر:", count);
         
       } catch (e) {
         document.getElementById('visitorCount').textContent = '...';
+        console.error('❌ خطأ في العداد:', e);
       }
     })();
   </script>
