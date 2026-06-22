@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
+  <title>مدرسة الحداد الخاصة | ElHadad Language School</title>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-app.js";
+    import { 
+      getFirestore, collection, addDoc, serverTimestamp, 
+      getDoc, setDoc, increment, doc 
+    } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-firestore.js";
+    import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-analytics.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyBysr4ZEHTY_ojej_onmso3d09sz6uU65A",
+      authDomain: "infinity-ai-bd879.firebaseapp.com",
+      projectId: "infinity-ai-bd879",
+      storageBucket: "infinity-ai-bd879.firebasestorage.app",
+      messagingSenderId: "391390244727",
+      appId: "1:391390244727:web:7cc77f13f3ed0e4221fb72",
+      measurementId: "G-XGW87N67WZ"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    
+    window.db = db;
+    window.collection = collection;
+    window.addDoc = addDoc;
+    window.serverTimestamp = serverTimestamp;
+    window.getDoc = getDoc;
+    window.setDoc = setDoc;
+    window.increment = increment;
+    window.docRef = doc;
+    
+    console.log("✅ Firebase Ready - ElHadad School");
+  </script>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,600;0,700;1,600;1,700&family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --navy-dark: #0B1330;
+      --emerald-green: #1E7045;
+      --white: #FFFFFF;
+      --cream: #F8F6F0;
+      --gold: #C5A55A;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: var(--cream);
+      font-family: 'Cairo', 'Tajawal', sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      min-height: 100vh;
+      padding: 0;
+      direction: rtl;
+      color: var(--navy-dark);
+    }
+
+    .main-wrapper {
+      width: 100%;
+      max-width: 500px;
+      position: relative;
+      padding-bottom: 40px;
+    }
+
+    /* ========== الهيرو بالشعار ========== */
+    .hero-section {
+      background: var(--white);
+      padding: 20px 16px 28px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      border-bottom: 4px solid var(--emerald-green);
+      box-shadow: 0 4px 20px rgba(11, 19, 48, 0.08);
+    }
+
+    .logo-container {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 12px;
+    }
+
+    /* الشعار SVG */
+    .school-logo-svg {
+      width: 120px;
+      height: 140px;
+    }
+
+    .school-name-en {
+      font-family: 'Playfair Display', 'Times New Roman', serif;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--emerald-green);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+
+    .school-name-ar {
+      font-size: 22px;
+      font-weight: 800;
+      color: var(--navy-dark);
+      margin: 4px 0;
+      letter-spacing: 1px;
+    }
+
+    .school-since {
+      font-size: 11px;
+      color: var(--navy-dark);
+      font-weight: 600;
+      letter-spacing: 1px;
+    }
+
+    .hero-divider {
+      width: 60px;
+      height: 2px;
+      background: var(--gold);
+      margin: 10px auto;
+    }
+
+    .hero-badge {
+      display: inline-block;
+      background: var(--navy-dark);
+      color: var(--white);
+      padding: 6px 18px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+    }
+
+    .visitor-strip {
+      background: var(--white);
+      margin: 0 14px;
+      border-radius: 12px;
+      padding: 8px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+      position: relative;
+      z-index: 5;
+      border: 1px solid #e8e4d8;
+      font-size: 11px;
+      color: #5c5c5c;
+      font-weight: 600;
+      margin-top: -16px;
+    }
+
+    .visitor-count {
+      font-weight: 900;
+      font-size: 18px;
+      color: var(--navy-dark);
+      background: var(--cream);
+      padding: 2px 12px;
+      border-radius: 8px;
+    }
+
+    .content-section {
+      padding: 16px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .section-card {
+      background: var(--white);
+      border-radius: 14px;
+      padding: 16px 14px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.03);
+      border: 1px solid #e8e4d8;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
+    .section-icon {
+      width: 38px; height: 38px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #e8f5e9, #c8e6c9);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+
+    .section-title {
+      font-size: 16px;
+      font-weight: 800;
+      color: var(--navy-dark);
+    }
+
+    .section-desc {
+      font-size: 11px;
+      color: #4a4a4a;
+      line-height: 1.7;
+      margin-bottom: 10px;
+    }
+
+    .skill-card {
+      background: #fafbf6;
+      border-radius: 10px;
+      padding: 10px 12px;
+      border: 1px solid #e8e4d8;
+      margin-bottom: 6px;
+      border-right: 3px solid var(--emerald-green);
+    }
+
+    .skill-header {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 2px;
+    }
+
+    .skill-number {
+      width: 24px; height: 24px;
+      border-radius: 50%;
+      background: var(--emerald-green);
+      color: var(--white);
+      text-align: center;
+      line-height: 24px;
+      font-weight: 900;
+      font-size: 11px;
+      flex-shrink: 0;
+    }
+
+    .skill-title {
+      font-weight: 700;
+      font-size: 12px;
+      color: var(--navy-dark);
+    }
+
+    .skill-list {
+      list-style: none;
+      padding-right: 30px;
+    }
+
+    .skill-list li {
+      font-size: 10px;
+      color: #4a4a4a;
+      line-height: 1.5;
+      padding-right: 12px;
+      position: relative;
+    }
+
+    .skill-list li::before {
+      content: '▸';
+      position: absolute;
+      right: 0;
+      color: var(--emerald-green);
+      font-size: 8px;
+    }
+
+    .info-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px;
+    }
+
+    .info-item {
+      background: #fafbf6;
+      border-radius: 10px;
+      padding: 10px 6px;
+      text-align: center;
+      border: 1px solid #e8e4d8;
+    }
+
+    .info-icon { font-size: 20px; }
+    .info-value { font-weight: 800; font-size: 12px; color: var(--navy-dark); }
+    .info-label { font-size: 8px; color: #6b7280; font-weight: 600; }
+
+    .platform-card {
+      background: linear-gradient(135deg, #f0f4e8, #e8f0e0);
+      border-radius: 10px;
+      padding: 10px;
+      margin-top: 8px;
+      border: 2px solid var(--gold);
+    }
+
+    .platform-title { font-weight: 700; font-size: 11px; }
+    .platform-desc { font-size: 10px; color: #4a4a4a; }
+
+    .price-card {
+      background: linear-gradient(135deg, var(--navy-dark), #1a2550);
+      border-radius: 12px;
+      padding: 12px;
+      text-align: center;
+      margin-top: 8px;
+      color: var(--white);
+    }
+
+    .price-value { font-size: 28px; font-weight: 900; color: #4caf50; }
+    .price-label { font-size: 10px; color: rgba(255,255,255,0.8); }
+
+    /* ========== فورم التسجيل ========== */
+    .registration-section {
+      background: var(--white);
+      border-radius: 16px;
+      padding: 20px 14px;
+      box-shadow: 0 6px 24px rgba(11, 36, 59, 0.06);
+      border: 2px solid var(--navy-dark);
+      position: relative;
+    }
+
+    .registration-section::before {
+      content: '';
+      position: absolute;
+      top: -2px; right: -2px; left: -2px;
+      height: 4px;
+      background: linear-gradient(90deg, var(--emerald-green), var(--gold));
+      border-radius: 2px;
+    }
+
+    .reg-title {
+      font-size: 17px;
+      font-weight: 800;
+      text-align: center;
+      color: var(--navy-dark);
+      margin-bottom: 4px;
+    }
+
+    .reg-subtitle {
+      font-size: 10px;
+      color: #6b7280;
+      text-align: center;
+      margin-bottom: 14px;
+    }
+
+    .form-group { margin-bottom: 10px; }
+
+    .form-group label {
+      display: block;
+      font-weight: 600;
+      font-size: 11px;
+      color: var(--navy-dark);
+      margin-bottom: 3px;
+    }
+
+    .form-group input, .form-group select {
+      width: 100%;
+      padding: 10px 12px;
+      border: 2px solid #e8e4d8;
+      border-radius: 10px;
+      font-size: 12px;
+      font-family: inherit;
+      background: #fdfdf9;
+      color: var(--navy-dark);
+      outline: none;
+    }
+
+    .form-group input:focus, .form-group select:focus {
+      border-color: var(--emerald-green);
+      background: var(--white);
+    }
+
+    .btn-register {
+      width: 100%;
+      padding: 14px;
+      background: var(--emerald-green);
+      color: var(--white);
+      border: none;
+      border-radius: 12px;
+      font-weight: 800;
+      font-size: 15px;
+      cursor: pointer;
+      font-family: inherit;
+      box-shadow: 0 6px 18px rgba(30, 112, 69, 0.3);
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .btn-register:hover { background: #1a5c38; transform: translateY(-1px); }
+    .btn-register:disabled { opacity: 0.6; cursor: not-allowed; }
+
+    .success-message {
+      display: none;
+      text-align: center;
+      padding: 18px;
+      background: #e8f5e9;
+      border-radius: 12px;
+      border: 2px solid #4caf50;
+    }
+
+    .success-message.show { display: block; }
+    .success-icon { font-size: 40px; margin-bottom: 6px; }
+    .success-text { font-size: 15px; font-weight: 800; color: #2e7d32; }
+
+    .whatsapp-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #25D366;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 10px;
+      font-weight: 700;
+      font-size: 13px;
+      text-decoration: none;
+      margin-top: 10px;
+    }
+
+    .footer-note { text-align: center; padding: 12px; font-size: 9px; color: #8b7d9b; }
+
+    @media (max-width: 400px) {
+      .school-name-ar { font-size: 19px; }
+      .section-title { font-size: 14px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="main-wrapper">
+    
+    <!-- الهيرو بالشعار -->
+    <div class="hero-section">
+      <div class="logo-container">
+        <svg class="school-logo-svg" viewBox="0 0 120 140" xmlns="http://www.w3.org/2000/svg">
+          <!-- الدرع الخارجي -->
+          <defs>
+            <clipPath id="shieldClip">
+              <path d="M60 8 L12 30 L12 65 Q12 110 60 135 Q108 110 108 65 L108 30 Z"/>
+            </clipPath>
+          </defs>
+          
+          <!-- خلفية الدرع -->
+          <path d="M60 8 L12 30 L12 65 Q12 110 60 135 Q108 110 108 65 L108 30 Z" 
+                fill="white" stroke="#0B1330" stroke-width="3"/>
+          
+          <!-- أشعة الشمس -->
+          <g clip-path="url(#shieldClip)" opacity="0.3">
+            <line x1="60" y1="30" x2="60" y2="0" stroke="#0B1330" stroke-width="2"/>
+            <line x1="60" y1="30" x2="80" y2="5" stroke="#0B1330" stroke-width="2"/>
+            <line x1="60" y1="30" x2="40" y2="5" stroke="#0B1330" stroke-width="2"/>
+            <line x1="60" y1="30" x2="100" y2="15" stroke="#0B1330" stroke-width="2"/>
+            <line x1="60" y1="30" x2="20" y2="15" stroke="#0B1330" stroke-width="2"/>
+            <line x1="60" y1="30" x2="110" y2="35" stroke="#0B1330" stroke-width="2"/>
+            <line x1="60" y1="30" x2="10" y2="35" stroke="#0B1330" stroke-width="2"/>
+            <!-- نصف دائرة الشمس -->
+            <circle cx="60" cy="30" r="15" fill="none" stroke="#0B1330" stroke-width="2"/>
+          </g>
+          
+          <!-- الكتاب المفتوح -->
+          <g transform="translate(35, 42)">
+            <path d="M0 15 Q8 0 25 10 L25 25 Q8 15 0 25 Z" fill="#1E7045"/>
+            <path d="M50 15 Q42 0 25 10 L25 25 Q42 15 50 25 Z" fill="#1E7045"/>
+            <!-- خط الوسط -->
+            <line x1="25" y1="5" x2="25" y2="28" stroke="#0B1330" stroke-width="1"/>
+          </g>
+          
+          <!-- H.L.S -->
+          <text x="60" y="55" text-anchor="middle" 
+                font-family="'Times New Roman', serif" font-weight="bold" 
+                font-style="italic" font-size="18" fill="#0B1330" 
+                letter-spacing="3">H.L.S</text>
+          
+          <!-- الشريط السفلي -->
+          <path d="M8 88 Q30 78 60 82 Q90 86 112 80 L112 100 Q90 106 60 102 Q30 98 8 100 Z" 
+                fill="#1E7045"/>
+          
+          <!-- نص الشريط -->
+          <text x="60" y="95" text-anchor="middle" 
+                font-family="Arial, sans-serif" font-weight="bold" 
+                font-size="7" fill="white" letter-spacing="1">
+            ElHadad Languages School
+          </text>
+          
+          <!-- Since -->
+          <text x="60" y="118" text-anchor="middle" 
+                font-family="Arial, sans-serif" font-size="5" fill="#0B1330">
+            since
+          </text>
+          <text x="60" y="128" text-anchor="middle" 
+                font-family="'Times New Roman', serif" font-weight="bold" 
+                font-size="9" fill="#0B1330">
+            1986
+          </text>
+        </svg>
+      </div>
+      
+      <div class="school-name-en">ElHadad Languages School</div>
+      <div class="school-name-ar">مدرسة الحداد الخاصة</div>
+      <div class="school-since">Since 1986</div>
+      <div class="hero-divider"></div>
+      <div class="hero-badge">💻 كورس البرمجة الصيفي</div>
+    </div>
+
+    <div class="visitor-strip">
+      <span>
+ </span>
+      <span class="visitor-count" id="visitorCount">...</span>
+    </div>
+
+    <div class="content-section">
+      
+      <!-- عن الكورس -->
+      <div class="section-card">
+        <div class="section-header">
+          <div class="section-icon">💻</div>
+          <div class="section-title">عن كورس البرمجة</div>
+        </div>
+        <p class="section-desc">
+          صُمم كورس البرمجة ليصاحب الطالب خطوة بخطوة من الأساسيات حتى المهارات المتقدمة. ينقسم البرنامج إلى 5 مستويات متدرجة.
+        </p>
+
+        <div class="skill-card">
+          <div class="skill-header">
+            <div class="skill-number">1</div>
+            <div class="skill-title">🧠 تنمية التفكير وحل المشكلات</div>
+          </div>
+          <ul class="skill-list">
+            <li>تحليل المشكلات وتحويلها لخطوات منظمة</li>
+            <li>تنمية التفكير المنطقي - البحث عن أكثر من حل</li>
+            <li>اكتشاف الأخطاء وتصحيحها ذاتياً</li>
+          </ul>
+        </div>
+
+        <div class="skill-card">
+          <div class="skill-header">
+            <div class="skill-number">2</div>
+            <div class="skill-title">🚀 مهارات المستقبل والعصر الرقمي</div>
+          </div>
+          <ul class="skill-list">
+            <li>فهم التكنولوجيا وصناعتها</li>
+            <li>تصميم الألعاب والمشروعات التفاعلية</li>
+            <li>تكوين أساس قوي للتخصصات التقنية</li>
+          </ul>
+        </div>
+
+        <div class="skill-card">
+          <div class="skill-header">
+            <div class="skill-number">3</div>
+            <div class="skill-title">📚 الاستعداد الأكاديمي</div>
+          </div>
+          <ul class="skill-list">
+            <li>تأسيس قوي لمادة البرمجة بالمرحلة الثانوية</li>
+            <li>قاعدة معرفية للمجالات التقنية والهندسية</li>
+          </ul>
+        </div>
+
+        <div class="skill-card">
+          <div class="skill-header">
+            <div class="skill-number">4</div>
+            <div class="skill-title">🌟 بناء الشخصية والمهارات الحياتية</div>
+          </div>
+          <ul class="skill-list">
+            <li>تعزيز الثقة عبر تحويل الأفكار لمشروعات</li>
+            <li>تنمية التواصل والعمل الجماعي</li>
+            <li>التفكير المنظم وتحمل المسؤولية</li>
+          </ul>
+        </div>
+
+        <div style="background:#e8f5e9;border-radius:10px;padding:10px;margin-top:6px;border:2px solid var(--emerald-green);text-align:center;">
+          <div style="font-weight:800;font-size:13px;">🏆 بنهاية المستوى الخامس</div>
+          <p style="font-size:10px;">يتعلم الطالب أساسيات <strong>Python</strong> و <strong>Java</strong></p>
+        </div>
+      </div>
+
+      <!-- تفاصيل -->
+      <div class="section-card">
+        <div class="section-header">
+          <div class="section-icon">📋</div>
+          <div class="section-title">تفاصيل الكورس</div>
+        </div>
+        
+        <div class="info-grid">
+          <div class="info-item"><div class="info-icon">📅</div><div class="info-value">2/أسبوع</div><div class="info-label">سيشن</div></div>
+          <div class="info-item"><div class="info-icon">⏱️</div><div class="info-value">1.5-2 ساعة</div><div class="info-label">المدة</div></div>
+          <div class="info-item"><div class="info-icon">🖥️</div><div class="info-value">عملي+نظري</div><div class="info-label">النوع</div></div>
+          <div class="info-item"><div class="info-icon">📆</div><div class="info-value">1.5-2 شهر</div><div class="info-label">لكل مستوى</div></div>
+        </div>
+
+        <div class="platform-card">
+          <div class="platform-title">🎓 منصة تعلم إضافية مجانية</div>
+          <p class="platform-desc">كارت بكود وpassword لمنصة امتحانات وشرح إضافي مدعوم بالذكاء الاصطناعي</p>
+        </div>
+
+        <div class="price-card">
+          <div class="price-label"> </div>
+          <div class="price-value">الكورس مخصص من الصف الرابع الي الاول الثانوي </div>
+        </div>
+      </div>
+
+      <!-- فورم التسجيل -->
+      <div class="registration-section" id="registrationSection">
+        <div class="reg-title">📝 سجل الآن في الكورس</div>
+        <div class="reg-subtitle">ElHadad Language School - Programming Course</div>
+
+        <div id="formContainer">
+          <form onsubmit="return false;">
+            <div class="form-group">
+              <label>👤 الاسم الثلاثي</label>
+              <input type="text" id="studentName" placeholder="أدخل الاسم كاملاً" required>
+            </div>
+            <div class="form-group">
+              <label>📱 رقم الواتساب</label>
+              <input type="tel" id="whatsappNumber" placeholder="01xxxxxxxxx" dir="ltr" style="text-align:right;" required>
+            </div>
+            <div class="form-group">
+              <label>🎒 المرحلة الدراسية للعام القادم</label>
+              <select id="gradeLevel" required>
+                <option value="" disabled selected>اختر المرحلة</option>
+                <option value="الصف الرابع">الصف الرابع</option>
+                <option value="الصف الخامس">الصف الخامس</option>
+                <option value="الصف السادس">الصف السادس</option>
+                <option value="الأول الإعدادي">الأول الإعدادي</option>
+                <option value="الثاني الإعدادي">الثاني الإعدادي</option>
+                <option value="الثالث الإعدادي">الثالث الإعدادي</option>
+                <option value="الأول الثانوي">🚀 الأول الثانوي (تأسيس قوي)</option>
+              </select>
+            </div>
+            <button type="button" class="btn-register" id="registerBtn" onclick="registerStudent()">
+              📩 تسجيل وانضمام لجروب الواتساب
+            </button>
+          </form>
+        </div>
+
+        <div class="success-message" id="successMessage">
+          <div class="success-icon">✅</div>
+          <div class="success-text">تم التسجيل بنجاح!</div>
+          <p style="font-size:12px;color:#4a4a4a;margin-top:4px;">سيتم توجيهك إلى جروب الواتساب</p>
+          <a href="https://chat.whatsapp.com/LQm2b3nmNQFDiKr9H7svxJ?s=cl&p=i&mlu=2" 
+             target="_blank" class="whatsapp-btn">
+            💬 انضم لجروب الواتساب
+          </a>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="footer-note">
+      ElHadad Language School © 1986 - 2025 | جميع الحقوق محفوظة
+    </div>
+
+  </div>
+
+  <script>
+    window.registerStudent = async function() {
+      const btn = document.getElementById('registerBtn');
+      const name = document.getElementById('studentName').value.trim();
+      const phone = document.getElementById('whatsappNumber').value.trim();
+      const grade = document.getElementById('gradeLevel').value;
+
+      if (!name || !phone || !grade) {
+        alert('يرجى ملء جميع الحقول');
+        return;
+      }
+
+      btn.disabled = true;
+      btn.textContent = '⏳ جاري التسجيل...';
+
+      try {
+        const db = window.db;
+        const add = window.addDoc;
+        const sTime = window.serverTimestamp;
+        const getD = window.getDoc;
+        const setD = window.setDoc;
+        const inc = window.increment;
+        const docR = window.docRef;
+        const col = window.collection;
+
+        // حفظ التسجيل
+        await add(col(db, "registrations_elhadad"), {
+          studentName: name,
+          phoneNumber: phone,
+          gradeLevel: grade,
+          submittedAt: sTime(),
+          school: "ElHadad Language School"
+        });
+        console.log("✅ تم التسجيل");
+
+        // تحديث الإحصائيات
+        const STATS_DOC = docR(db, "statistics_elhadad", "counters");
+        const snap = await getD(STATS_DOC);
+        const today = new Date().toDateString();
+
+        if (!snap.exists()) {
+          await setD(STATS_DOC, {
+            totalVisitors: 0, totalRegistrations: 1,
+            todayRegistrations: 1, lastTodayReset: today,
+            updatedAt: sTime()
+          });
+        } else {
+          const data = snap.data();
+          const updates = { totalRegistrations: inc(1), updatedAt: sTime() };
+          updates.todayRegistrations = (data.lastTodayReset !== today) ? 1 : inc(1);
+          if (data.lastTodayReset !== today) updates.lastTodayReset = today;
+          await setD(STATS_DOC, updates, { merge: true });
+        }
+
+        // إظهار النجاح
+        document.getElementById('formContainer').style.display = 'none';
+        document.getElementById('successMessage').classList.add('show');
+
+        // توجيه تلقائي للواتساب بعد ثانية
+        setTimeout(() => {
+          window.open('https://chat.whatsapp.com/LQm2b3nmNQFDiKr9H7svxJ?s=cl&p=i&mlu=2', '_blank');
+        }, 1000);
+
+      } catch (err) {
+        console.error('❌ خطأ:', err);
+        alert('حدث خطأ: ' + err.message);
+        btn.disabled = false;
+        btn.textContent = '📩 تسجيل وانضمام لجروب الواتساب';
+      }
+    };
+
+    // عداد الزوار
+    (async function() {
+      try {
+        const db = window.db;
+        const add = window.addDoc;
+        const sTime = window.serverTimestamp;
+        const getD = window.getDoc;
+        const setD = window.setDoc;
+        const inc = window.increment;
+        const docR = window.docRef;
+        const col = window.collection;
+
+        const STATS_DOC = docR(db, "statistics_elhadad", "counters");
+
+        await add(col(db, "visitors_elhadad"), { visitedAt: sTime(), page: "ElHadad School" });
+
+        const snap = await getD(STATS_DOC);
+        if (!snap.exists()) {
+          await setD(STATS_DOC, { totalVisitors: 1, totalRegistrations: 0, todayRegistrations: 0, lastTodayReset: new Date().toDateString(), updatedAt: sTime() });
+          document.getElementById('visitorCount').textContent = '1';
+        } else {
+          await setD(STATS_DOC, { totalVisitors: inc(1), updatedAt: sTime() }, { merge: true });
+          const updated = await getD(STATS_DOC);
+          document.getElementById('visitorCount').textContent = updated.exists() ? (updated.data().totalVisitors || 0) : '1';
+        }
+      } catch (e) {
+        document.getElementById('visitorCount').textContent = '...';
+      }
+    })();
+  </script>
+</body>
+</html>
