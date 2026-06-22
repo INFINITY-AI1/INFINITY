@@ -1,0 +1,792 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
+  <title>مدرسة ابن خلدون الخاصة | Ibn Khaldoon Private Schools</title>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-app.js";
+    import { 
+      getFirestore, collection, addDoc, serverTimestamp, 
+      getDoc, setDoc, increment, doc 
+    } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-firestore.js";
+    import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-analytics.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyBysr4ZEHTY_ojej_onmso3d09sz6uU65A",
+      authDomain: "infinity-ai-bd879.firebaseapp.com",
+      projectId: "infinity-ai-bd879",
+      storageBucket: "infinity-ai-bd879.firebasestorage.app",
+      messagingSenderId: "391390244727",
+      appId: "1:391390244727:web:7cc77f13f3ed0e4221fb72",
+      measurementId: "G-XGW87N67WZ"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    
+    window.db = db;
+    window.collection = collection;
+    window.addDoc = addDoc;
+    window.serverTimestamp = serverTimestamp;
+    window.getDoc = getDoc;
+    window.setDoc = setDoc;
+    window.increment = increment;
+    window.docRef = doc;
+    
+    console.log("✅ Firebase Ready - Ibn Khaldoon");
+  </script>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&family=Tajawal:wght@400;500;700;800&family=Scheherazade+New:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --royal-blue: #0D1B9E;
+      --blue-light: #4A90E2;
+      --blue-dark: #0A4F80;
+      --red-text: #CC1100;
+      --white: #FFFFFF;
+      --cream: #F5F3EE;
+      --gold: #D4AF37;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: linear-gradient(180deg, #f0f4ff 0%, var(--cream) 30%, #f8f6f0 100%);
+      font-family: 'Cairo', 'Tajawal', sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      min-height: 100vh;
+      padding: 0;
+      direction: rtl;
+      color: var(--royal-blue);
+    }
+
+    .main-wrapper {
+      width: 100%;
+      max-width: 500px;
+      position: relative;
+      padding-bottom: 40px;
+    }
+
+    /* ========== الهيرو ========== */
+    .hero-section {
+      background: linear-gradient(160deg, #0a1580 0%, #0D1B9E 35%, #1a30c8 70%, #1528b5 100%);
+      padding: 28px 18px 36px;
+      text-align: center;
+      color: var(--white);
+      border-radius: 0 0 36px 36px;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 14px 40px rgba(13, 27, 158, 0.35);
+    }
+
+    .hero-particles {
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      pointer-events: none;
+    }
+
+    .particle {
+      position: absolute;
+      background: rgba(255,255,255,0.06);
+      border-radius: 50%;
+      animation: floatParticle 8s infinite ease-in-out;
+    }
+
+    .particle:nth-child(1) { width: 80px; height: 80px; top: 10%; right: 5%; animation-delay: 0s; }
+    .particle:nth-child(2) { width: 50px; height: 50px; top: 60%; right: 15%; animation-delay: 2s; }
+    .particle:nth-child(3) { width: 100px; height: 100px; bottom: 20%; left: 10%; animation-delay: 4s; }
+    .particle:nth-child(4) { width: 40px; height: 40px; top: 30%; left: 20%; animation-delay: 6s; }
+
+    @keyframes floatParticle {
+      0%, 100% { transform: translateY(0) scale(1); opacity: 0.3; }
+      50% { transform: translateY(-30px) scale(1.4); opacity: 0.1; }
+    }
+
+    .hero-content { position: relative; z-index: 1; }
+
+    .hero-acronym {
+      font-family: 'Tajawal', sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 3px;
+      opacity: 0.9;
+      margin-bottom: 8px;
+      color: #c5d0ff;
+    }
+
+    .hero-school-name {
+      font-family: 'Scheherazade New', 'Cairo', serif;
+      font-size: 30px;
+      font-weight: 700;
+      color: var(--white);
+      margin: 4px 0;
+      text-shadow: 0 3px 12px rgba(0,0,0,0.3);
+      letter-spacing: 1px;
+      line-height: 1.3;
+    }
+
+    .hero-divider {
+      width: 70px;
+      height: 3px;
+      background: linear-gradient(90deg, transparent, var(--gold), transparent);
+      margin: 12px auto;
+      border-radius: 2px;
+    }
+
+    .hero-badge {
+      display: inline-block;
+      background: rgba(255,255,255,0.1);
+      color: var(--white);
+      padding: 7px 22px;
+      border-radius: 24px;
+      font-size: 12px;
+      font-weight: 700;
+      border: 1px solid rgba(255,255,255,0.18);
+      backdrop-filter: blur(12px);
+    }
+
+    .hero-subtitle {
+      font-size: 12px;
+      opacity: 0.8;
+      margin-top: 10px;
+      color: #d0d8ff;
+      line-height: 1.6;
+    }
+
+    .visitor-strip {
+      background: var(--white);
+      margin: -16px 14px 0;
+      border-radius: 14px;
+      padding: 10px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      box-shadow: 0 6px 20px rgba(13, 27, 158, 0.08);
+      position: relative;
+      z-index: 5;
+      border: 2px solid #e8ecf8;
+      font-size: 12px;
+      color: #5c5c5c;
+      font-weight: 600;
+    }
+
+    .visitor-icon-wrap {
+      width: 34px; height: 34px;
+      border-radius: 50%;
+      background: #f0f4ff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+    }
+
+    .visitor-count {
+      font-weight: 900;
+      font-size: 22px;
+      color: var(--royal-blue);
+      background: #f0f4ff;
+      padding: 2px 16px;
+      border-radius: 10px;
+      min-width: 44px;
+      text-align: center;
+    }
+
+    .content-section {
+      padding: 18px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .section-card {
+      background: var(--white);
+      border-radius: 18px;
+      padding: 18px 14px;
+      box-shadow: 0 3px 16px rgba(0,0,0,0.04);
+      border: 2px solid #e8ecf8;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .section-icon {
+      width: 40px; height: 40px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #e8ecf8, #d0d8f8);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      flex-shrink: 0;
+    }
+
+    .section-title {
+      font-size: 17px;
+      font-weight: 800;
+      color: var(--royal-blue);
+    }
+
+    .section-desc {
+      font-size: 11px;
+      color: #4a4a4a;
+      line-height: 1.8;
+      margin-bottom: 12px;
+    }
+
+    .skill-card {
+      background: #f8faff;
+      border-radius: 12px;
+      padding: 12px 14px;
+      border: 1px solid #e0e4f0;
+      margin-bottom: 8px;
+      border-right: 4px solid var(--royal-blue);
+    }
+
+    .skill-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 4px;
+    }
+
+    .skill-number {
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--royal-blue), var(--blue-light));
+      color: var(--white);
+      text-align: center;
+      line-height: 28px;
+      font-weight: 900;
+      font-size: 12px;
+      flex-shrink: 0;
+    }
+
+    .skill-title {
+      font-weight: 700;
+      font-size: 13px;
+      color: var(--royal-blue);
+    }
+
+    .skill-list {
+      list-style: none;
+      padding-right: 36px;
+    }
+
+    .skill-list li {
+      font-size: 11px;
+      color: #4a4a4a;
+      line-height: 1.6;
+      padding-right: 14px;
+      position: relative;
+    }
+
+    .skill-list li::before {
+      content: '▸';
+      position: absolute;
+      right: 0;
+      color: var(--blue-light);
+      font-size: 9px;
+    }
+
+    .info-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+
+    .info-item {
+      background: #f8faff;
+      border-radius: 12px;
+      padding: 12px 8px;
+      text-align: center;
+      border: 1px solid #e0e4f0;
+    }
+
+    .info-icon { font-size: 22px; margin-bottom: 2px; }
+    .info-value { font-weight: 800; font-size: 13px; color: var(--royal-blue); }
+    .info-label { font-size: 9px; color: #6b7280; font-weight: 600; }
+
+    .platform-card {
+      background: linear-gradient(135deg, #f8faff, #eef2ff);
+      border-radius: 12px;
+      padding: 12px;
+      margin-top: 10px;
+      border: 2px solid var(--gold);
+    }
+
+    .platform-title { font-weight: 700; font-size: 12px; color: var(--royal-blue); }
+    .platform-desc { font-size: 10px; color: #4a4a4a; margin-top: 2px; }
+
+    /* ========== فورم التسجيل ========== */
+    .registration-section {
+      background: var(--white);
+      border-radius: 18px;
+      padding: 22px 16px;
+      box-shadow: 0 10px 35px rgba(13, 27, 158, 0.12);
+      border: 2px solid var(--royal-blue);
+      position: relative;
+    }
+
+    .registration-section::before {
+      content: '';
+      position: absolute;
+      top: -2px; right: -2px; left: -2px;
+      height: 4px;
+      background: linear-gradient(90deg, var(--royal-blue), var(--blue-light), var(--gold));
+      border-radius: 2px;
+    }
+
+    .reg-title {
+      font-size: 18px;
+      font-weight: 800;
+      text-align: center;
+      color: var(--royal-blue);
+      margin-bottom: 4px;
+    }
+
+    .reg-subtitle {
+      font-size: 10px;
+      color: #6b7280;
+      text-align: center;
+      margin-bottom: 16px;
+    }
+
+    .form-group { margin-bottom: 12px; }
+
+    .form-group label {
+      display: block;
+      font-weight: 600;
+      font-size: 12px;
+      color: var(--royal-blue);
+      margin-bottom: 4px;
+    }
+
+    .form-group input, .form-group select {
+      width: 100%;
+      padding: 12px 15px;
+      border: 2px solid #e0e4f0;
+      border-radius: 12px;
+      font-size: 13px;
+      font-family: inherit;
+      background: #fafbff;
+      color: var(--royal-blue);
+      outline: none;
+      transition: all 0.2s;
+    }
+
+    .form-group input:focus, .form-group select:focus {
+      border-color: var(--royal-blue);
+      box-shadow: 0 0 0 4px rgba(13, 27, 158, 0.08);
+      background: var(--white);
+    }
+
+    .btn-register {
+      width: 100%;
+      padding: 15px;
+      background: linear-gradient(135deg, var(--royal-blue), #1528b5);
+      color: var(--white);
+      border: none;
+      border-radius: 14px;
+      font-weight: 800;
+      font-size: 16px;
+      cursor: pointer;
+      font-family: inherit;
+      box-shadow: 0 10px 28px rgba(13, 27, 158, 0.4);
+      transition: all 0.25s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .btn-register:hover { 
+      transform: translateY(-2px);
+      box-shadow: 0 14px 35px rgba(13, 27, 158, 0.55);
+    }
+    .btn-register:disabled { 
+      opacity: 0.6; 
+      cursor: not-allowed; 
+      transform: none; 
+    }
+
+    /* رسالة النجاح بعد التسجيل */
+    .success-message {
+      display: none;
+      text-align: center;
+      padding: 24px 16px;
+      background: linear-gradient(135deg, #e8f5e9, #f1f8e9);
+      border-radius: 16px;
+      border: 2px solid #4caf50;
+      animation: fadeInUp 0.5s ease;
+    }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .success-message.show { display: block; }
+
+    .success-icon { 
+      font-size: 52px; 
+      margin-bottom: 10px; 
+      animation: bounce 1s infinite; 
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-12px); }
+    }
+
+    .success-text { 
+      font-size: 18px; 
+      font-weight: 800; 
+      color: #2e7d32; 
+      margin-bottom: 4px; 
+    }
+
+    .success-detail { 
+      font-size: 12px; 
+      color: #4a4a4a; 
+      margin-bottom: 14px; 
+      line-height: 1.6;
+    }
+
+    .whatsapp-group-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: #25D366;
+      color: white;
+      padding: 14px 28px;
+      border-radius: 16px;
+      font-weight: 800;
+      font-size: 15px;
+      text-decoration: none;
+      transition: all 0.2s;
+      box-shadow: 0 8px 22px rgba(37, 211, 102, 0.4);
+      animation: pulseWhatsapp 2s ease-in-out infinite;
+    }
+
+    @keyframes pulseWhatsapp {
+      0%, 100% { box-shadow: 0 8px 22px rgba(37, 211, 102, 0.4); }
+      50% { box-shadow: 0 12px 30px rgba(37, 211, 102, 0.6); }
+    }
+
+    .whatsapp-group-btn:hover {
+      background: #20b858;
+      transform: scale(1.04);
+    }
+
+    .footer-note { 
+      text-align: center; 
+      padding: 14px; 
+      font-size: 9px; 
+      color: #8b7d9b; 
+    }
+
+    @media (max-width: 400px) {
+      .hero-school-name { font-size: 26px; }
+      .section-title { font-size: 15px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="main-wrapper">
+    
+    <!-- الهيرو -->
+    <div class="hero-section">
+      <div class="hero-particles">
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+      </div>
+      <div class="hero-content">
+        <div class="hero-acronym">IBN KHALDOON PRIVATE SCHOOLS</div>
+        <h1 class="hero-school-name">مدرسة ابن خلدون الخاصة</h1>
+        <div class="hero-divider"></div>
+        <div class="hero-badge">💻 كورس البرمجة الصيفي</div>
+        <p class="hero-subtitle">تأسيس الطالب من الصفر حتى الاحتراف<br>5 مستويات متدرجة - منهج عالمي</p>
+      </div>
+    </div>
+
+    <div class="visitor-strip">
+      <div class="visitor-icon-wrap">
+</div>
+      <span style="font-size:11px;"></span>
+      <span class="visitor-count" id="visitorCount">...</span>
+    </div>
+
+    <div class="content-section">
+      
+      <!-- عن الكورس -->
+      <div class="section-card">
+        <div class="section-header">
+          <div class="section-icon">💻</div>
+          <div class="section-title">عن كورس البرمجة</div>
+        </div>
+        <p class="section-desc">
+          صُمم كورس البرمجة ليصاحب الطالب خطوة بخطوة من الأساسيات حتى المهارات المتقدمة المطلوبة في المستقبل الدراسي والمهني. ينقسم البرنامج إلى 5 مستويات متدرجة.
+        </p>
+
+        <div class="skill-card">
+          <div class="skill-header">
+            <div class="skill-number">1</div>
+            <div class="skill-title">🧠 تنمية التفكير وحل المشكلات</div>
+          </div>
+          <ul class="skill-list">
+            <li>تحليل المشكلات الكبيرة وتحويلها لخطوات منظمة</li>
+            <li>تنمية التفكير المنطقي في الرياضيات والعلوم</li>
+            <li>البحث عن أكثر من حل وتعزيز الإبداع</li>
+            <li>اكتشاف الأخطاء وتصحيحها ذاتياً</li>
+          </ul>
+        </div>
+
+        <div class="skill-card">
+          <div class="skill-header">
+            <div class="skill-number">2</div>
+            <div class="skill-title">🚀 مهارات المستقبل والعصر الرقمي</div>
+          </div>
+          <ul class="skill-list">
+            <li>من استخدام التكنولوجيا إلى فهمها وصناعتها</li>
+            <li>تصميم الألعاب والقصص التفاعلية والمشروعات</li>
+            <li>فهم عمل الأجهزة والتطبيقات والأنظمة الرقمية</li>
+            <li>تكوين أساس قوي للتخصصات التقنية المطلوبة</li>
+          </ul>
+        </div>
+
+        <div class="skill-card">
+          <div class="skill-header">
+            <div class="skill-number">3</div>
+            <div class="skill-title">📚 الاستعداد الأكاديمي</div>
+          </div>
+          <ul class="skill-list">
+            <li>تأسيس قوي لمادة البرمجة المقررة بالمرحلة الثانوية</li>
+            <li>قاعدة معرفية تسهّل دراسة المجالات التقنية والهندسية</li>
+          </ul>
+        </div>
+
+        <div class="skill-card">
+          <div class="skill-header">
+            <div class="skill-number">4</div>
+            <div class="skill-title">🌟 بناء الشخصية والمهارات الحياتية</div>
+          </div>
+          <ul class="skill-list">
+            <li>تعزيز الثقة عبر تحويل الأفكار لمشروعات حقيقية</li>
+            <li>تنمية التواصل والعمل الجماعي</li>
+            <li>التفكير المنظم وتحمل المسؤولية</li>
+          </ul>
+        </div>
+
+        <div style="background:linear-gradient(135deg,#eef2ff,#e0e8ff);border-radius:12px;padding:12px;margin-top:8px;border:2px solid var(--royal-blue);text-align:center;">
+          <div style="font-weight:800;font-size:14px;color:var(--royal-blue);">🏆 بنهاية المستوى الخامس</div>
+          <p style="font-size:11px;color:#4a4a4a;margin-top:2px;">
+            يتعلم الطالب أساسيات <strong style="color:var(--royal-blue);">Python</strong> و <strong style="color:var(--royal-blue);">Java</strong> مع قاعدة قوية للتطوير المستقبلي
+          </p>
+        </div>
+      </div>
+
+      <!-- تفاصيل -->
+      <div class="section-card">
+        <div class="section-header">
+          <div class="section-icon">📋</div>
+          <div class="section-title">تفاصيل الكورس</div>
+        </div>
+        
+        <div class="info-grid">
+          <div class="info-item">
+            <div class="info-icon">📅</div>
+            <div class="info-value">2 / أسبوع</div>
+            <div class="info-label">سيشن</div>
+          </div>
+          <div class="info-item">
+            <div class="info-icon">⏱️</div>
+            <div class="info-value">1.5 - 2 ساعة</div>
+            <div class="info-label">المدة</div>
+          </div>
+          <div class="info-item">
+            <div class="info-icon">🖥️</div>
+            <div class="info-value">عملي + نظري</div>
+            <div class="info-label">النوع</div>
+          </div>
+          <div class="info-item">
+            <div class="info-icon">📆</div>
+            <div class="info-value">1.5 - 2 شهر</div>
+            <div class="info-label">لكل مستوى</div>
+          </div>
+        </div>
+
+        <div class="platform-card">
+          <div class="platform-title">🎓 منصة تعلم إضافية مجانية</div>
+          <p class="platform-desc">كارت به كود وكلمة مرور للدخول إلى منصة تعلم بها امتحانات وشرح إضافي ومدعومة بالذكاء الاصطناعي</p>
+        </div>
+      </div>
+
+      <!-- فورم التسجيل -->
+      <div class="registration-section" id="registrationSection">
+        <div class="reg-title">📝 سجل الآن في الكورس</div>
+        <div class="reg-subtitle">Ibn Khaldoon Private Schools - Programming Course</div>
+
+        <div id="formContainer">
+          <form onsubmit="return false;">
+            <div class="form-group">
+              <label>👤 الاسم الثلاثي</label>
+              <input type="text" id="studentName" placeholder="أدخل الاسم كاملاً" required>
+            </div>
+            <div class="form-group">
+              <label>📱 رقم الواتساب</label>
+              <input type="tel" id="whatsappNumber" placeholder="01xxxxxxxxx" dir="ltr" style="text-align:right;" required>
+            </div>
+            <div class="form-group">
+              <label>🎒 المرحلة الدراسية للعام القادم</label>
+              <select id="gradeLevel" required>
+                <option value="" disabled selected>اختر المرحلة</option>
+                <option value="الصف الرابع">الصف الرابع</option>
+                <option value="الصف الخامس">الصف الخامس</option>
+                <option value="الصف السادس">الصف السادس</option>
+                <option value="الأول الإعدادي">الأول الإعدادي</option>
+                <option value="الثاني الإعدادي">الثاني الإعدادي</option>
+                <option value="الثالث الإعدادي">الثالث الإعدادي</option>
+                <option value="الأول الثانوي">🚀 الأول الثانوي (تأسيس قوي)</option>
+              </select>
+            </div>
+            <button type="button" class="btn-register" id="registerBtn" onclick="registerStudent()">
+              📩 تسجيل في الكورس
+            </button>
+          </form>
+        </div>
+
+        <!-- رسالة النجاح مع زر جروب الواتساب -->
+        <div class="success-message" id="successMessage">
+          <div class="success-icon">✅</div>
+          <div class="success-text">تم التسجيل بنجاح!</div>
+          <div class="success-detail">
+            سيتم توجيهك إلى جروب الواتساب للانضمام<br>
+            لمتابعة كل جديد عن الكورس
+          </div>
+          <a href="https://chat.whatsapp.com/KhPmjpESPrtDRkOo1z7dl6?s=cl&p=i&mlu=2" 
+             target="_blank" class="whatsapp-group-btn">
+            💬 انضم لجروب الواتساب
+          </a>
+          <p style="font-size:10px;color:#6b7280;margin-top:10px;">
+            لم يتم فتح الجروب؟ <a href="https://chat.whatsapp.com/KhPmjpESPrtDRkOo1z7dl6?s=cl&p=i&mlu=2" target="_blank" style="color:var(--royal-blue);font-weight:700;">اضغط هنا</a>
+          </p>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="footer-note">
+      Ibn Khaldoon Private Schools © 2026 | IKPS | جميع الحقوق محفوظة
+    </div>
+
+  </div>
+
+  <script>
+    window.registerStudent = async function() {
+      const btn = document.getElementById('registerBtn');
+      const name = document.getElementById('studentName').value.trim();
+      const phone = document.getElementById('whatsappNumber').value.trim();
+      const grade = document.getElementById('gradeLevel').value;
+
+      if (!name || !phone || !grade) {
+        alert('يرجى ملء جميع الحقول');
+        return;
+      }
+
+      btn.disabled = true;
+      btn.textContent = '⏳ جاري التسجيل...';
+
+      try {
+        const db = window.db;
+        const add = window.addDoc;
+        const sTime = window.serverTimestamp;
+        const getD = window.getDoc;
+        const setD = window.setDoc;
+        const inc = window.increment;
+        const docR = window.docRef;
+        const col = window.collection;
+
+        await add(col(db, "registrations_ibn_khaldoon"), {
+          studentName: name,
+          phoneNumber: phone,
+          gradeLevel: grade,
+          submittedAt: sTime(),
+          school: "Ibn Khaldoon Private Schools"
+        });
+        console.log("✅ تم التسجيل");
+
+        const STATS_DOC = docR(db, "statistics_ibn_khaldoon", "counters");
+        const snap = await getD(STATS_DOC);
+        const today = new Date().toDateString();
+
+        if (!snap.exists()) {
+          await setD(STATS_DOC, {
+            totalVisitors: 0, totalRegistrations: 1,
+            todayRegistrations: 1, lastTodayReset: today,
+            updatedAt: sTime()
+          });
+        } else {
+          const data = snap.data();
+          const updates = { totalRegistrations: inc(1), updatedAt: sTime() };
+          updates.todayRegistrations = (data.lastTodayReset !== today) ? 1 : inc(1);
+          if (data.lastTodayReset !== today) updates.lastTodayReset = today;
+          await setD(STATS_DOC, updates, { merge: true });
+        }
+
+        // إخفاء الفورم وإظهار رسالة النجاح
+        document.getElementById('formContainer').style.display = 'none';
+        document.getElementById('successMessage').classList.add('show');
+
+        // توجيه تلقائي لجروب الواتساب بعد 1.5 ثانية
+        setTimeout(() => {
+          window.open('https://chat.whatsapp.com/KhPmjpESPrtDRkOo1z7dl6?s=cl&p=i&mlu=2', '_blank');
+        }, 1500);
+
+      } catch (err) {
+        console.error('❌ خطأ:', err);
+        alert('حدث خطأ: ' + err.message);
+        btn.disabled = false;
+        btn.textContent = '📩 تسجيل في الكورس';
+      }
+    };
+
+    //  (async function() {
+      try {
+        const db = window.db;
+        const add = window.addDoc;
+        const sTime = window.serverTimestamp;
+        const getD = window.getDoc;
+        const setD = window.setDoc;
+        const inc = window.increment;
+        const docR = window.docRef;
+        const col = window.collection;
+
+        const STATS_DOC = docR(db, "statistics_ibn_khaldoon", "counters");
+
+        await add(col(db, "visitors_ibn_khaldoon"), { visitedAt: sTime(), page: "Ibn Khaldoon" });
+
+        const snap = await getD(STATS_DOC);
+        if (!snap.exists()) {
+          await setD(STATS_DOC, { totalVisitors: 1, totalRegistrations: 0, todayRegistrations: 0, lastTodayReset: new Date().toDateString(), updatedAt: sTime() });
+          document.getElementById('visitorCount').textContent = '1';
+        } else {
+          await setD(STATS_DOC, { totalVisitors: inc(1), updatedAt: sTime() }, { merge: true });
+          const updated = await getD(STATS_DOC);
+          document.getElementById('visitorCount').textContent = updated.exists() ? (updated.data().totalVisitors || 0) : '1';
+        }
+      } catch (e) {
+        document.getElementById('visitorCount').textContent = '...';
+      }
+    })();
+  </script>
+</body>
+</html>
