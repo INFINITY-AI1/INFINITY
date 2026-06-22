@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
+  <title>لوحة التحكم | مدرسة الحداد الخاصة</title>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-app.js";
+    import { 
+      getFirestore, collection, query, orderBy, 
+      deleteDoc, doc, updateDoc, serverTimestamp, 
+      getDoc, setDoc, getDocs 
+    } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyBysr4ZEHTY_ojej_onmso3d09sz6uU65A",
+      authDomain: "infinity-ai-bd879.firebaseapp.com",
+      projectId: "infinity-ai-bd879",
+      storageBucket: "infinity-ai-bd879.firebasestorage.app",
+      messagingSenderId: "391390244727",
+      appId: "1:391390244727:web:7cc77f13f3ed0e4221fb72",
+      measurementId: "G-XGW87N67WZ"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    
+    window.db = db;
+    window.collection = collection;
+    window.query = query;
+    window.orderBy = orderBy;
+    window.deleteDoc = deleteDoc;
+    window.doc = doc;
+    window.getDoc = getDoc;
+    window.setDoc = setDoc;
+    window.getDocs = getDocs;
+    window.serverTimestamp = serverTimestamp;
+    
+    console.log("✅ Dashboard Ready - ElHadad");
+  </script>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --navy-dark: #0B1330;
+      --emerald-green: #1E7045;
+      --white: #FFFFFF;
+      --cream: #F8F6F0;
+      --gold: #C5A55A;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: var(--cream);
+      font-family: 'Cairo', sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      min-height: 100vh;
+      padding: 10px;
+      direction: rtl;
+      color: var(--navy-dark);
+    }
+
+    .dashboard {
+      width: 100%;
+      max-width: 650px;
+      background: var(--white);
+      border-radius: 20px;
+      box-shadow: 0 12px 35px rgba(11, 19, 48, 0.1);
+      padding: 20px 14px 24px;
+      border: 1px solid #e8e4d8;
+    }
+
+    .dash-header {
+      text-align: center;
+      margin-bottom: 16px;
+      padding-bottom: 12px;
+      border-bottom: 2px solid #e8e4d8;
+    }
+
+    .dash-header h1 { font-size: 20px; font-weight: 800; color: var(--navy-dark); }
+    .dash-header .subtitle { font-size: 11px; color: #6b7280; }
+
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+
+    .stat-box {
+      background: linear-gradient(135deg, #f0f4e8, #e8f0e0);
+      border-radius: 12px;
+      padding: 12px 4px;
+      text-align: center;
+      border: 1px solid #d0d8c0;
+    }
+
+    .stat-value { font-size: 24px; font-weight: 900; color: var(--emerald-green); }
+    .stat-label { font-size: 9px; color: #6b7280; font-weight: 700; }
+
+    .tabs {
+      display: flex; gap: 4px; margin-bottom: 12px;
+      background: #f5f7f0; padding: 4px; border-radius: 12px;
+    }
+
+    .tab-btn {
+      flex: 1; padding: 9px 8px; border: none; background: transparent;
+      border-radius: 10px; font-size: 10px; font-weight: 700;
+      color: #6b7280; cursor: pointer; font-family: inherit;
+    }
+
+    .tab-btn.active { background: var(--white); color: var(--navy-dark); box-shadow: 0 2px 6px rgba(0,0,0,0.05); }
+
+    .refresh-row {
+      display: flex; justify-content: space-between; align-items: center;
+      margin-bottom: 10px; font-size: 10px; color: #6b7280;
+    }
+
+    .refresh-btn {
+      padding: 8px 14px; background: var(--emerald-green); color: white;
+      border: none; border-radius: 10px; font-weight: 700;
+      font-size: 10px; cursor: pointer; font-family: inherit;
+    }
+
+    .refresh-btn:disabled { opacity: 0.6; }
+
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+
+    .list-container {
+      display: flex; flex-direction: column; gap: 8px;
+      max-height: 50vh; overflow-y: auto;
+    }
+
+    .student-card {
+      background: var(--white); border-radius: 12px; padding: 12px;
+      border: 1px solid #e8e4d8; border-right: 4px solid var(--emerald-green);
+    }
+
+    .card-header {
+      display: flex; justify-content: space-between;
+      align-items: flex-start; margin-bottom: 6px;
+    }
+
+    .student-name { font-weight: 700; font-size: 14px; color: var(--navy-dark); }
+    .card-time { font-size: 9px; color: #9ca3af; }
+
+    .card-details { display: flex; flex-direction: column; gap: 3px; }
+    .detail-row { display: flex; align-items: center; gap: 5px; font-size: 11px; color: #4a4a4a; }
+    .detail-label { font-weight: 600; color: #6b7280; font-size: 9px; min-width: 35px; }
+    .detail-value { font-weight: 600; color: var(--navy-dark); }
+
+    .card-actions { display: flex; gap: 5px; margin-top: 8px; }
+    .btn-action {
+      padding: 5px 10px; border-radius: 8px; font-size: 10px;
+      font-weight: 700; cursor: pointer; font-family: inherit; border: none;
+    }
+
+    .btn-wa { background: #e8f5e9; color: #2e7d32; }
+    .btn-del { background: #fce4ec; color: #c62828; }
+
+    .empty-state { text-align: center; padding: 30px; color: #9ca3af; }
+    .empty-state .icon { font-size: 40px; }
+
+    .modal-overlay {
+      display: none; position: fixed; top: 0; left: 0;
+      width: 100%; height: 100%; background: rgba(0,0,0,0.6);
+      z-index: 1000; justify-content: center; align-items: center;
+    }
+
+    .modal-overlay.active { display: flex; }
+
+    .modal-box {
+      background: white; border-radius: 16px; padding: 20px;
+      max-width: 350px; width: 90%; text-align: center;
+    }
+
+    .modal-title { font-size: 17px; font-weight: 800; margin-bottom: 10px; }
+    .modal-actions { display: flex; gap: 8px; justify-content: center; }
+    .modal-btn {
+      padding: 10px 18px; border-radius: 10px; font-weight: 700;
+      border: none; cursor: pointer; font-family: inherit;
+    }
+
+    .modal-btn-cancel { background: #f3f4f6; color: #6b7280; }
+    .modal-btn-danger { background: #e53935; color: white; }
+
+    .list-container::-webkit-scrollbar { width: 4px; }
+    .list-container::-webkit-scrollbar-track { background: #f5f7f0; border-radius: 8px; }
+    .list-container::-webkit-scrollbar-thumb { background: #d0d8c0; border-radius: 8px; }
+  </style>
+</head>
+<body>
+
+  <div class="modal-overlay" id="deleteModal">
+    <div class="modal-box">
+      <div class="modal-title">🗑️ تأكيد الحذف</div>
+      <p style="font-size:12px;color:#6b7280;margin-bottom:10px;" id="modalText">هل أنت متأكد؟</p>
+      <div class="modal-actions">
+        <button class="modal-btn modal-btn-cancel" id="cancelBtn">إلغاء</button>
+        <button class="modal-btn modal-btn-danger" id="confirmBtn">حذف</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="dashboard">
+    <div class="dash-header">
+      <h1>📋 لوحة تحكم - مدرسة الحداد الخاصة</h1>
+      <div class="subtitle">ElHadad Language School | Programming Course</div>
+    </div>
+
+    <div class="stats-row">
+      <div class="stat-box"><div class="stat-value" id="statVisitors">-</div><div class="stat-label"> </div></div>
+      <div class="stat-box"><div class="stat-value" id="statTotal">-</div><div class="stat-label">📋 تسجيلات</div></div>
+      <div class="stat-box"><div class="stat-value" id="statToday">-</div><div class="stat-label">📅 اليوم</div></div>
+      <div class="stat-box"><div class="stat-value" id="statFirstSecondary">-</div><div class="stat-label">🚀 أولى ثانوي</div></div>
+    </div>
+
+    <div class="tabs">
+      <button class="tab-btn active" data-tab="all">الكل</button>
+      <button class="tab-btn" data-tab="firstSecondary">🚀 أولى ثانوي</button>
+    </div>
+
+    <div class="refresh-row">
+      <span>آخر تحديث: <span id="lastUpdate">---</span></span>
+      <button class="refresh-btn" id="refreshBtn">🔄 تحديث</button>
+    </div>
+
+    <div class="tab-content active" id="tab-all"><div class="list-container" id="listAll"></div></div>
+    <div class="tab-content" id="tab-firstSecondary"><div class="list-container" id="listFS"></div></div>
+  </div>
+
+  <script>
+    (function() {
+      window.addEventListener('load', () => {
+        if (!window.db) { setTimeout(initDashboard, 600); return; }
+        initDashboard();
+      });
+
+      function initDashboard() {
+        const db = window.db;
+        const col = window.collection;
+        const q = window.query;
+        const order = window.orderBy;
+        const delDoc = window.deleteDoc;
+        const docR = window.doc;
+        const getD = window.getDoc;
+        const getDocs = window.getDocs;
+
+        const REG_COL = "registrations_elhadad";
+        const STATS_DOC = docR(db, "statistics_elhadad", "counters");
+
+        const els = {
+          statVisitors: document.getElementById('statVisitors'),
+          statTotal: document.getElementById('statTotal'),
+          statToday: document.getElementById('statToday'),
+          statFirstSecondary: document.getElementById('statFirstSecondary'),
+          lastUpdate: document.getElementById('lastUpdate'),
+          refreshBtn: document.getElementById('refreshBtn'),
+          listAll: document.getElementById('listAll'),
+          listFS: document.getElementById('listFS'),
+          modal: document.getElementById('deleteModal'),
+          modalText: document.getElementById('modalText'),
+          cancelBtn: document.getElementById('cancelBtn'),
+          confirmBtn: document.getElementById('confirmBtn'),
+        };
+
+        let allRegs = [];
+        let deleteTarget = null;
+        let activeTab = 'all';
+
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+          btn.addEventListener('click', function() {
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+            activeTab = this.dataset.tab;
+            document.querySelectorAll('.tab-content').forEach(tc => tc.classList.remove('active'));
+            document.getElementById(`tab-${activeTab}`).classList.add('active');
+          });
+        });
+
+        async function loadData() {
+          els.refreshBtn.disabled = true;
+          els.refreshBtn.textContent = '⏳';
+
+          try {
+            const regQ = q(col(db, REG_COL), order("submittedAt", "desc"));
+            const snap = await getDocs(regQ);
+            allRegs = [];
+            snap.forEach(doc => allRegs.push({ id: doc.id, ...doc.data() }));
+
+            const statsSnap = await getD(STATS_DOC);
+            if (statsSnap.exists()) {
+              const d = statsSnap.data();
+              els.statVisitors.textContent = d.totalVisitors || 0;
+              els.statTotal.textContent = d.totalRegistrations || 0;
+              els.statToday.textContent = d.todayRegistrations || 0;
+            }
+
+            const firstSec = allRegs.filter(r => r.gradeLevel === 'الأول الثانوي').length;
+            els.statFirstSecondary.textContent = firstSec;
+
+            renderLists();
+            els.lastUpdate.textContent = new Date().toLocaleTimeString('ar-EG', { hour:'2-digit', minute:'2-digit' });
+          } catch (e) {
+            console.error(e);
+          }
+
+          els.refreshBtn.disabled = false;
+          els.refreshBtn.textContent = '🔄 تحديث';
+        }
+
+        function renderLists() {
+          renderList(els.listAll, allRegs);
+          renderList(els.listFS, allRegs.filter(r => r.gradeLevel === 'الأول الثانوي'));
+        }
+
+        function renderList(container, regs) {
+          if (regs.length === 0) {
+            container.innerHTML = `<div class="empty-state"><div class="icon">📋</div><p>لا توجد تسجيلات</p></div>`;
+            return;
+          }
+
+          container.innerHTML = regs.map(r => {
+            let t = '---';
+            if (r.submittedAt) {
+              const d = r.submittedAt.toDate ? r.submittedAt.toDate() : new Date(r.submittedAt);
+              t = d.toLocaleDateString('ar-EG', { day:'numeric', month:'short', hour:'2-digit', minute:'2-digit' });
+            }
+            return `
+              <div class="student-card">
+                <div class="card-header">
+                  <span class="student-name">${r.studentName || '---'}</span>
+                  <span class="card-time">${t}</span>
+                </div>
+                <div class="card-details">
+                  <div class="detail-row"><span class="detail-label">📱</span><span class="detail-value" dir="ltr">${r.phoneNumber || '---'}</span></div>
+                  <div class="detail-row"><span class="detail-label">🎒</span><span class="detail-value">${r.gradeLevel || '---'}</span></div>
+                </div>
+                <div class="card-actions">
+                  ${r.phoneNumber ? `<button class="btn-action btn-wa" onclick="window.open('https://wa.me/2${r.phoneNumber.replace(/^0/,'')}','_blank')">💬 واتساب</button>` : ''}
+                  <button class="btn-action btn-del" data-id="${r.id}" data-name="${r.studentName || '---'}">🗑️ حذف</button>
+                </div>
+              </div>
+            `;
+          }).join('');
+
+          container.querySelectorAll('.btn-del').forEach(b => {
+            b.addEventListener('click', function() {
+              deleteTarget = this.dataset.id;
+              els.modalText.textContent = `حذف تسجيل: ${this.dataset.name}؟`;
+              els.modal.classList.add('active');
+            });
+          });
+        }
+
+        els.refreshBtn.addEventListener('click', loadData);
+        els.cancelBtn.addEventListener('click', () => { els.modal.classList.remove('active'); deleteTarget = null; });
+        els.modal.addEventListener('click', e => { if (e.target === els.modal) { els.modal.classList.remove('active'); } });
+
+        els.confirmBtn.addEventListener('click', async () => {
+          if (!deleteTarget) return;
+          try {
+            await delDoc(docR(db, REG_COL, deleteTarget));
+            allRegs = allRegs.filter(r => r.id !== deleteTarget);
+            renderLists();
+            els.modal.classList.remove('active');
+            deleteTarget = null;
+          } catch (e) { console.error(e); }
+        });
+
+        loadData();
+      }
+    })();
+  </script>
+</body>
+</html>
