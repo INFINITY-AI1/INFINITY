@@ -1,0 +1,1572 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover">
+  <title>النظام المالي المؤسسي للمدارس الخاصة | منصة متكاملة</title>
+  <style>
+    /* === CSS Reset & Variables - نظام مؤسسي === */
+    *, *::before, *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --white: #ffffff;
+      --bg-page: #f6f9f7;
+      --bg-surface: #ffffff;
+      --bg-soft: #ecf5ef;
+      --bg-soft-secondary: #f0f4f1;
+      --green-deep: #0b6e3e;
+      --green-primary: #0d8047;
+      --green-bright: #0f914f;
+      --green-light: #e3f1e9;
+      --green-light-hover: #d0e8d9;
+      --green-glow: rgba(11, 110, 62, 0.12);
+      --green-glow-strong: rgba(11, 110, 62, 0.22);
+      --text-primary: #1a1d1b;
+      --text-secondary: #2d322f;
+      --text-muted: #556358;
+      --text-muted-light: #7a857d;
+      --border-light: #dce5df;
+      --border-medium: #c5d0c8;
+      --border-dark: #a8b5ac;
+      --shadow-xs: 0 1px 3px rgba(0,0,0,0.03);
+      --shadow-sm: 0 2px 8px rgba(0,0,0,0.04);
+      --shadow-md: 0 8px 24px rgba(0,0,0,0.06);
+      --shadow-lg: 0 16px 40px rgba(0,0,0,0.08);
+      --shadow-xl: 0 24px 56px rgba(0,0,0,0.1);
+      --radius-xs: 0.5rem;
+      --radius-sm: 0.75rem;
+      --radius-md: 1rem;
+      --radius-lg: 1.25rem;
+      --radius-xl: 1.75rem;
+      --radius-2xl: 2.25rem;
+      --transition-fast: all 0.18s ease;
+      --transition: all 0.28s ease;
+      --transition-slow: all 0.4s ease;
+      --font-stack: 'Tajawal', 'Cairo', system-ui, -apple-system, sans-serif;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      font-size: 15px;
+    }
+
+    body {
+      font-family: var(--font-stack);
+      background: var(--bg-page);
+      color: var(--text-primary);
+      line-height: 1.7;
+      direction: rtl;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    /* === حاويات === */
+    .container {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+    }
+
+    .section-spacing {
+      margin-top: 2.8rem;
+      margin-bottom: 2.8rem;
+    }
+
+    .section-spacing-lg {
+      margin-top: 4rem;
+      margin-bottom: 4rem;
+    }
+
+    /* === بطاقات احترافية === */
+    .card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-lg);
+      padding: 1.8rem;
+      box-shadow: var(--shadow-xs);
+      transition: var(--transition);
+      position: relative;
+      overflow: hidden;
+    }
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--green-primary), var(--green-bright));
+      opacity: 0;
+      transition: var(--transition);
+    }
+    .card:hover {
+      box-shadow: var(--shadow-md);
+      border-color: var(--border-medium);
+      transform: translateY(-2px);
+    }
+    .card:hover::before {
+      opacity: 1;
+    }
+    .card-accent {
+      border-right: 4px solid var(--green-primary);
+      padding-right: 1.5rem;
+    }
+
+    .card-header {
+      font-weight: 700;
+      font-size: 1.3rem;
+      color: var(--text-primary);
+      margin-bottom: 0.9rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .card-header svg {
+      flex-shrink: 0;
+    }
+
+    .card-subtitle {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      margin-bottom: 1.2rem;
+      line-height: 1.6;
+    }
+
+    /* === أيقونات SVG === */
+    .icon-svg {
+      width: 1.5rem;
+      height: 1.5rem;
+      display: inline-block;
+      vertical-align: middle;
+      margin-left: 0.4rem;
+      flex-shrink: 0;
+    }
+    .icon-svg-sm {
+      width: 1.1rem;
+      height: 1.1rem;
+    }
+    .icon-svg-lg {
+      width: 2.2rem;
+      height: 2.2rem;
+    }
+
+    /* === أزرار === */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1.8rem;
+      border-radius: 2.5rem;
+      font-weight: 600;
+      font-size: 0.95rem;
+      border: 1px solid transparent;
+      cursor: pointer;
+      transition: var(--transition);
+      background: var(--bg-surface);
+      color: var(--text-primary);
+      text-decoration: none;
+      white-space: nowrap;
+      font-family: inherit;
+      letter-spacing: 0.01em;
+    }
+    .btn-primary {
+      background: var(--green-primary);
+      color: white;
+      border-color: var(--green-primary);
+      box-shadow: 0 4px 14px var(--green-glow);
+    }
+    .btn-primary:hover {
+      background: var(--green-bright);
+      box-shadow: 0 8px 22px var(--green-glow-strong);
+      transform: translateY(-2px);
+    }
+    .btn-outline {
+      background: transparent;
+      border: 1.5px solid var(--border-medium);
+      color: var(--text-secondary);
+    }
+    .btn-outline:hover {
+      background: var(--bg-soft);
+      border-color: var(--green-primary);
+      color: var(--green-primary);
+    }
+    .btn-ghost {
+      background: transparent;
+      border-color: transparent;
+      color: var(--text-muted);
+    }
+    .btn-ghost:hover {
+      background: var(--bg-soft);
+      color: var(--text-primary);
+    }
+    .btn-sm {
+      padding: 0.45rem 1.1rem;
+      font-size: 0.82rem;
+      border-radius: 2rem;
+    }
+    .btn-lg {
+      padding: 0.9rem 2.2rem;
+      font-size: 1.05rem;
+    }
+    .btn-icon {
+      width: 2.4rem;
+      height: 2.4rem;
+      padding: 0;
+      border-radius: 50%;
+    }
+
+    /* === الهيرو === */
+    .hero {
+      text-align: center;
+      padding: 3rem 0.5rem 2.2rem;
+      position: relative;
+    }
+    .hero::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 80px;
+      height: 4px;
+      background: var(--green-primary);
+      border-radius: 2px;
+      opacity: 0.5;
+    }
+    .hero h1 {
+      font-size: clamp(2.2rem, 6vw, 3.5rem);
+      font-weight: 900;
+      color: var(--text-primary);
+      line-height: 1.25;
+      margin-bottom: 0.9rem;
+      letter-spacing: -0.01em;
+    }
+    .hero .highlight {
+      color: var(--green-primary);
+      position: relative;
+      display: inline-block;
+    }
+    .hero .highlight::after {
+      content: '';
+      position: absolute;
+      bottom: -2px;
+      left: 0;
+      right: 0;
+      height: 8px;
+      background: var(--green-light);
+      z-index: -1;
+      border-radius: 4px;
+    }
+    .hero p {
+      font-size: 1.2rem;
+      color: var(--text-muted);
+      max-width: 700px;
+      margin: 0 auto 2rem;
+      line-height: 1.7;
+    }
+    .hero-actions {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    /* === الألسنة === */
+    .tabs-wrapper {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      margin: 2rem 0 1.5rem;
+      justify-content: center;
+      padding: 0.4rem;
+      background: var(--bg-soft);
+      border-radius: 3rem;
+    }
+    .tab-btn {
+      background: transparent;
+      border: none;
+      padding: 0.6rem 1.4rem;
+      border-radius: 2.5rem;
+      font-weight: 600;
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: var(--transition);
+      white-space: nowrap;
+      font-family: inherit;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .tab-btn.active {
+      background: var(--white);
+      color: var(--green-primary);
+      box-shadow: var(--shadow-sm);
+      font-weight: 700;
+    }
+    .tab-btn:hover:not(.active) {
+      background: var(--green-light);
+      color: var(--text-primary);
+    }
+    .tab-content {
+      display: none;
+      animation: fadeSlideIn 0.4s ease;
+    }
+    .tab-content.active {
+      display: block;
+    }
+    @keyframes fadeSlideIn {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* === جداول === */
+    .table-responsive {
+      overflow-x: auto;
+      margin: 1.2rem 0;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-light);
+      -webkit-overflow-scrolling: touch;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.9rem;
+      background: var(--bg-surface);
+      min-width: 700px;
+    }
+    th {
+      background: var(--bg-soft);
+      font-weight: 700;
+      color: var(--text-secondary);
+      padding: 0.9rem 0.8rem;
+      text-align: right;
+      border-bottom: 2px solid var(--border-light);
+      white-space: nowrap;
+      font-size: 0.85rem;
+      letter-spacing: 0.02em;
+    }
+    td {
+      padding: 0.8rem;
+      border-bottom: 1px solid var(--border-light);
+      color: var(--text-primary);
+    }
+    tr:last-child td {
+      border-bottom: none;
+    }
+    tr:hover td {
+      background: var(--bg-soft-secondary);
+    }
+    .badge {
+      display: inline-block;
+      padding: 0.25rem 0.8rem;
+      border-radius: 1.5rem;
+      font-size: 0.78rem;
+      font-weight: 600;
+      background: #e3f1e9;
+      color: #0b6e3e;
+      white-space: nowrap;
+    }
+    .badge-warning {
+      background: #fef5e7;
+      color: #8a4b10;
+    }
+    .badge-info {
+      background: #e8f0fe;
+      color: #1a509a;
+    }
+    .badge-accent {
+      background: #f0e6f6;
+      color: #6b2d8b;
+    }
+
+    /* === المودال === */
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,0.55);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      visibility: hidden;
+      opacity: 0;
+      transition: 0.25s ease;
+      padding: 1rem;
+    }
+    .modal-overlay.active {
+      visibility: visible;
+      opacity: 1;
+    }
+    .modal {
+      background: var(--bg-surface);
+      border-radius: var(--radius-xl);
+      padding: 2.2rem;
+      max-width: 580px;
+      width: 100%;
+      box-shadow: var(--shadow-xl);
+      border: 1px solid var(--border-light);
+      text-align: right;
+      max-height: 85vh;
+      overflow-y: auto;
+      position: relative;
+    }
+    .modal h3 {
+      margin-bottom: 1rem;
+      color: var(--green-primary);
+      font-size: 1.3rem;
+      font-weight: 700;
+    }
+    .modal .close-btn {
+      position: absolute;
+      top: 1rem;
+      left: 1rem;
+      background: var(--bg-soft);
+      border: none;
+      font-size: 1.4rem;
+      cursor: pointer;
+      color: var(--text-muted);
+      width: 2.2rem;
+      height: 2.2rem;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: var(--transition-fast);
+    }
+    .modal .close-btn:hover {
+      background: #e0e0e0;
+      color: var(--text-primary);
+    }
+    .modal-section {
+      margin-bottom: 1.2rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid var(--border-light);
+    }
+    .modal-section:last-child {
+      border-bottom: none;
+      margin-bottom: 0;
+      padding-bottom: 0;
+    }
+    .modal-label {
+      font-weight: 700;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.3rem;
+    }
+
+    /* === شبكة الإضافات === */
+    .addons-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(175px, 1fr));
+      gap: 0.7rem;
+      margin-top: 0.8rem;
+    }
+    .addon-item {
+      background: var(--bg-soft);
+      border-radius: var(--radius-sm);
+      padding: 0.75rem 0.9rem;
+      font-size: 0.84rem;
+      font-weight: 500;
+      color: var(--text-secondary);
+      border: 1px solid transparent;
+      transition: var(--transition-fast);
+      cursor: default;
+    }
+    .addon-item:hover {
+      border-color: var(--green-primary);
+      background: var(--white);
+      box-shadow: var(--shadow-xs);
+    }
+    .addon-category-title {
+      font-weight: 700;
+      font-size: 1rem;
+      color: var(--text-primary);
+      margin-top: 1.5rem;
+      margin-bottom: 0.4rem;
+      padding-bottom: 0.3rem;
+      border-bottom: 2px solid var(--green-light);
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    /* === مخطط التدفق === */
+    .flow-diagram {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: center;
+      gap: 0.6rem 1.4rem;
+      background: var(--bg-soft);
+      padding: 1.5rem 1rem;
+      border-radius: var(--radius-md);
+      margin: 1rem 0;
+      font-weight: 600;
+      color: var(--text-secondary);
+    }
+    .flow-node {
+      background: white;
+      padding: 0.5rem 1.2rem;
+      border-radius: 2rem;
+      border: 1px solid var(--border-medium);
+      box-shadow: var(--shadow-xs);
+      white-space: nowrap;
+      font-size: 0.9rem;
+    }
+    .flow-arrow {
+      font-size: 1.4rem;
+      color: var(--green-primary);
+      font-weight: 700;
+    }
+
+    /* === مؤشرات KPI === */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 1rem;
+    }
+    .kpi-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-lg);
+      padding: 1.4rem;
+      box-shadow: var(--shadow-xs);
+      transition: var(--transition);
+      position: relative;
+    }
+    .kpi-card:hover {
+      box-shadow: var(--shadow-md);
+      transform: translateY(-3px);
+    }
+    .kpi-value {
+      font-size: 2.2rem;
+      font-weight: 800;
+      color: var(--text-primary);
+      line-height: 1.2;
+    }
+    .kpi-label {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-top: 0.3rem;
+      font-weight: 500;
+    }
+    .kpi-change {
+      font-size: 0.8rem;
+      font-weight: 600;
+      margin-top: 0.5rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.2rem;
+    }
+    .kpi-change.positive { color: #0b6e3e; }
+    .kpi-change.negative { color: #8a4b10; }
+
+    /* === شريط التقدم === */
+    .progress-bar-wrap {
+      background: var(--bg-soft);
+      border-radius: 1rem;
+      height: 10px;
+      margin: 0.5rem 0;
+      overflow: hidden;
+    }
+    .progress-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--green-primary), var(--green-bright));
+      border-radius: 1rem;
+      transition: width 1.2s ease;
+    }
+
+    /* === تلميحات === */
+    .tooltip-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      background: #fef5e7;
+      color: #8a4b10;
+      padding: 0.3rem 0.9rem;
+      border-radius: 1.5rem;
+      font-size: 0.8rem;
+      font-weight: 600;
+      border: 1px solid #f0d9a8;
+    }
+
+    /* === تايملاين === */
+    .timeline {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      align-items: flex-start;
+      justify-content: center;
+      padding: 1rem 0;
+    }
+    .timeline-step {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      flex: 0 0 auto;
+      min-width: 90px;
+    }
+    .timeline-dot {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: var(--green-light);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      color: var(--green-primary);
+      border: 2px solid var(--green-primary);
+      margin-bottom: 0.4rem;
+      font-size: 0.9rem;
+    }
+    .timeline-label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+      max-width: 100px;
+    }
+    .timeline-connector {
+      width: 30px;
+      height: 2px;
+      background: var(--border-medium);
+      align-self: center;
+      margin: 0 -0.3rem;
+      position: relative;
+      top: -20px;
+    }
+
+    /* === تنافسية === */
+    .competitive-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 1rem;
+    }
+    .competitive-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.8rem;
+      padding: 1rem;
+      background: var(--bg-soft);
+      border-radius: var(--radius-md);
+      transition: var(--transition-fast);
+    }
+    .competitive-item:hover {
+      background: var(--white);
+      box-shadow: var(--shadow-sm);
+    }
+    .competitive-icon {
+      width: 2.5rem;
+      height: 2.5rem;
+      border-radius: 50%;
+      background: var(--green-light);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    /* === بطاقات صغيرة للجوال === */
+    @media (max-width: 768px) {
+      .container { padding: 0 0.9rem; }
+      .hero { padding: 2rem 0.2rem 1.5rem; }
+      .card { padding: 1.2rem; }
+      .kpi-grid { grid-template-columns: repeat(2, 1fr); gap: 0.6rem; }
+      .kpi-value { font-size: 1.5rem; }
+      .addons-grid { grid-template-columns: repeat(2, 1fr); }
+      .tabs-wrapper { border-radius: 2rem; gap: 0.3rem; }
+      .tab-btn { padding: 0.5rem 0.9rem; font-size: 0.78rem; }
+      .flow-diagram { gap: 0.4rem 0.8rem; }
+      .flow-node { padding: 0.4rem 0.8rem; font-size: 0.78rem; }
+      .timeline { flex-direction: column; align-items: center; gap: 0.3rem; }
+      .timeline-connector { display: none; }
+      .competitive-grid { grid-template-columns: 1fr; }
+      .modal { padding: 1.5rem; }
+      .table-mobile-cards td {
+        display: block;
+        text-align: right;
+        padding: 0.4rem 0.8rem;
+      }
+      .table-mobile-cards th {
+        display: none;
+      }
+      .table-mobile-cards tr {
+        display: block;
+        margin-bottom: 0.8rem;
+        border: 1px solid var(--border-light);
+        border-radius: var(--radius-sm);
+        background: white;
+      }
+      .table-mobile-cards td::before {
+        content: attr(data-label);
+        font-weight: 700;
+        display: inline-block;
+        width: 100px;
+        color: var(--text-muted);
+        font-size: 0.75rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .kpi-grid { grid-template-columns: 1fr 1fr; }
+      .kpi-value { font-size: 1.3rem; }
+      .btn { padding: 0.6rem 1.2rem; font-size: 0.85rem; }
+      .hero h1 { font-size: 1.7rem; }
+    }
+
+    /* === تحسينات إضافية === */
+    .divider {
+      height: 1px;
+      background: var(--border-light);
+      margin: 2rem 0;
+      border: none;
+    }
+    .text-center { text-align: center; }
+    .text-muted { color: var(--text-muted); }
+    .font-bold { font-weight: 700; }
+    .mt-1 { margin-top: 1rem; }
+    .mt-2 { margin-top: 2rem; }
+    .mb-1 { margin-bottom: 1rem; }
+    .mb-2 { margin-bottom: 2rem; }
+    .gap-1 { gap: 1rem; }
+    .flex-wrap { display: flex; flex-wrap: wrap; }
+    .align-center { align-items: center; }
+    .justify-between { justify-content: space-between; }
+  </style>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+</head>
+<body>
+  <main class="container">
+
+    <!-- === Hero Section === -->
+    <section class="hero">
+      <h1>النظام المالي <span class="highlight">المؤسسي</span><br>لإدارة المدارس الخاصة</h1>
+      <p>منظومة متكاملة تجمع بين إدارة المصروفات والتحصيل والتقارير والربط اللحظي بين جميع الأجهزة والإدارات، بتصميم مؤسسي يعكس احترافية مدرستك ويدعم اتخاذ القرار.</p>
+      <div class="hero-actions">
+        <a href="#dashboard-section" class="btn btn-primary btn-lg">
+          <svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+          لوحة التحكم التنفيذية
+        </a>
+        <a href="#tabs-section" class="btn btn-outline btn-lg">
+          <svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+          استعراض النظام بالكامل
+        </a>
+      </div>
+    </section>
+
+    <!-- === لوحة التحكم التنفيذية (Dashboard) === -->
+    <section id="dashboard-section" class="section-spacing">
+      <div class="card" style="border-right: 4px solid var(--green-primary);">
+        <div class="card-header">
+          <svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+          لوحة التحكم التنفيذية
+        </div>
+        <p class="card-subtitle">نظرة شاملة على أداء المؤسسة المالي والإداري في الوقت الفعلي. جميع المؤشرات محدثة لحظياً مع كل عملية تتم داخل النظام.</p>
+
+        <!-- مؤشرات KPI -->
+        <div class="kpi-grid">
+          <div class="kpi-card">
+            <div class="kpi-value" id="kpi-total-students">0</div>
+            <div class="kpi-label">إجمالي الطلاب المسجلين</div>
+            <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width: 92%;"></div></div>
+            <span class="kpi-change positive">▲ 8% عن العام الماضي</span>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-value" id="kpi-total-collected">0</div>
+            <div class="kpi-label">إجمالي المتحصل (جنيه)</div>
+            <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width: 78%;"></div></div>
+            <span class="kpi-change positive">▲ 15% هذا الشهر</span>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-value" id="kpi-outstanding">0</div>
+            <div class="kpi-label">المبالغ المستحقة (جنيه)</div>
+            <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width: 35%; background: #e8a840;"></div></div>
+            <span class="kpi-change negative">▼ تحتاج متابعة</span>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-value" id="kpi-daily-ops">0</div>
+            <div class="kpi-label">عدد العمليات اليوم</div>
+            <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width: 65%;"></div></div>
+            <span class="kpi-change positive">نشاط مالي مرتفع</span>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-value" id="kpi-collection-rate">0%</div>
+            <div class="kpi-label">نسبة التحصيل الإجمالية</div>
+            <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width: 87%;"></div></div>
+            <span class="kpi-change positive">▲ 5% تحسن</span>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-value" id="kpi-active-users">0</div>
+            <div class="kpi-label">مستخدم نشط حالياً</div>
+            <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width: 55%;"></div></div>
+            <span class="kpi-change positive">جميع الأقسام متصلة</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- === قسم آلية عمل النظام (Architecture) === -->
+    <section class="section-spacing">
+      <div class="card">
+        <div class="card-header">
+          <svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+          آلية عمل النظام داخل المؤسسة التعليمية
+        </div>
+        <p class="card-subtitle">النظام مبني على بنية مركزية موحدة تربط جميع الأقسام والإدارات في قاعدة بيانات واحدة. أي عملية تتم من أي جهاز تنعكس فوراً على جميع الأجهزة الأخرى دون أي تأخير.</p>
+
+        <!-- المخطط البصري -->
+        <div class="flow-diagram">
+          <span class="flow-node">الخزينة</span>
+          <span class="flow-arrow">↓</span>
+          <span class="flow-node">الحسابات</span>
+          <span class="flow-arrow">↓</span>
+          <span class="flow-node">شؤون الطلاب</span>
+          <span class="flow-arrow">↓</span>
+          <span class="flow-node">الإدارة المالية</span>
+          <span class="flow-arrow">↓</span>
+          <span class="flow-node">مدير المدرسة</span>
+          <span class="flow-arrow">↓</span>
+          <span class="flow-node">الإدارة العليا</span>
+        </div>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1rem; margin-top: 1.5rem;">
+          <div class="card" style="padding: 1.2rem;">
+            <h4 style="font-weight: 700; color: var(--green-primary); margin-bottom: 0.5rem;">قاعدة بيانات موحدة</h4>
+            <p style="color: var(--text-muted); font-size: 0.9rem;">جميع الأجهزة في جميع الأقسام مرتبطة بقاعدة بيانات واحدة مركزية. لا توجد نسخ منفصلة أو بيانات متضاربة بين الأقسام.</p>
+          </div>
+          <div class="card" style="padding: 1.2rem;">
+            <h4 style="font-weight: 700; color: var(--green-primary); margin-bottom: 0.5rem;">تحديث لحظي شامل</h4>
+            <p style="color: var(--text-muted); font-size: 0.9rem;">يتم تحديث الأرصدة والإحصائيات والتقارير والمتابعات بشكل فوري. أي تحصيل في الخزينة يظهر فوراً في شاشة مدير المدرسة والإدارة العليا.</p>
+          </div>
+          <div class="card" style="padding: 1.2rem;">
+            <h4 style="font-weight: 700; color: var(--green-primary); margin-bottom: 0.5rem;">تكامل كامل بين الأقسام</h4>
+            <p style="color: var(--text-muted); font-size: 0.9rem;">لا حاجة لنقل البيانات يدوياً بين قسم الخزينة والحسابات والإدارة. النظام يربط جميع العمليات تلقائياً ويمنع الازدواجية والأخطاء البشرية.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- === الألسنة الرئيسية === -->
+    <div id="tabs-section">
+      <div class="tabs-wrapper">
+        <button class="tab-btn active" data-tab="tab-students">
+          <svg class="icon-svg icon-svg-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          إدارة الطلاب
+        </button>
+        <button class="tab-btn" data-tab="tab-expenses">
+          <svg class="icon-svg icon-svg-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+          المصروفات
+        </button>
+        <button class="tab-btn" data-tab="tab-reports">
+          <svg class="icon-svg icon-svg-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          التقارير
+        </button>
+        <button class="tab-btn" data-tab="tab-statistics">
+          <svg class="icon-svg icon-svg-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M18 20V10"/><path d="M12 20V4"/><path d="M6 20v-6"/></svg>
+          الإحصائيات
+        </button>
+        <button class="tab-btn" data-tab="tab-ai">
+          <svg class="icon-svg icon-svg-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+          الذكاء الاصطناعي
+        </button>
+        <button class="tab-btn" data-tab="tab-addons">
+          <svg class="icon-svg icon-svg-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="17.5" x2="22" y2="22"/></svg>
+          الإضافات الاختيارية
+        </button>
+      </div>
+    </div>
+
+    <!-- === محتويات الألسنة === -->
+    <div style="margin-bottom: 3rem;">
+
+      <!-- تبويبة الطلاب -->
+      <div class="tab-content active" id="tab-students">
+        <div class="card">
+          <div class="card-header">
+            <svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+            إدارة الطلاب والمتابعة المالية الشاملة
+          </div>
+          <p class="card-subtitle">سجل كامل لكل طالب يشمل جميع المعاملات المالية والتاريخ الأكاديمي وبيانات ولي الأمر. النظام يوفر أدوات بحث وفلترة متقدمة وعرض الموقف المالي لحظياً مع إمكانية الطباعة والتصدير.</p>
+
+          <div class="flex-wrap gap-1 align-center" style="margin-bottom: 1.2rem;">
+            <input type="text" placeholder="بحث بالاسم أو الرقم التعريفي..." style="flex:2; padding:0.7rem 1rem; border-radius:2.5rem; border:1px solid var(--border-light); background:white; font-family: inherit; min-width: 200px;">
+            <select style="padding:0.7rem 1rem; border-radius:2.5rem; border:1px solid var(--border-light); background:white; font-family: inherit;">
+              <option>المرحلة الدراسية</option><option>الابتدائية</option><option>الإعدادية</option><option>الثانوية</option>
+            </select>
+            <select style="padding:0.7rem 1rem; border-radius:2.5rem; border:1px solid var(--border-light); background:white; font-family: inherit;">
+              <option>الحالة المالية</option><option>منتظم</option><option>متأخر</option><option>مدين</option>
+            </select>
+            <button class="btn btn-sm btn-primary">بحث</button>
+          </div>
+
+          <div class="table-responsive">
+            <table>
+              <thead>
+                <tr><th>الاسم الكامل</th><th>الصف</th><th>المدفوع</th><th>المتبقي</th><th>الخصومات</th><th>آخر دفعة</th><th>الحالة</th><th>إجراءات</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>أحمد محمد عبد الله</td><td>الثالث الإعدادي</td><td>2,500 ج</td><td>500 ج</td><td>100 ج</td><td>2025-01-15</td>
+                  <td><span class="badge">منتظم</span></td>
+                  <td>
+                    <button class="btn btn-sm modal-trigger" data-modal="دفع سريع">دفع</button>
+                    <button class="btn btn-sm modal-trigger" data-modal="إيصال">إيصال</button>
+                    <button class="btn btn-sm modal-trigger" data-modal="سجل الطالب">سجل</button>
+                  </td>
+                </tr>
+                <tr>
+                  <td>سلمى علي إبراهيم</td><td>الأول الابتدائي</td><td>0 ج</td><td>1,200 ج</td><td>0 ج</td><td>-</td>
+                  <td><span class="badge badge-warning">متأخر</span></td>
+                  <td>
+                    <button class="btn btn-sm modal-trigger" data-modal="دفع سريع">دفع</button>
+                    <button class="btn btn-sm modal-trigger" data-modal="إشعار">إشعار</button>
+                    <button class="btn btn-sm modal-trigger" data-modal="سجل الطالب">سجل</button>
+                  </td>
+                </tr>
+                <tr>
+                  <td>يوسف محمود حسن</td><td>الثاني الثانوي</td><td>3,800 ج</td><td>0 ج</td><td>200 ج</td><td>2025-01-20</td>
+                  <td><span class="badge">مكتمل</span></td>
+                  <td>
+                    <button class="btn btn-sm modal-trigger" data-modal="إيصال">إيصال</button>
+                    <button class="btn btn-sm modal-trigger" data-modal="سجل الطالب">سجل</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="flex-wrap gap-1 mt-1">
+            <button class="btn btn-sm btn-outline modal-trigger" data-modal="استيراد Excel">استيراد Excel</button>
+            <button class="btn btn-sm btn-outline modal-trigger" data-modal="تصدير Excel">تصدير Excel</button>
+            <button class="btn btn-sm btn-outline modal-trigger" data-modal="طباعة بطاقات">طباعة بطاقات</button>
+            <button class="btn btn-sm btn-outline modal-trigger" data-modal="ترقية جماعية">ترقية جماعية</button>
+            <button class="btn btn-sm btn-outline modal-trigger" data-modal="إشعارات جماعية">إشعارات جماعية</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- تبويبة المصروفات -->
+      <div class="tab-content" id="tab-expenses">
+        <div class="card">
+          <div class="card-header">
+            <svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+            إدارة المصروفات والرسوم الدراسية
+          </div>
+          <p class="card-subtitle">منظومة متكاملة لإنشاء وإدارة جميع أنواع المصروفات والرسوم. أنشئ المصروف مرة واحدة وحدد المرحلة أو الصف، وسيقوم النظام بتوزيعه على جميع الطلاب المعنيين فوراً مع إمكانية الجدولة والتقسيط.</p>
+
+          <div class="flex-wrap gap-1 align-center mb-1">
+            <select style="padding:0.7rem 1rem; border-radius:2.5rem; border:1px solid var(--border-light); background:white; font-family: inherit;">
+              <option>المرحلة الابتدائية</option><option>الإعدادية</option><option>الثانوية</option>
+            </select>
+            <select style="padding:0.7rem 1rem; border-radius:2.5rem; border:1px solid var(--border-light); background:white; font-family: inherit;">
+              <option>نوع المصروف</option><option>رسوم دراسية</option><option>رسوم كتب</option><option>رسوم باص</option><option>رسوم أنشطة</option><option>رسوم زي مدرسي</option><option>رسوم امتحانات</option><option>غرامات</option>
+            </select>
+            <input placeholder="اسم المصروف" style="padding:0.7rem 1rem; border-radius:2.5rem; border:1px solid var(--border-light); background:white; font-family: inherit; min-width: 180px;">
+            <input placeholder="القيمة" type="number" style="padding:0.7rem 1rem; border-radius:2.5rem; border:1px solid var(--border-light); background:white; font-family: inherit; width:130px;">
+            <button class="btn btn-sm btn-primary modal-trigger" data-modal="إنشاء مصروف">إنشاء وتوزيع</button>
+          </div>
+
+          <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 0.8rem; margin-top: 1.5rem;">
+            <div class="card" style="padding: 1rem;">
+              <strong>رسوم دراسية</strong>
+              <p style="color: var(--text-muted); font-size: 0.8rem;">الرسوم الأساسية للعام الدراسي</p>
+              <button class="btn btn-sm modal-trigger mt-1" data-modal="رسوم دراسية">إدارة</button>
+            </div>
+            <div class="card" style="padding: 1rem;">
+              <strong>رسوم الكتب</strong>
+              <p style="color: var(--text-muted); font-size: 0.8rem;">تكلفة الكتب والمناهج</p>
+              <button class="btn btn-sm modal-trigger mt-1" data-modal="رسوم كتب">إدارة</button>
+            </div>
+            <div class="card" style="padding: 1rem;">
+              <strong>رسوم النقل</strong>
+              <p style="color: var(--text-muted); font-size: 0.8rem;">اشتراكات الباص المدرسي</p>
+              <button class="btn btn-sm modal-trigger mt-1" data-modal="رسوم باص">إدارة</button>
+            </div>
+            <div class="card" style="padding: 1rem;">
+              <strong>رسوم الأنشطة</strong>
+              <p style="color: var(--text-muted); font-size: 0.8rem;">الرحلات والفعاليات</p>
+              <button class="btn btn-sm modal-trigger mt-1" data-modal="رسوم أنشطة">إدارة</button>
+            </div>
+            <div class="card" style="padding: 1rem;">
+              <strong>الخصومات والمنح</strong>
+              <p style="color: var(--text-muted); font-size: 0.8rem;">خصومات الأخوة والمنح</p>
+              <button class="btn btn-sm modal-trigger mt-1" data-modal="خصومات">إدارة</button>
+            </div>
+            <div class="card" style="padding: 1rem;">
+              <strong>جدولة الأقساط</strong>
+              <p style="color: var(--text-muted); font-size: 0.8rem;">تقسيط المصروفات على دفعات</p>
+              <button class="btn btn-sm modal-trigger mt-1" data-modal="أقساط">إدارة</button>
+            </div>
+          </div>
+
+          <div class="flex-wrap gap-1 mt-2">
+            <button class="btn btn-sm btn-outline modal-trigger" data-modal="إنشاء مصروف جماعي">إنشاء مصروف جماعي</button>
+            <button class="btn btn-sm btn-outline modal-trigger" data-modal="نسخ مصروف">نسخ مصروف</button>
+            <button class="btn btn-sm btn-outline modal-trigger" data-modal="إيقاف مصروف">إيقاف مصروف</button>
+            <button class="btn btn-sm btn-outline modal-trigger" data-modal="أرشفة مصروف">أرشفة مصروف</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- تبويبة التقارير -->
+      <div class="tab-content" id="tab-reports">
+        <div class="card">
+          <div class="card-header">
+            <svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+            منظومة التقارير المالية المتقدمة
+          </div>
+          <p class="card-subtitle">شاشة تقارير شاملة تغطي جميع الجوانب المالية والإدارية. تقارير يومية وأسبوعية وشهرية وسنوية مع إمكانية التصفية حسب المرحلة أو الصف أو المصروف أو الطالب أو المستخدم أو الفرع. جميع التقارير قابلة للتصدير والطباعة.</p>
+
+          <div class="kpi-grid mb-2">
+            <div class="kpi-card">
+              <div class="kpi-value" style="font-size: 1.6rem;">45,820 ج</div>
+              <div class="kpi-label">تحصيل اليوم</div>
+            </div>
+            <div class="kpi-card">
+              <div class="kpi-value" style="font-size: 1.6rem;">89%</div>
+              <div class="kpi-label">نسبة التحصيل الشهرية</div>
+            </div>
+            <div class="kpi-card">
+              <div class="kpi-value" style="font-size: 1.6rem;">128</div>
+              <div class="kpi-label">عملية اليوم</div>
+            </div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 0.8rem;">
+            <button class="btn btn-outline modal-trigger" data-modal="تقرير يومي">تقرير يومي</button>
+            <button class="btn btn-outline modal-trigger" data-modal="تقرير أسبوعي">تقرير أسبوعي</button>
+            <button class="btn btn-outline modal-trigger" data-modal="تقرير شهري">تقرير شهري</button>
+            <button class="btn btn-outline modal-trigger" data-modal="تقرير سنوي">تقرير سنوي</button>
+            <button class="btn btn-outline modal-trigger" data-modal="تقرير حسب المرحلة">حسب المرحلة</button>
+            <button class="btn btn-outline modal-trigger" data-modal="تقرير حسب الصف">حسب الصف</button>
+            <button class="btn btn-outline modal-trigger" data-modal="تقرير المتأخرات">المتأخرات</button>
+            <button class="btn btn-outline modal-trigger" data-modal="تقرير الخصومات">الخصومات</button>
+            <button class="btn btn-outline modal-trigger" data-modal="تقرير الإيرادات">الإيرادات</button>
+            <button class="btn btn-outline modal-trigger" data-modal="تقرير المقارنات">مقارنات</button>
+            <button class="btn btn-outline modal-trigger" data-modal="تصدير Excel">تصدير Excel</button>
+            <button class="btn btn-outline modal-trigger" data-modal="تصدير PDF">تصدير PDF</button>
+            <button class="btn btn-outline modal-trigger" data-modal="طباعة">طباعة</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- تبويبة الإحصائيات -->
+      <div class="tab-content" id="tab-statistics">
+        <div class="card">
+          <div class="card-header">
+            <svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M18 20V10"/><path d="M12 20V4"/><path d="M6 20v-6"/></svg>
+            الإحصائيات والتحليلات المالية المتقدمة
+          </div>
+          <p class="card-subtitle">لوحة إحصائيات تفاعلية تحتوي على رسوم بيانية متقدمة ودوائر نسب وخرائط بيانات. تمكنك من تحليل أداء التحصيل واكتشاف الأنماط واتخاذ القرارات المبنية على البيانات.</p>
+
+          <div class="kpi-grid mb-2">
+            <div class="kpi-card">
+              <div class="kpi-value" style="font-size: 1.4rem;">92%</div>
+              <div class="kpi-label">مؤشر الأداء المالي</div>
+              <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width: 92%;"></div></div>
+            </div>
+            <div class="kpi-card">
+              <div class="kpi-value" style="font-size: 1.4rem;">78%</div>
+              <div class="kpi-label">نسبة التحصيل</div>
+              <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width: 78%;"></div></div>
+            </div>
+            <div class="kpi-card">
+              <div class="kpi-value" style="font-size: 1.4rem;">22%</div>
+              <div class="kpi-label">نسبة المتأخرات</div>
+              <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width: 22%; background: #e8a840;"></div></div>
+            </div>
+            <div class="kpi-card">
+              <div class="kpi-value" style="font-size: 1.4rem;">+15%</div>
+              <div class="kpi-label">توقعات النمو</div>
+              <span class="kpi-change positive">▲ مقارنة بالفصل الماضي</span>
+            </div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 0.8rem;">
+            <button class="btn btn-outline modal-trigger" data-modal="إحصائيات التحصيل">إحصائيات التحصيل</button>
+            <button class="btn btn-outline modal-trigger" data-modal="إحصائيات المتأخرات">إحصائيات المتأخرات</button>
+            <button class="btn btn-outline modal-trigger" data-modal="إحصائيات الفروع">إحصائيات الفروع</button>
+            <button class="btn btn-outline modal-trigger" data-modal="تحليلات مالية">تحليلات مالية</button>
+            <button class="btn btn-outline modal-trigger" data-modal="مقارنات زمنية">مقارنات زمنية</button>
+            <button class="btn btn-outline modal-trigger" data-modal="توقعات النمو">توقعات النمو</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- تبويبة الذكاء الاصطناعي -->
+      <div class="tab-content" id="tab-ai">
+        <div class="card">
+          <div class="flex-wrap align-center justify-between mb-1">
+            <div class="card-header" style="margin-bottom: 0;">
+              <svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+              مساعد الذكاء الاصطناعي
+            </div>
+            <span class="tooltip-badge">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+              ميزة إضافية مدفوعة - اشتراك منفصل
+            </span>
+          </div>
+          <p class="card-subtitle">النظام يعمل بكامل كفاءته بدون هذه الميزة. هذه الخدمة مخصصة للمدارس التي ترغب في أتمتة متقدمة وتسريع العمليات من خلال أوامر نصية مباشرة. الذكاء الاصطناعي ينفذ أوامر إدارية وليس مجرد محادثة.</p>
+
+          <div style="background: var(--bg-soft); border-radius: var(--radius-md); padding: 1.5rem; margin: 1.2rem 0;">
+            <p class="font-bold mb-1">أمثلة على الأوامر التي ينفذها الذكاء الاصطناعي:</p>
+            <div style="display: grid; gap: 0.8rem;">
+              <div class="card" style="padding: 1rem; background: white;">
+                <p style="font-weight: 600; color: var(--green-primary);">"الطالب أحمد محمد دفع 500 جنيه من رسوم الكتب"</p>
+                <p style="color: var(--text-muted); font-size: 0.85rem;">يقوم النظام فوراً بتسجيل الدفعة، تحديث رصيد الطالب، إنشاء إيصال، وتحديث التقارير.</p>
+              </div>
+              <div class="card" style="padding: 1rem; background: white;">
+                <p style="font-weight: 600; color: var(--green-primary);">"اعرض الطلاب المتأخرين في الصف الثاني الإعدادي"</p>
+                <p style="color: var(--text-muted); font-size: 0.85rem;">يستعرض النظام قائمة كاملة بالطلاب المتأخرين مع المبالغ المستحقة وتفاصيل المصروفات.</p>
+              </div>
+              <div class="card" style="padding: 1rem; background: white;">
+                <p style="font-weight: 600; color: var(--green-primary);">"أنشئ تقرير تحصيل هذا الشهر"</p>
+                <p style="color: var(--text-muted); font-size: 0.85rem;">يولد النظام تقريراً شاملاً للإيرادات والمتأخرات ونسب التحصيل مع إمكانية التصدير.</p>
+              </div>
+            </div>
+          </div>
+
+          <p style="color: var(--text-muted); font-size:0.9rem;">يتم تفعيل هذه الميزة باشتراك إضافي حسب احتياج المؤسسة وحجم العمليات. السعر يحدد بناءً على عدد المستخدمين وحجم البيانات.</p>
+        </div>
+      </div>
+
+      <!-- تبويبة الإضافات -->
+      <div class="tab-content" id="tab-addons">
+        <div class="card">
+          <div class="card-header">
+            <svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="17.5" x2="22" y2="22"/></svg>
+            الإضافات الاختيارية حسب احتياج المؤسسة
+          </div>
+          <p class="card-subtitle">يمكن تطوير أي ميزة إضافية تطلبها إدارة المدرسة حتى لو لم تكن موجودة ضمن القائمة. جميع الإضافات قابلة للتخصيص والتطوير حسب متطلباتك الخاصة. هذه مجرد أمثلة من بين أكثر من 80 إضافة يمكن تفعيلها.</p>
+
+          <h4 class="addon-category-title">
+            <svg class="icon-svg icon-svg-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+            الإضافات المالية
+          </h4>
+          <div class="addons-grid">
+            <div class="addon-item">الدفع الإلكتروني</div><div class="addon-item">تقسيط المصروفات</div>
+            <div class="addon-item">ربط الحسابات البنكية</div><div class="addon-item">إدارة الخصومات</div>
+            <div class="addon-item">المنح الدراسية</div><div class="addon-item">جدولة الاستحقاقات</div>
+            <div class="addon-item">الفواتير الإلكترونية</div><div class="addon-item">الموازنات التقديرية</div>
+          </div>
+
+          <h4 class="addon-category-title">
+            <svg class="icon-svg icon-svg-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+            الإضافات الأكاديمية
+          </h4>
+          <div class="addons-grid">
+            <div class="addon-item">ربط الامتحانات</div><div class="addon-item">متابعة الحضور</div>
+            <div class="addon-item">نظام المكتبة</div><div class="addon-item">الجدول المدرسي</div>
+            <div class="addon-item">الشهادات الإلكترونية</div><div class="addon-item">إدارة المناهج</div>
+          </div>
+
+          <h4 class="addon-category-title">
+            <svg class="icon-svg icon-svg-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+            إضافات أولياء الأمور والتواصل
+          </h4>
+          <div class="addons-grid">
+            <div class="addon-item">بوابة ولي الأمر</div><div class="addon-item">إشعارات الرسائل</div>
+            <div class="addon-item">تطبيق جوال</div><div class="addon-item">رسائل واتساب</div>
+            <div class="addon-item">اجتماعات أولياء الأمور</div><div class="addon-item">استطلاعات الرأي</div>
+          </div>
+
+          <h4 class="addon-category-title">
+            <svg class="icon-svg icon-svg-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/></svg>
+            الإضافات الإدارية والتنظيمية
+          </h4>
+          <div class="addons-grid">
+            <div class="addon-item">الموارد البشرية</div><div class="addon-item">إدارة الفروع</div>
+            <div class="addon-item">المخازن والمشتريات</div><div class="addon-item">العيادة المدرسية</div>
+            <div class="addon-item">النقل المدرسي</div><div class="addon-item">الأمن والصلاحيات</div>
+            <div class="addon-item">الأرشفة الإلكترونية</div><div class="addon-item">النسخ الاحتياطي</div>
+            <div class="addon-item">إدارة المستخدمين</div><div class="addon-item">سجل النشاطات</div>
+          </div>
+
+          <p style="margin-top:1.8rem; color: var(--text-muted); font-weight: 500;">هذه مجرد أمثلة من بين أكثر من 80 إضافة يمكن تفعيلها حسب أولويات المؤسسة. يمكن تنفيذ أي متطلبات خاصة تطلبها إدارة المدرسة.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- === قسم المزايا التنافسية === -->
+    <section class="section-spacing">
+      <div class="card">
+        <div class="card-header text-center" style="justify-content: center;">
+          <svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          لماذا تختار هذا النظام؟
+        </div>
+        <p class="card-subtitle text-center">منظومة مالية متكاملة صممت خصيصاً لتلبية احتياجات المدارس الخاصة. نظام يقلل الأخطاء ويرفع الكفاءة ويمنحك تحكماً كاملاً في كل التفاصيل المالية.</p>
+
+        <div class="competitive-grid">
+          <div class="competitive-item">
+            <div class="competitive-icon">
+              <svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="var(--green-primary)" stroke-width="2"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="10"/></svg>
+            </div>
+            <div>
+              <strong>تقليل الأخطاء البشرية</strong>
+              <p style="color: var(--text-muted); font-size: 0.85rem;">أتمتة كاملة للعمليات المالية تقلل الأخطاء بنسبة 95% من خلال التوزيع التلقائي للمصروفات والتحصيل.</p>
+            </div>
+          </div>
+          <div class="competitive-item">
+            <div class="competitive-icon">
+              <svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="var(--green-primary)" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            </div>
+            <div>
+              <strong>متابعة لحظية</strong>
+              <p style="color: var(--text-muted); font-size: 0.85rem;">جميع العمليات تظهر فوراً على جميع الأجهزة. لا فجوات زمنية ولا بيانات متضاربة بين الأقسام.</p>
+            </div>
+          </div>
+          <div class="competitive-item">
+            <div class="competitive-icon">
+              <svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="var(--green-primary)" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/></svg>
+            </div>
+            <div>
+              <strong>ربط كامل بين الأقسام</strong>
+              <p style="color: var(--text-muted); font-size: 0.85rem;">الخزينة والحسابات والإدارة تعمل على قاعدة بيانات واحدة. لا حاجة لنقل البيانات يدوياً.</p>
+            </div>
+          </div>
+          <div class="competitive-item">
+            <div class="competitive-icon">
+              <svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="var(--green-primary)" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+            </div>
+            <div>
+              <strong>توفير وقت الموظفين</strong>
+              <p style="color: var(--text-muted); font-size: 0.85rem;">أتمتة المهام المتكررة توفر أكثر من 60% من وقت الموظفين لتركيزهم على مهام أكثر قيمة.</p>
+            </div>
+          </div>
+          <div class="competitive-item">
+            <div class="competitive-icon">
+              <svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="var(--green-primary)" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg>
+            </div>
+            <div>
+              <strong>تقارير فورية</strong>
+              <p style="color: var(--text-muted); font-size: 0.85rem;">تقارير مالية جاهزة للطباعة والتصدير في أي وقت. دعم كامل للتقارير اليومية والأسبوعية والشهرية.</p>
+            </div>
+          </div>
+          <div class="competitive-item">
+            <div class="competitive-icon">
+              <svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="var(--green-primary)" stroke-width="2"><path d="M18 20V10"/><path d="M12 20V4"/><path d="M6 20v-6"/></svg>
+            </div>
+            <div>
+              <strong>سهولة التوسع</strong>
+              <p style="color: var(--text-muted); font-size: 0.85rem;">النظام يدعم إدارة فروع متعددة من لوحة تحكم واحدة مع إمكانية التوسع حسب نمو المؤسسة.</p>
+            </div>
+          </div>
+          <div class="competitive-item">
+            <div class="competitive-icon">
+              <svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="var(--green-primary)" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            </div>
+            <div>
+              <strong>الأمان والصلاحيات</strong>
+              <p style="color: var(--text-muted); font-size: 0.85rem;">نظام صلاحيات متدرج يضمن وصول كل مستخدم للوظائف المصرح بها فقط. جميع البيانات مشفرة ومحمية.</p>
+            </div>
+          </div>
+          <div class="competitive-item">
+            <div class="competitive-icon">
+              <svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="var(--green-primary)" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+            </div>
+            <div>
+              <strong>سهولة الاستخدام</strong>
+              <p style="color: var(--text-muted); font-size: 0.85rem;">واجهة مستخدم بسيطة وبديهية باللغة العربية. تدريب سريع للموظفين ولا حاجة لخبرة تقنية متقدمة.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- === قسم رحلة العملية المالية (Workflow) === -->
+    <section class="section-spacing">
+      <div class="card">
+        <div class="card-header text-center" style="justify-content: center;">
+          <svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="9 18 15 12 9 6"/></svg>
+          رحلة العملية المالية داخل النظام
+        </div>
+        <p class="card-subtitle text-center">من إنشاء المصروف حتى وصول الإشعار لولي الأمر. جميع الخطوات مؤتمتة ومترابطة لضمان الدقة والسرعة.</p>
+
+        <div class="timeline">
+          <div class="timeline-step">
+            <div class="timeline-dot">1</div>
+            <div class="timeline-label">إنشاء مصروف</div>
+          </div>
+          <div class="timeline-connector"></div>
+          <div class="timeline-step">
+            <div class="timeline-dot">2</div>
+            <div class="timeline-label">ربطه بمرحلة</div>
+          </div>
+          <div class="timeline-connector"></div>
+          <div class="timeline-step">
+            <div class="timeline-dot">3</div>
+            <div class="timeline-label">ظهوره للطلاب</div>
+          </div>
+          <div class="timeline-connector"></div>
+          <div class="timeline-step">
+            <div class="timeline-dot">4</div>
+            <div class="timeline-label">تحصيل المبلغ</div>
+          </div>
+          <div class="timeline-connector"></div>
+          <div class="timeline-step">
+            <div class="timeline-dot">5</div>
+            <div class="timeline-label">إنشاء إيصال</div>
+          </div>
+          <div class="timeline-connector"></div>
+          <div class="timeline-step">
+            <div class="timeline-dot">6</div>
+            <div class="timeline-label">تحديث التقارير</div>
+          </div>
+          <div class="timeline-connector"></div>
+          <div class="timeline-step">
+            <div class="timeline-dot">7</div>
+            <div class="timeline-label">تحديث الإحصائيات</div>
+          </div>
+          <div class="timeline-connector"></div>
+          <div class="timeline-step">
+            <div class="timeline-dot">8</div>
+            <div class="timeline-label">إشعار ولي الأمر</div>
+          </div>
+        </div>
+
+        <p style="color: var(--text-muted); text-align: center; margin-top: 1rem;">كل خطوة من هذه الخطوات تتم بشكل تلقائي ومترابط. النظام يضمن عدم وجود أي انقطاع في سير العملية المالية من البداية حتى النهاية.</p>
+      </div>
+    </section>
+
+    <!-- === رسالة ختامية === -->
+    <div class="card section-spacing" style="text-align: center; background: var(--bg-soft); border: 2px solid var(--green-light);">
+      <p style="font-weight: 800; font-size: 1.4rem; color: var(--text-primary);">النظام المالي المؤسسي صُمم ليكون العمود الفقري لإدارة مدرستك</p>
+      <p style="color: var(--text-muted); max-width: 650px; margin: 0.8rem auto 0;">يوفر وقت الموظفين، يمنع تسرب الإيرادات، ويمنحك رؤية كاملة في أي وقت ومن أي مكان. جميع البيانات محدثة لحظياً وجميع الأقسام متصلة في منظومة واحدة.</p>
+      <div class="mt-2">
+        <a href="#" class="btn btn-primary btn-lg modal-trigger" data-modal="طلب نسخة تجريبية">طلب نسخة تجريبية</a>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- === المودال التفاعلي === -->
+  <div class="modal-overlay" id="modalOverlay">
+    <div class="modal">
+      <button class="close-btn" id="closeModal">&times;</button>
+      <h3 id="modalTitle">العنوان</h3>
+      <div id="modalContent"></div>
+    </div>
+  </div>
+
+  <script>
+    (function() {
+      // === نظام الألسنة ===
+      const tabs = document.querySelectorAll('.tab-btn');
+      const contents = document.querySelectorAll('.tab-content');
+      tabs.forEach(btn => {
+        btn.addEventListener('click', () => {
+          const tabId = btn.getAttribute('data-tab');
+          tabs.forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          contents.forEach(c => c.classList.remove('active'));
+          const target = document.getElementById(tabId);
+          if (target) target.classList.add('active');
+        });
+      });
+
+      // === عدادات متحركة ===
+      function animateCounter(el, target, duration = 1800) {
+        if (!el) return;
+        const start = 0;
+        const startTime = performance.now();
+        function update(currentTime) {
+          const elapsed = currentTime - startTime;
+          const progress = Math.min(elapsed / duration, 1);
+          const eased = 1 - Math.pow(1 - progress, 3);
+          const current = Math.floor(start + (target - start) * eased);
+          el.textContent = current.toLocaleString('ar-EG');
+          if (progress < 1) {
+            requestAnimationFrame(update);
+          } else {
+            el.textContent = target.toLocaleString('ar-EG');
+          }
+        }
+        requestAnimationFrame(update);
+      }
+
+      // تشغيل العدادات عند التمرير
+      let countersAnimated = false;
+      const dashboardSection = document.getElementById('dashboard-section');
+      
+      function runCounters() {
+        if (countersAnimated) return;
+        if (!dashboardSection) return;
+        const rect = dashboardSection.getBoundingClientRect();
+        if (rect.top < window.innerHeight && rect.bottom > 0) {
+          countersAnimated = true;
+          animateCounter(document.getElementById('kpi-total-students'), 1248);
+          animateCounter(document.getElementById('kpi-total-collected'), 452800);
+          animateCounter(document.getElementById('kpi-outstanding'), 128500);
+          animateCounter(document.getElementById('kpi-daily-ops'), 87);
+          animateCounter(document.getElementById('kpi-active-users'), 24);
+          
+          const rateEl = document.getElementById('kpi-collection-rate');
+          if (rateEl) {
+            let prog = 0;
+            const targetRate = 87;
+            const interval = setInterval(() => {
+              prog += 2;
+              if (prog >= targetRate) { rateEl.textContent = targetRate + '%'; clearInterval(interval); }
+              else { rateEl.textContent = prog + '%'; }
+            }, 35);
+          }
+        }
+      }
+
+      window.addEventListener('scroll', runCounters, { passive: true });
+      setTimeout(runCounters, 300);
+
+      // === نظام المودال المتقدم ===
+      const modalOverlay = document.getElementById('modalOverlay');
+      const modalTitle = document.getElementById('modalTitle');
+      const modalContent = document.getElementById('modalContent');
+      const closeModalBtn = document.getElementById('closeModal');
+
+      const modalDatabase = {
+        'دفع سريع': {
+          title: 'وظيفة: الدفع السريع',
+          sections: [
+            { label: 'الغرض', text: 'تسجيل دفعة مالية للطالب مباشرة من شاشة إدارة الطلاب دون الحاجة للانتقال إلى شاشة الخزينة.' },
+            { label: 'الفوائد', text: 'توفير الوقت وتقليل الخطوات. تمكين موظف الخزينة من تسجيل الدفعات بسرعة مع البحث السريع عن الطالب.' },
+            { label: 'كيف تعمل', text: 'يتم إدخال المبلغ واختيار المصروف المراد السداد عليه. النظام يتحقق من رصيد الطالب ويحدثه فوراً.' },
+            { label: 'ماذا يحدث بعد التنفيذ', text: 'يتم إنشاء إيصال تلقائي، تحديث رصيد الطالب، تسجيل العملية في سجل التحصيل، وتحديث جميع التقارير والإحصائيات.' }
+          ]
+        },
+        'إيصال': {
+          title: 'طباعة إيصال',
+          sections: [
+            { label: 'الغرض', text: 'استعراض وطباعة الإيصال الخاص بآخر دفعة أو أي دفعة سابقة للطالب.' },
+            { label: 'الفوائد', text: 'توثيق عملية الدفع وإعطاء ولي الأمر إثبات رسمي. الإيصال يحتوي على جميع التفاصيل المطلوبة.' },
+            { label: 'كيف تعمل', text: 'يتم جلب بيانات الدفعة من قاعدة البيانات وعرضها في قالب إيصال احترافي جاهز للطباعة أو الحفظ.' },
+            { label: 'ماذا يحدث بعد التنفيذ', text: 'يمكن طباعة الإيصال مباشرة أو حفظه كملف PDF أو إرساله لولي الأمر عبر البوابة الإلكترونية.' }
+          ]
+        },
+        'إشعار': {
+          title: 'إرسال إشعار لولي الأمر',
+          sections: [
+            { label: 'الغرض', text: 'إرسال إشعار فوري لولي الأمر بالمبلغ المستحق أو بتأكيد عملية الدفع.' },
+            { label: 'الفوائد', text: 'تحسين التواصل مع أولياء الأمور وتقليل المتابعة اليدوية. زيادة سرعة التحصيل.' },
+            { label: 'كيف تعمل', text: 'النظام يستخدم بيانات الاتصال المسجلة لولي الأمر ويرسل الإشعار عبر القناة المحددة.' },
+            { label: 'ماذا يحدث بعد التنفيذ', text: 'يتم تسجيل الإشعار في سجل التواصل مع ولي الأمر ويمكن متابعته.' }
+          ]
+        },
+        'سجل الطالب': {
+          title: 'السجل الكامل للطالب',
+          sections: [
+            { label: 'الغرض', text: 'عرض جميع المعاملات المالية والتاريخ الأكاديمي للطالب في شاشة واحدة.' },
+            { label: 'الفوائد', text: 'رؤية شاملة للموقف المالي للطالب تشمل سجل المدفوعات والمتأخرات والخصومات والأقساط.' },
+            { label: 'المحتويات', text: 'سجل المدفوعات - سجل المتأخرات - سجل الخصومات - سجل الأقساط - الملفات المرفوعة - بيانات ولي الأمر - إدارة الأشقاء.' },
+            { label: 'ماذا يحدث بعد التنفيذ', text: 'يمكن تصدير السجل أو طباعته أو مشاركته مع الإدارة.' }
+          ]
+        },
+        'إنشاء مصروف': {
+          title: 'إنشاء مصروف وتوزيعه',
+          sections: [
+            { label: 'الغرض', text: 'إنشاء مصروف جديد وتوزيعه تلقائياً على جميع الطلاب في المرحلة أو الصف المحدد.' },
+            { label: 'الفوائد', text: 'توفير وقت هائل مقارنة بالإدخال اليدوي لكل طالب. تقليل الأخطاء بنسبة 95%.' },
+            { label: 'كيف تعمل', text: 'يتم إدخال اسم المصروف وقيمته واختيار المرحلة أو الصف. النظام يوزع المصروف على جميع الطلاب المعنيين.' },
+            { label: 'ماذا يحدث بعد التنفيذ', text: 'يتم إضافة المصروف إلى حسابات الطلاب وتحديث الأرصدة والتقارير.' }
+          ]
+        },
+        'إنشاء تقرير': {
+          title: 'إنشاء تقرير مالي',
+          sections: [
+            { label: 'الغرض', text: 'توليد تقرير مالي شامل حسب المعايير المحددة.' },
+            { label: 'الفوائد', text: 'رؤية واضحة للإيرادات والمتأخرات. دعم اتخاذ القرار.' },
+            { label: 'كيف تعمل', text: 'يتم اختيار نوع التقرير والمعايير. النظام يجمع البيانات ويولد التقرير.' },
+            { label: 'ماذا يحدث بعد التنفيذ', text: 'يمكن تصدير التقرير بصيغة Excel أو PDF أو طباعته مباشرة.' }
+          ]
+        }
+      };
+
+      // بيانات إضافية للمودالات غير المعرفة
+      function getModalData(key) {
+        if (modalDatabase[key]) return modalDatabase[key];
+        return {
+          title: 'وظيفة: ' + key,
+          sections: [
+            { label: 'الغرض', text: 'هذه الوظيفة مصممة لتلبية احتياجات إدارة المدرسة في ' + key + ' بشكل احترافي ومتكامل.' },
+            { label: 'الفوائد', text: 'توفير الوقت والجهد وزيادة الدقة وتقليل الأخطاء البشرية. تمكين الإدارة من متابعة جميع التفاصيل.' },
+            { label: 'كيف تعمل', text: 'بمجرد الضغط على الزر، يقوم النظام بتنفيذ العملية المطلوبة وتحديث جميع البيانات المرتبطة بها.' },
+            { label: 'ماذا يحدث بعد التنفيذ', text: 'يتم تحديث قاعدة البيانات والتقارير والإحصائيات بشكل لحظي. يمكن متابعة النتائج فوراً.' }
+          ]
+        };
+      }
+
+      document.querySelectorAll('.modal-trigger').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.preventDefault();
+          const key = btn.getAttribute('data-modal');
+          const data = getModalData(key);
+          modalTitle.textContent = data.title;
+          
+          let html = '';
+          data.sections.forEach(sec => {
+            html += '<div class="modal-section">';
+            html += '<div class="modal-label">' + sec.label + '</div>';
+            html += '<p style="color: var(--text-secondary);">' + sec.text + '</p>';
+            html += '</div>';
+          });
+          modalContent.innerHTML = html;
+          modalOverlay.classList.add('active');
+          document.body.style.overflow = 'hidden';
+        });
+      });
+
+      function closeModal() {
+        modalOverlay.classList.remove('active');
+        document.body.style.overflow = '';
+      }
+
+      closeModalBtn.addEventListener('click', closeModal);
+      modalOverlay.addEventListener('click', (e) => {
+        if (e.target === modalOverlay) closeModal();
+      });
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && modalOverlay.classList.contains('active')) closeModal();
+      });
+
+      // === تأثير ظهور تدريجي ===
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.style.opacity = '1';
+            entry.target.style.transform = 'translateY(0)';
+          }
+        });
+      }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+      document.querySelectorAll('.card, .kpi-card, .competitive-item').forEach(el => {
+        el.style.opacity = '0';
+        el.style.transform = 'translateY(16px)';
+        el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+        observer.observe(el);
+      });
+
+      setTimeout(() => {
+        document.querySelectorAll('.card, .kpi-card, .competitive-item').forEach(el => {
+          const rect = el.getBoundingClientRect();
+          if (rect.top < window.innerHeight) {
+            el.style.opacity = '1';
+            el.style.transform = 'translateY(0)';
+          }
+        });
+      }, 150);
+    })();
+  </script>
+</body>
+</html>
