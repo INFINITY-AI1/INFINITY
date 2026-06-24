@@ -1,0 +1,1263 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>م/ إسماعيل عماد - حجز الكورسات</title>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            /* ===== Design Tokens ===== */
+            --navy-950: #0A1128;
+            --navy-900: #0F1A3D;
+            --navy-800: #16234F;
+            --navy-700: #1F2F66;
+            --gold: #E8A33D;
+            --gold-light: #F4C77A;
+            --gold-dim: #C98B2E;
+            --cream: #FBF8F2;
+            --ink: #16203A;
+            --ink-soft: #4A5578;
+            --line: #E7E2D6;
+            --surface: #FFFFFF;
+            --success: #1E8E5A;
+            --success-bg: #E8F6EE;
+            --danger: #D14343;
+            --danger-bg: #FCEAEA;
+            --whatsapp: #1FAF5A;
+
+            --shadow-soft: 0 2px 14px rgba(10, 17, 40, 0.06);
+            --shadow-card: 0 10px 30px rgba(10, 17, 40, 0.10);
+            --shadow-lift: 0 16px 40px rgba(10, 17, 40, 0.16);
+
+            --radius-s: 12px;
+            --radius-m: 18px;
+            --radius-l: 26px;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        html { -webkit-text-size-adjust: 100%; }
+
+        body {
+            font-family: 'Cairo', 'IBM Plex Sans Arabic', sans-serif;
+            background: var(--cream);
+            background-image:
+                radial-gradient(circle at 12% 8%, rgba(232, 163, 61, 0.07), transparent 38%),
+                radial-gradient(circle at 90% 90%, rgba(15, 26, 61, 0.05), transparent 45%);
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent;
+            color: var(--ink);
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after { animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
+        }
+
+        .app-container {
+            width: 100%;
+            max-width: 460px;
+            background: var(--surface);
+            min-height: 100vh;
+            position: relative;
+            box-shadow: var(--shadow-lift);
+        }
+
+        /* ================= HERO ================= */
+        .hero {
+            background: linear-gradient(155deg, var(--navy-950) 0%, var(--navy-900) 55%, var(--navy-800) 100%);
+            padding: 30px 24px 26px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-grid {
+            position: absolute;
+            inset: 0;
+            background-image:
+                linear-gradient(rgba(255,255,255,0.035) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.035) 1px, transparent 1px);
+            background-size: 28px 28px;
+            mask-image: radial-gradient(circle at 30% 20%, black, transparent 70%);
+        }
+
+        .hero-orb {
+            position: absolute;
+            top: -60px;
+            left: -40px;
+            width: 220px;
+            height: 220px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(232, 163, 61, 0.25), transparent 70%);
+            filter: blur(4px);
+        }
+
+        .hero-content { position: relative; z-index: 2; }
+
+        .hero-eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            background: rgba(232, 163, 61, 0.14);
+            border: 1px solid rgba(232, 163, 61, 0.35);
+            color: var(--gold-light);
+            padding: 6px 14px;
+            border-radius: 50px;
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 0.3px;
+        }
+
+        .hero-eyebrow .dot {
+            width: 6px; height: 6px;
+            border-radius: 50%;
+            background: var(--gold);
+            box-shadow: 0 0 0 0 rgba(232,163,61,0.6);
+            animation: pulse-dot 2s infinite;
+        }
+
+        @keyframes pulse-dot {
+            0% { box-shadow: 0 0 0 0 rgba(232,163,61,0.55); }
+            70% { box-shadow: 0 0 0 6px rgba(232,163,61,0); }
+            100% { box-shadow: 0 0 0 0 rgba(232,163,61,0); }
+        }
+
+        .hero h1 {
+            color: #fff;
+            font-size: 1.5rem;
+            font-weight: 800;
+            margin-top: 14px;
+            line-height: 1.4;
+        }
+
+        .hero h1 .accent { color: var(--gold-light); }
+
+        .hero-contact {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            background: var(--gold);
+            color: var(--navy-950);
+            padding: 11px 18px;
+            border-radius: var(--radius-s);
+            font-size: 0.88rem;
+            font-weight: 800;
+            margin-top: 16px;
+            text-decoration: none;
+            box-shadow: 0 8px 20px rgba(232, 163, 61, 0.3);
+        }
+
+        /* ================= ALERT ================= */
+        .alert-banner {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            background: #FFF6E8;
+            border-bottom: 1px solid #F3E3C4;
+            padding: 13px 20px;
+        }
+
+        .alert-banner .icon { font-size: 1.15rem; flex-shrink: 0; margin-top: 1px; }
+
+        .alert-banner .text {
+            font-size: 0.78rem;
+            font-weight: 600;
+            color: #8A5A12;
+            line-height: 1.65;
+        }
+
+        /* ================= FORM AREA ================= */
+        .form-area { padding: 24px 20px 28px; }
+
+        /* ---- Journey progress (signature element) ---- */
+        .journey {
+            display: flex;
+            align-items: center;
+            margin-bottom: 26px;
+            padding: 0 4px;
+        }
+
+        .journey-step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            position: relative;
+            flex-shrink: 0;
+        }
+
+        .journey-step .node {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: var(--line);
+            color: var(--ink-soft);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.78rem;
+            font-weight: 800;
+            transition: all 0.35s ease;
+            border: 2px solid transparent;
+        }
+
+        .journey-step .node-label {
+            font-size: 0.62rem;
+            font-weight: 700;
+            color: var(--ink-soft);
+            white-space: nowrap;
+        }
+
+        .journey-step.active .node {
+            background: var(--navy-900);
+            color: var(--gold-light);
+            border-color: var(--gold);
+            transform: scale(1.08);
+        }
+
+        .journey-step.active .node-label { color: var(--navy-900); }
+
+        .journey-step.done .node {
+            background: var(--success);
+            color: #fff;
+        }
+
+        .journey-step.done .node-label { color: var(--success); }
+
+        .journey-line {
+            flex: 1;
+            height: 2px;
+            background: var(--line);
+            margin: 0 6px;
+            margin-bottom: 18px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .journey-line::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: var(--success);
+            transform: scaleX(0);
+            transform-origin: right;
+            transition: transform 0.45s ease;
+        }
+
+        .journey-line.filled::after { transform: scaleX(1); }
+
+        /* Step transitions */
+        .step-panel {
+            animation: stepIn 0.38s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes stepIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .step-heading {
+            font-size: 1.15rem;
+            font-weight: 800;
+            color: var(--navy-900);
+            margin-bottom: 4px;
+        }
+
+        .step-subheading {
+            font-size: 0.82rem;
+            color: var(--ink-soft);
+            font-weight: 500;
+            margin-bottom: 20px;
+        }
+
+        /* ---- Fields ---- */
+        .field-group { margin-bottom: 16px; }
+
+        .field-label {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            font-size: 0.83rem;
+            font-weight: 700;
+            color: var(--navy-900);
+            margin-bottom: 8px;
+        }
+
+        .field-label .emoji { font-size: 1rem; }
+
+        .input-field {
+            width: 100%;
+            padding: 15px 16px;
+            font-size: 0.95rem;
+            font-family: inherit;
+            font-weight: 600;
+            border: 2px solid var(--line);
+            border-radius: var(--radius-s);
+            background: #FCFBF8;
+            color: var(--ink);
+            transition: all 0.2s ease;
+            -webkit-appearance: none;
+        }
+
+        .input-field:focus {
+            outline: none;
+            border-color: var(--gold);
+            background: #fff;
+            box-shadow: 0 0 0 4px rgba(232, 163, 61, 0.12);
+        }
+
+        .input-field::placeholder { color: #B5AFA0; font-weight: 500; }
+
+        /* ---- Grade cards (each grade separate, as requested) ---- */
+        .grade-list { display: flex; flex-direction: column; gap: 10px; }
+
+        .grade-card {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 15px 16px;
+            border: 2px solid var(--line);
+            border-radius: var(--radius-m);
+            background: #fff;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            position: relative;
+        }
+
+        .grade-card:active { transform: scale(0.985); }
+
+        .grade-card .grade-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 13px;
+            background: var(--navy-900);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            flex-shrink: 0;
+            transition: all 0.2s ease;
+        }
+
+        .grade-card .grade-text { flex: 1; }
+
+        .grade-card .grade-name {
+            font-size: 0.92rem;
+            font-weight: 700;
+            color: var(--navy-900);
+            display: block;
+        }
+
+        .grade-card .grade-arrow {
+            color: var(--line);
+            font-size: 1.1rem;
+            transition: all 0.2s ease;
+        }
+
+        .grade-card.selected {
+            border-color: var(--gold);
+            background: linear-gradient(0deg, #FFF8EC, #FFF8EC);
+            box-shadow: 0 6px 18px rgba(232, 163, 61, 0.18);
+        }
+
+        .grade-card.selected .grade-icon { background: var(--gold); }
+
+        .grade-card.selected .grade-arrow { color: var(--gold-dim); transform: translateX(-3px); }
+
+        /* ---- Course cards ---- */
+        .courses-grid { display: flex; flex-direction: column; gap: 10px; margin-top: 4px; }
+
+        .course-card {
+            display: flex;
+            align-items: center;
+            gap: 13px;
+            padding: 14px 15px;
+            border: 2px solid var(--line);
+            border-radius: var(--radius-m);
+            cursor: pointer;
+            background: #fff;
+            transition: all 0.2s ease;
+            position: relative;
+        }
+
+        .course-card:active { transform: scale(0.985); }
+
+        .course-card .course-icon {
+            font-size: 1.5rem;
+            width: 42px;
+            height: 42px;
+            background: var(--cream);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .course-card .course-name {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--navy-900);
+            flex: 1;
+        }
+
+        .course-card .checkbox {
+            width: 22px;
+            height: 22px;
+            border-radius: 7px;
+            border: 2px solid var(--line);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            color: transparent;
+            flex-shrink: 0;
+            transition: all 0.2s ease;
+        }
+
+        .course-card.selected {
+            border-color: var(--gold);
+            background: #FFF8EC;
+        }
+
+        .course-card.selected .checkbox {
+            background: var(--gold);
+            border-color: var(--gold);
+            color: #fff;
+        }
+
+        /* ---- Note ---- */
+        .note-text {
+            font-size: 0.76rem;
+            color: #8A5A12;
+            font-weight: 600;
+            margin-top: 10px;
+            padding: 10px 13px;
+            background: #FFF6E8;
+            border-radius: var(--radius-s);
+            display: none;
+            line-height: 1.5;
+        }
+
+        .note-text.show { display: block; }
+
+        /* ---- Selected summary chip ---- */
+        .grade-chosen-chip {
+            display: none;
+            align-items: center;
+            gap: 10px;
+            background: var(--navy-900);
+            color: #fff;
+            padding: 11px 14px;
+            border-radius: var(--radius-s);
+            margin-bottom: 18px;
+            font-size: 0.82rem;
+            font-weight: 700;
+        }
+
+        .grade-chosen-chip.show { display: flex; }
+
+        .grade-chosen-chip .chip-icon {
+            width: 30px; height: 30px;
+            background: var(--gold);
+            border-radius: 9px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            flex-shrink: 0;
+        }
+
+        .grade-chosen-chip .chip-change {
+            margin-right: auto;
+            color: var(--gold-light);
+            font-size: 0.74rem;
+            font-weight: 700;
+            cursor: pointer;
+            text-decoration: underline;
+        }
+
+        /* ---- Buttons ---- */
+        .btn {
+            width: 100%;
+            padding: 16px;
+            font-size: 0.98rem;
+            font-weight: 800;
+            font-family: inherit;
+            border: none;
+            border-radius: var(--radius-s);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn:active { transform: scale(0.97); }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--navy-900), var(--navy-800));
+            color: #fff;
+            box-shadow: 0 8px 22px rgba(15, 26, 61, 0.28);
+            margin-top: 6px;
+        }
+
+        .btn-primary:disabled {
+            background: #D4D0C4;
+            box-shadow: none;
+            cursor: not-allowed;
+            color: #8A8675;
+        }
+
+        .btn-gold {
+            background: linear-gradient(135deg, var(--gold), var(--gold-dim));
+            color: var(--navy-950);
+            box-shadow: 0 8px 22px rgba(232, 163, 61, 0.32);
+            margin-top: 6px;
+        }
+
+        .btn-outline {
+            background: #fff;
+            color: var(--ink-soft);
+            border: 2px solid var(--line);
+            margin-bottom: 10px;
+        }
+
+        /* ================= RESULT ================= */
+        .result-box { display: none; padding: 8px 4px; text-align: center; }
+        .result-box.show { display: block; animation: stepIn 0.4s cubic-bezier(0.16,1,0.3,1); }
+
+        .result-burst {
+            width: 78px;
+            height: 78px;
+            margin: 4px auto 18px;
+            border-radius: 50%;
+            background: var(--success-bg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.1rem;
+            position: relative;
+            animation: burstIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        @keyframes burstIn {
+            0% { transform: scale(0); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .result-burst::before {
+            content: '';
+            position: absolute;
+            inset: -8px;
+            border-radius: 50%;
+            border: 2px solid var(--success);
+            opacity: 0.3;
+            animation: ringOut 1.2s ease-out 0.2s;
+        }
+
+        @keyframes ringOut {
+            0% { transform: scale(0.8); opacity: 0.5; }
+            100% { transform: scale(1.5); opacity: 0; }
+        }
+
+        .result-title {
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: var(--navy-900);
+            margin-bottom: 6px;
+        }
+
+        .result-subtitle {
+            font-size: 0.86rem;
+            color: var(--ink-soft);
+            font-weight: 500;
+            margin-bottom: 22px;
+            line-height: 1.6;
+        }
+
+        .result-subtitle b { color: var(--navy-900); }
+
+        .group-cta-card {
+            background: linear-gradient(135deg, #EAFBF1, #F4FBF6);
+            border: 1.5px solid #BFE8CE;
+            border-radius: var(--radius-m);
+            padding: 16px;
+            margin-bottom: 12px;
+            text-align: right;
+        }
+
+        .group-cta-card .gc-title {
+            font-size: 0.86rem;
+            font-weight: 700;
+            color: var(--navy-900);
+            margin-bottom: 3px;
+        }
+
+        .group-cta-card .gc-sub {
+            font-size: 0.74rem;
+            color: var(--ink-soft);
+            margin-bottom: 12px;
+            font-weight: 500;
+        }
+
+        .whatsapp-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 9px;
+            width: 100%;
+            padding: 14px;
+            background: var(--whatsapp);
+            color: #fff;
+            border: none;
+            border-radius: var(--radius-s);
+            font-size: 0.92rem;
+            font-weight: 800;
+            font-family: inherit;
+            cursor: pointer;
+            text-decoration: none;
+            box-shadow: 0 8px 18px rgba(31, 175, 90, 0.28);
+            transition: all 0.2s ease;
+        }
+
+        .whatsapp-btn:active { transform: scale(0.97); }
+
+        .auto-redirect-note {
+            font-size: 0.7rem;
+            color: var(--ink-soft);
+            text-align: center;
+            margin-top: 8px;
+            font-weight: 600;
+        }
+
+        .countdown-bar {
+            height: 3px;
+            background: var(--line);
+            border-radius: 3px;
+            overflow: hidden;
+            margin-top: 6px;
+        }
+
+        .countdown-bar .fill {
+            height: 100%;
+            background: var(--whatsapp);
+            width: 100%;
+            transform-origin: right;
+            animation: countdown 2.4s linear forwards;
+        }
+
+        @keyframes countdown {
+            from { transform: scaleX(1); }
+            to { transform: scaleX(0); }
+        }
+
+        .info-msg {
+            background: #FFF6E8;
+            color: #8A5A12;
+            padding: 13px 14px;
+            border-radius: var(--radius-s);
+            font-weight: 600;
+            font-size: 0.8rem;
+            margin-top: 4px;
+            margin-bottom: 12px;
+            text-align: right;
+            line-height: 1.6;
+        }
+
+        .error-toast {
+            background: var(--danger-bg);
+            color: var(--danger);
+            padding: 12px 16px;
+            border-radius: var(--radius-s);
+            font-weight: 700;
+            font-size: 0.82rem;
+            text-align: center;
+            margin-top: 12px;
+            display: none;
+        }
+
+        .error-toast.show { display: block; animation: shake 0.4s ease; }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-7px); }
+            50% { transform: translateX(7px); }
+            75% { transform: translateX(-3px); }
+        }
+
+        .hidden { display: none !important; }
+
+        .footer-note {
+            text-align: center;
+            padding: 18px;
+            font-size: 0.68rem;
+            color: #B5AFA0;
+            font-weight: 600;
+        }
+
+        /* Loading spinner inside button */
+        .spinner {
+            width: 16px; height: 16px;
+            border: 2.5px solid rgba(255,255,255,0.35);
+            border-top-color: #fff;
+            border-radius: 50%;
+            animation: spin 0.7s linear infinite;
+        }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        :focus-visible {
+            outline: 3px solid var(--gold);
+            outline-offset: 2px;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Hero -->
+        <div class="hero">
+            <div class="hero-grid"></div>
+            <div class="hero-orb"></div>
+            <div class="hero-content">
+                <span class="hero-eyebrow"><span class="dot"></span> الفرصة مفتوحة لعام 2026/2027</span>
+                <h1>م/ إسماعيل عماد<br><span class="accent">
+ </span></h1>
+
+                <a href="tel:01122104596" class="hero-contact">📞 تواصل مباشر: 01122104596</a>
+            </div>
+        </div>
+
+        <!-- Alert -->
+        <div class="alert-banner">
+            <span class="icon">🔔</span>
+            <span class="text">اختر المرحلة الدراسية التي ستلتحق بها <b>العام الدراسي القادم</b>، وليس السنة التي انتهيت منها</span>
+        </div>
+
+        <!-- Form Area -->
+        <div class="form-area" id="formArea">
+            <!-- Journey -->
+            <div class="journey" id="journey">
+                <div class="journey-step active" id="jstep1">
+                    <div class="node">١</div>
+                    <div class="node-label">بياناتك</div>
+                </div>
+                <div class="journey-line" id="jline1"></div>
+                <div class="journey-step" id="jstep2">
+                    <div class="node">٢</div>
+                    <div class="node-label">المرحلة</div>
+                </div>
+                <div class="journey-line" id="jline2"></div>
+                <div class="journey-step" id="jstep3">
+                    <div class="node">٣</div>
+                    <div class="node-label">الكورسات</div>
+                </div>
+            </div>
+
+            <!-- Step 1: Info -->
+            <div id="step1Content" class="step-panel">
+                <div class="step-heading">خلّينا نتعرف عليك</div>
+                <div class="step-subheading">بياناتك هتساعدنا نتواصل معاك بخصوص الحجز</div>
+
+                <div class="field-group">
+                    <div class="field-label"><span class="emoji">👤</span> الاسم بالكامل</div>
+                    <input type="text" class="input-field" id="nameInput" placeholder="اكتب اسمك الثلاثي هنا">
+                </div>
+                <div class="field-group">
+                    <div class="field-label"><span class="emoji">📱</span> رقم الواتساب</div>
+                    <input type="tel" class="input-field" id="phoneInput" placeholder="01xxxxxxxxx" maxlength="11">
+                </div>
+                <button class="btn btn-primary" id="nextBtn">التالي ←</button>
+                <div class="error-toast" id="errorToast1"></div>
+            </div>
+
+            <!-- Step 2: Grade selection (each grade separate) -->
+            <div id="step2Content" class="step-panel hidden">
+                <div class="step-heading">اختر مرحلتك الدراسية</div>
+                <div class="step-subheading">كل مرحلة ليها كورسات مختلفة مصممة خصيصاً لها</div>
+
+                <div class="grade-list" id="gradeList"></div>
+
+                <button class="btn btn-outline" id="backBtn1" style="margin-top: 18px;">↩️ الرجوع للخلف</button>
+            </div>
+
+            <!-- Step 3: Courses -->
+            <div id="step3Content" class="step-panel hidden">
+                <div class="step-heading">اختر كورساتك</div>
+                <div class="step-subheading" id="step3Sub">حدد الكورس أو الكورسات اللي تحب تلتحق بيها</div>
+
+                <div class="grade-chosen-chip" id="gradeChosenChip">
+                    <span class="chip-icon" id="chipIcon">📘</span>
+                    <span id="chipText"></span>
+                    <span class="chip-change" id="chipChange">تغيير</span>
+                </div>
+
+                <div class="courses-grid" id="coursesGrid"></div>
+                <div class="note-text" id="courseNote"></div>
+
+                <button class="btn btn-gold" id="submitBtn" style="margin-top: 18px;">🚀 تأكيد الحجز</button>
+                <button class="btn btn-outline" id="backBtn2">↩️ الرجوع للخلف</button>
+                <div class="error-toast" id="errorToast2"></div>
+            </div>
+
+            <!-- Result -->
+            <div class="result-box" id="resultBox">
+                <div class="result-burst">✅</div>
+                <div class="result-title">تم الحجز بنجاح يا <span id="resultName"></span>!</div>
+                <div class="result-subtitle" id="resultSubtitle"></div>
+                <div id="resultLinks"></div>
+                <div id="resultInfo"></div>
+                <button class="btn btn-outline" id="newBookingBtn" style="margin-top: 10px;">📝 حجز جديد</button>
+            </div>
+        </div>
+
+        <div class="footer-note">© 2026 م/ إسماعيل عماد — كل الحقوق محفوظة</div>
+    </div>
+
+    <script>
+        // ============ Firebase Init ============
+        const firebaseConfig = {
+            apiKey: "AIzaSyDt7ous1vSxA6LuPS4VmlB80AUTuL6Q10U",
+            authDomain: "elgeel-f4e0d.firebaseapp.com",
+            projectId: "elgeel-f4e0d",
+            storageBucket: "elgeel-f4e0d.firebasestorage.app",
+            messagingSenderId: "87722465380",
+            appId: "1:87722465380:web:3b5b1943372ab6167aa771",
+            measurementId: "G-68S1RS95JV"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
+        // ============ Config ============
+        // كل مرحلة دراسية منفصلة تماماً كما طلب
+        const grades = [
+            { id: 'g4', name: 'الصف الرابع الابتدائي', icon: '📗' },
+            { id: 'g5', name: 'الصف الخامس الابتدائي', icon: '📗' },
+            { id: 'g6', name: 'الصف السادس الابتدائي', icon: '📗' },
+            { id: 'g7', name: 'الصف الأول الإعدادي', icon: '📘' },
+            { id: 'g8', name: 'الصف الثاني الإعدادي', icon: '📘' },
+            { id: 'g9', name: 'الصف الثالث الإعدادي', icon: '📙' },
+            { id: 'g10', name: 'الصف الأول الثانوي', icon: '📕' },
+            { id: 'g11', name: 'الصف الثاني الثانوي', icon: '📕' }
+        ];
+
+        const coursesByGrade = {
+            g4: [
+                { id: 'science_primary', name: 'تأسيس علوم', icon: '🔬' },
+                { id: 'programming_primary', name: 'برمجة', icon: '💻' }
+            ],
+            g5: [
+                { id: 'science_primary', name: 'تأسيس علوم', icon: '🔬' },
+                { id: 'programming_primary', name: 'برمجة', icon: '💻' }
+            ],
+            g6: [
+                { id: 'science_primary', name: 'تأسيس علوم', icon: '🔬' },
+                { id: 'programming_primary', name: 'برمجة', icon: '💻' }
+            ],
+            g7: [
+                { id: 'science_prep', name: 'تأسيس علوم', icon: '🔬' },
+                { id: 'programming_prep', name: 'برمجة', icon: '💻' }
+            ],
+            g8: [
+                { id: 'science_prep', name: 'تأسيس علوم', icon: '🔬' },
+                { id: 'programming_prep', name: 'برمجة', icon: '💻' }
+            ],
+            g9: [
+                { id: 'science_prep3', name: 'تأسيس علوم', icon: '🔬' },
+                { id: 'programming_prep3', name: 'برمجة', icon: '💻' }
+            ],
+            g10: [
+                { id: 'science_integrated', name: 'علوم متكاملة', icon: '🧪' },
+                { id: 'programming_sec1', name: 'برمجة', icon: '💻' }
+            ],
+            g11: [
+                { id: 'physics_sec2', name: 'تأسيس فيزياء', icon: '⚡' },
+                { id: 'chemistry_sec2', name: 'تأسيس كيمياء', icon: '🧬' },
+                { id: 'programming_sec2', name: 'تأسيس برمجة', icon: '💻' }
+            ]
+        };
+
+        // الصف الثاني الثانوي فقط مرتبط بمسار واحد (علمي علوم / علمي رياضة) فيختار كورس واحد
+        // كل المراحل التانية تقدر تختار أكتر من كورس (مثلاً علوم + برمجة معاً)
+        const maxPerGrade = { g4: 99, g5: 99, g6: 99, g7: 99, g8: 99, g9: 99, g10: 99, g11: 1 };
+
+        const groupLinks = {
+            science_4to9: 'https://chat.whatsapp.com/CJy1QKMW15MB04JVGOvtnU',
+            chemistry_sec2: 'https://chat.whatsapp.com/GYnodV8WbeYK6FkUK9y1y5',
+            physics_sec2: 'https://chat.whatsapp.com/GlVC69Qal6bC3hucfOmGmG',
+            programming_sec2: 'https://chat.whatsapp.com/Ex8o7MSP7jqJFBfI5xmjNe',
+            programming_sec1: 'https://chat.whatsapp.com/BQZDD5OIbwxLW409LU4GLw'
+        };
+
+        // ============ State ============
+        let selectedCourses = [];
+        let selectedGrade = '';
+        let studentName = '';
+        let studentPhone = '';
+
+        // ============ DOM Refs ============
+        const $ = (id) => document.getElementById(id);
+        const step1Content = $('step1Content');
+        const step2Content = $('step2Content');
+        const step3Content = $('step3Content');
+        const resultBox = $('resultBox');
+        const formArea = $('formArea');
+        const nameInput = $('nameInput');
+        const phoneInput = $('phoneInput');
+        const nextBtn = $('nextBtn');
+        const backBtn1 = $('backBtn1');
+        const backBtn2 = $('backBtn2');
+        const submitBtn = $('submitBtn');
+        const gradeList = $('gradeList');
+        const coursesGrid = $('coursesGrid');
+        const courseNote = $('courseNote');
+        const errorToast1 = $('errorToast1');
+        const errorToast2 = $('errorToast2');
+        const gradeChosenChip = $('gradeChosenChip');
+        const chipIcon = $('chipIcon');
+        const chipText = $('chipText');
+        const chipChange = $('chipChange');
+        const step3Sub = $('step3Sub');
+        const resultName = $('resultName');
+        const resultSubtitle = $('resultSubtitle');
+        const resultLinks = $('resultLinks');
+        const resultInfo = $('resultInfo');
+        const newBookingBtn = $('newBookingBtn');
+
+        const jstep1 = $('jstep1'), jstep2 = $('jstep2'), jstep3 = $('jstep3');
+        const jline1 = $('jline1'), jline2 = $('jline2');
+
+        // ============ Helpers ============
+        function showError(el, msg) {
+            el.textContent = msg;
+            el.classList.add('show');
+            setTimeout(() => el.classList.remove('show'), 4000);
+        }
+
+        function setJourney(activeIndex) {
+            // activeIndex: 1, 2, or 3
+            [jstep1, jstep2, jstep3].forEach((step, i) => {
+                step.classList.remove('active', 'done');
+                if (i + 1 < activeIndex) step.classList.add('done');
+                else if (i + 1 === activeIndex) step.classList.add('active');
+            });
+            jline1.classList.toggle('filled', activeIndex > 1);
+            jline2.classList.toggle('filled', activeIndex > 2);
+        }
+
+        function renderGrades() {
+            gradeList.innerHTML = '';
+            grades.forEach(g => {
+                const card = document.createElement('div');
+                card.className = 'grade-card';
+                if (g.id === selectedGrade) card.classList.add('selected');
+                card.innerHTML = `
+                    <span class="grade-icon">${g.icon}</span>
+                    <span class="grade-text">
+                        <span class="grade-name">${g.name}</span>
+                    </span>
+                    <span class="grade-arrow">←</span>
+                `;
+                card.addEventListener('click', () => selectGrade(g.id));
+                gradeList.appendChild(card);
+            });
+        }
+
+        function selectGrade(gradeId) {
+            selectedGrade = gradeId;
+            selectedCourses = [];
+            renderGrades();
+            goToStep3();
+        }
+
+        function renderCourses(grade) {
+            coursesGrid.innerHTML = '';
+            courseNote.classList.remove('show');
+
+            const gradeInfo = grades.find(g => g.id === grade);
+            chipIcon.textContent = gradeInfo.icon;
+            chipText.textContent = gradeInfo.name;
+            gradeChosenChip.classList.add('show');
+
+            const courses = coursesByGrade[grade] || [];
+            const max = maxPerGrade[grade];
+
+            if (max === 1) {
+                courseNote.textContent = '⚠️ يمكنك اختيار كورس واحد فقط في هذه المرحلة';
+                courseNote.classList.add('show');
+                step3Sub.textContent = 'حدد الكورس الذي تريد الالتحاق به';
+            } else {
+                step3Sub.textContent = 'حدد كورس أو أكثر تريد الالتحاق به';
+            }
+
+            courses.forEach(course => {
+                const card = document.createElement('div');
+                card.className = 'course-card';
+                card.innerHTML = `
+                    <span class="course-icon">${course.icon}</span>
+                    <span class="course-name">${course.name}</span>
+                    <span class="checkbox">✓</span>
+                `;
+                card.addEventListener('click', () => toggleCourse(card, course.id, grade));
+                coursesGrid.appendChild(card);
+            });
+        }
+
+        function toggleCourse(card, courseId, grade) {
+            const max = maxPerGrade[grade];
+            const allCards = coursesGrid.querySelectorAll('.course-card');
+
+            if (max === 1) {
+                allCards.forEach(c => c.classList.remove('selected'));
+                if (selectedCourses.includes(courseId)) {
+                    selectedCourses = [];
+                } else {
+                    selectedCourses = [courseId];
+                    card.classList.add('selected');
+                }
+            } else {
+                if (selectedCourses.includes(courseId)) {
+                    selectedCourses = selectedCourses.filter(id => id !== courseId);
+                    card.classList.remove('selected');
+                } else {
+                    selectedCourses.push(courseId);
+                    card.classList.add('selected');
+                }
+            }
+        }
+
+        function goToStep1() {
+            step1Content.classList.remove('hidden');
+            step2Content.classList.add('hidden');
+            step3Content.classList.add('hidden');
+            setJourney(1);
+            formArea.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        function goToStep2() {
+            step1Content.classList.add('hidden');
+            step2Content.classList.remove('hidden');
+            step3Content.classList.add('hidden');
+            renderGrades();
+            setJourney(2);
+            formArea.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        function goToStep3() {
+            step1Content.classList.add('hidden');
+            step2Content.classList.add('hidden');
+            step3Content.classList.remove('hidden');
+            renderCourses(selectedGrade);
+            setJourney(3);
+            formArea.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        function resetForm() {
+            selectedCourses = [];
+            selectedGrade = '';
+            studentName = '';
+            studentPhone = '';
+            nameInput.value = '';
+            phoneInput.value = '';
+            coursesGrid.innerHTML = '';
+            courseNote.classList.remove('show');
+            gradeChosenChip.classList.remove('show');
+            errorToast1.classList.remove('show');
+            errorToast2.classList.remove('show');
+            resultBox.classList.remove('show');
+            goToStep1();
+        }
+
+        async function saveToFirestore(data) {
+            try {
+                const docRef = await db.collection('bookings').add({
+                    ...data,
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+                console.log('✅ Saved with ID:', docRef.id);
+                return true;
+            } catch (error) {
+                console.error('❌ Firestore error:', error);
+                return false;
+            }
+        }
+
+        function handlePostBooking(grade, selectedIds) {
+            let links = [];
+            let infos = [];
+
+            selectedIds.forEach(id => {
+                if (['science_primary', 'science_prep', 'science_prep3'].includes(id)) {
+                    links.push({ name: 'جروب العلوم', url: groupLinks.science_4to9, icon: '🔬' });
+                }
+                if (id === 'chemistry_sec2') links.push({ name: 'جروب الكيمياء', url: groupLinks.chemistry_sec2, icon: '🧬' });
+                if (id === 'physics_sec2') links.push({ name: 'جروب الفيزياء', url: groupLinks.physics_sec2, icon: '⚡' });
+                if (id === 'programming_sec2') links.push({ name: 'جروب البرمجة (٢ ثانوي)', url: groupLinks.programming_sec2, icon: '💻' });
+                if (id === 'programming_sec1') links.push({ name: 'جروب البرمجة (١ ثانوي)', url: groupLinks.programming_sec1, icon: '💻' });
+            });
+
+            // إزالة التكرار (مثلاً لو الطالب اختار علوم وكيمياء معاً قد يحدث تكرار في الروابط المتشابهة)
+            const seen = new Set();
+            links = links.filter(l => {
+                if (seen.has(l.url)) return false;
+                seen.add(l.url);
+                return true;
+            });
+
+            if (selectedIds.includes('programming_primary') || selectedIds.includes('programming_prep') || selectedIds.includes('programming_prep3')) {
+                infos.push('سيتم التواصل معك قريباً عبر الواتساب بخصوص كورس البرمجة');
+            }
+
+            resultName.textContent = studentName.split(' ')[0] || '';
+            resultSubtitle.innerHTML = `تم تسجيل بياناتك بنجاح. <b>اضغط الزر تحت</b> للانضمام لجروب الواتساب الخاص بكورسك مباشرة.`;
+            resultLinks.innerHTML = '';
+            resultInfo.innerHTML = '';
+
+            if (links.length > 0) {
+                links.forEach((link, idx) => {
+                    const card = document.createElement('div');
+                    card.className = 'group-cta-card';
+                    card.innerHTML = `
+                        <div class="gc-title">${link.icon} ${link.name}</div>
+                        <div class="gc-sub">جروب الواتساب الرسمي لمتابعة الحصص والمواعيد</div>
+                        <a href="${link.url}" target="_blank" class="whatsapp-btn">💬 انضمام للجروب الآن</a>
+                        ${idx === 0 ? '<div class="auto-redirect-note" id="autoRedirectNote">سيتم تحويلك تلقائياً خلال لحظات...</div><div class="countdown-bar"><div class="fill"></div></div>' : ''}
+                    `;
+                    resultLinks.appendChild(card);
+                });
+
+                // فتح تلقائي للجروب الأول بعد لحظة
+                setTimeout(() => window.open(links[0].url, '_blank'), 2400);
+            }
+
+            if (infos.length > 0) {
+                const div = document.createElement('div');
+                div.className = 'info-msg';
+                div.innerHTML = infos.map(i => '📌 ' + i).join('<br>');
+                resultInfo.appendChild(div);
+            }
+
+            if (links.length === 0 && infos.length === 0) {
+                const div = document.createElement('div');
+                div.className = 'info-msg';
+                div.textContent = '📌 سيتم التواصل معك عبر الواتساب قريباً';
+                resultInfo.appendChild(div);
+            }
+
+            step3Content.classList.add('hidden');
+            resultBox.classList.add('show');
+            formArea.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        // ============ Events ============
+        nextBtn.addEventListener('click', () => {
+            const name = nameInput.value.trim();
+            const phone = phoneInput.value.trim();
+
+            if (name.length < 3) {
+                showError(errorToast1, 'الرجاء كتابة الاسم بالكامل');
+                nameInput.focus();
+                return;
+            }
+            if (!phone.startsWith('01') || phone.length < 11) {
+                showError(errorToast1, 'الرجاء كتابة رقم واتساب صحيح يبدأ بـ 01');
+                phoneInput.focus();
+                return;
+            }
+
+            studentName = name;
+            studentPhone = phone;
+            goToStep2();
+        });
+
+        backBtn1.addEventListener('click', goToStep1);
+        backBtn2.addEventListener('click', goToStep2);
+        chipChange.addEventListener('click', goToStep2);
+
+        submitBtn.addEventListener('click', async () => {
+            if (!selectedGrade) {
+                showError(errorToast2, 'الرجاء اختيار المرحلة الدراسية');
+                return;
+            }
+            if (selectedCourses.length === 0) {
+                showError(errorToast2, 'الرجاء اختيار كورس واحد على الأقل');
+                return;
+            }
+
+            const selectedNames = selectedCourses.map(id => {
+                const course = coursesByGrade[selectedGrade].find(c => c.id === id);
+                return course ? course.name : id;
+            });
+
+            const gradeInfo = grades.find(g => g.id === selectedGrade);
+
+            const bookingData = {
+                studentName,
+                whatsappNumber: studentPhone,
+                grade: selectedGrade,
+                gradeName: gradeInfo ? gradeInfo.name : selectedGrade,
+                courses: selectedNames,
+                courseIds: selectedCourses,
+                bookedAt: new Date().toISOString()
+            };
+
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<span class="spinner"></span> جاري الحفظ...';
+
+            const success = await saveToFirestore(bookingData);
+
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = '🚀 تأكيد الحجز';
+
+            if (success) {
+                handlePostBooking(selectedGrade, selectedCourses);
+            } else {
+                showError(errorToast2, 'حدث خطأ في الاتصال. تأكد من الإنترنت وحاول مجدداً');
+            }
+        });
+
+        newBookingBtn.addEventListener('click', resetForm);
+
+        // ============ Phone formatting ============
+        phoneInput.addEventListener('input', () => {
+            phoneInput.value = phoneInput.value.replace(/\D/g, '').slice(0, 11);
+        });
+
+        // ============ Visitor Tracking ============
+        // كل مرة حد يفتح الصفحة، يتم تسجيل زيارة جديدة في كولكشن "visitors"
+        // (نفس الشخص لو دخل 1000 مرة، يتم احتساب 1000 زيارة - بدون أي تكرار/فلترة)
+        async function logVisit() {
+            try {
+                await db.collection('visitors').add({
+                    visitedAt: firebase.firestore.FieldValue.serverTimestamp(),
+                    page: window.location.pathname || '/',
+                    userAgent: navigator.userAgent || '',
+                    referrer: document.referrer || 'direct',
+                    language: navigator.language || ''
+                });
+                console.log('👀 Visit logged');
+            } catch (error) {
+                // فشل تسجيل الزيارة لا يجب أن يوقف عمل الصفحة أبداً
+                console.error('⚠️ Visit log error:', error);
+            }
+        }
+        logVisit();
+
+        console.log('✅ صفحة حجز الكورسات جاهزة | م/ إسماعيل عماد');
+    </script>
+</body>
+</html>
