@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <meta name="theme-color" content="#B22222">
+    <title>الاشتراك في الكورسات الصيفية | منصة أ.م إسماعيل عماد</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .premium-container { max-width: 680px; margin: 0 auto; padding: 16px; padding-bottom: 40px; }
+        .stage-header {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            border-radius: 24px; padding: 20px 18px; color: white;
+            text-align: center; margin-bottom: 20px;
+        }
+        .stage-header h2 { font-family: var(--font-display); font-size: 22px; margin-bottom: 4px; }
+        .stage-header p { font-size: 11px; opacity: 0.85; }
+        .stage-tabs { display: flex; gap: 8px; background: var(--bg-secondary); padding: 5px; border-radius: 20px; margin-bottom: 20px; }
+        .stage-tab {
+            flex: 1; padding: 12px 14px; border-radius: 16px;
+            font-family: var(--font-body); font-size: 12px; font-weight: 600;
+            cursor: pointer; transition: all 0.2s; border: none;
+            background: transparent; color: var(--text-secondary); text-align: center;
+        }
+        .stage-tab.active { background: var(--primary); color: white; }
+        .course-card {
+            background: var(--bg-card); border-radius: 22px;
+            padding: 20px 18px; margin-bottom: 14px;
+            border: 1px solid var(--border); box-shadow: var(--shadow-sm); transition: all 0.2s;
+        }
+        .course-card:hover { box-shadow: var(--shadow-md); }
+        .course-header { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 14px; }
+        .course-icon-box {
+            width: 48px; height: 48px; border-radius: 14px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 22px; flex-shrink: 0;
+        }
+        .course-info { flex: 1; min-width: 0; }
+        .course-name { font-size: 16px; font-weight: 800; color: var(--text-primary); margin-bottom: 2px; }
+        .course-desc { font-size: 11px; color: var(--text-secondary); }
+        .features-list {
+            display: flex; flex-direction: column; gap: 6px; margin-bottom: 14px;
+            padding: 12px 14px; background: var(--bg-secondary); border-radius: 14px;
+        }
+        .feature-row {
+            display: flex; align-items: center; gap: 8px;
+            font-size: 11px; color: var(--text-primary); font-weight: 500;
+        }
+        .feature-row i { color: #059669; font-size: 12px; flex-shrink: 0; }
+        .subscribe-btn {
+            width: 100%; padding: 12px; border-radius: 30px;
+            background: var(--primary); color: white;
+            border: none; font-family: var(--font-body); font-size: 13px;
+            font-weight: 700; cursor: pointer; transition: all 0.2s; margin-top: 10px;
+        }
+        .subscribe-btn:hover { background: var(--primary-dark); transform: translateY(-1px); }
+        .subscribe-btn:active { transform: scale(0.97); }
+
+        .modal-overlay {
+            position: fixed; inset: 0; background: rgba(0,0,0,0.7);
+            backdrop-filter: blur(8px); z-index: 1000;
+            display: flex; align-items: center; justify-content: center;
+            padding: 20px; visibility: hidden; opacity: 0; transition: all 0.3s;
+        }
+        .modal-overlay.show { visibility: visible; opacity: 1; }
+        .payment-modal {
+            background: white; border-radius: 24px;
+            max-width: 380px; width: 100%; padding: 24px 18px;
+            text-align: center; animation: slideUp 0.35s ease;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            position: relative; max-height: 90vh; overflow-y: auto;
+        }
+        @keyframes slideUp { from{opacity:0;transform:translateY(20px) scale(0.95)} to{opacity:1;transform:translateY(0) scale(1)} }
+        .close-btn {
+            position: absolute; top: 12px; left: 14px;
+            width: 28px; height: 28px; border-radius: 50%;
+            background: var(--bg-secondary); border: none;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; color: var(--text-secondary); font-size: 14px; z-index: 2;
+        }
+        .close-btn:hover { background: #FFEBEE; color: var(--primary); }
+
+        .payment-header-icon {
+            width: 50px; height: 50px; background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            border-radius: 14px; display: flex; align-items: center; justify-content: center;
+            margin: 0 auto 10px; font-size: 22px; color: white;
+        }
+        .payment-modal h3 { font-family: var(--font-display); font-size: 18px; margin-bottom: 2px; }
+        .payment-modal .course-tag { font-size: 10px; color: var(--text-secondary); margin-bottom: 14px; }
+
+        .form-input {
+            width: 100%; padding: 11px 14px; border: 2px solid var(--border);
+            border-radius: 16px; font-family: var(--font-body); font-size: 12px;
+            background: var(--bg); text-align: center; margin-bottom: 8px;
+            transition: all 0.2s;
+        }
+        .form-input:focus { outline: none; border-color: var(--primary); }
+        .form-input.ltr { direction: ltr; }
+
+        .submit-btn {
+            width: 100%; padding: 12px; background: var(--primary); color: white;
+            border: none; border-radius: 18px; font-family: var(--font-body);
+            font-size: 13px; font-weight: 700; cursor: pointer; transition: all 0.2s;
+        }
+        .submit-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+        .submit-btn:active { transform: scale(0.97); }
+
+        .receipt-card { background: white; border-radius: 20px; text-align: center; }
+        .receipt-top {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            border-radius: 16px; padding: 16px; color: white; margin-bottom: 12px;
+        }
+        .receipt-top .receipt-icon { font-size: 28px; margin-bottom: 6px; }
+        .receipt-top h3 { font-family: var(--font-display); font-size: 18px; margin-bottom: 2px; color: white; }
+        .receipt-top .tag { font-size: 10px; opacity: 0.85; }
+
+        .receipt-body { padding: 0 4px; }
+        .student-info-row {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 8px 0; border-bottom: 1px solid var(--border);
+            font-size: 11px; margin-bottom: 10px;
+        }
+        .student-info-row .rl { color: var(--text-secondary); }
+        .student-info-row .rv { font-weight: 700; color: var(--text-primary); direction: ltr; }
+
+        .wallet-mini-card {
+            background: #FFF3E0; border: 1.5px solid #FFE0B2;
+            border-radius: 14px; padding: 12px 14px; margin-bottom: 10px;
+            display: flex; align-items: center; justify-content: space-between;
+            gap: 10px;
+        }
+        .wallet-mini-card .wallet-icon {
+            width: 38px; height: 38px; background: #E65100;
+            border-radius: 10px; display: flex; align-items: center; justify-content: center;
+            color: white; font-size: 16px; flex-shrink: 0;
+        }
+        .wallet-mini-card .wallet-info { text-align: right; flex: 1; min-width: 0; }
+        .wallet-mini-card .wallet-label { font-size: 9px; color: #E65100; font-weight: 600; margin-bottom: 2px; }
+        .wallet-mini-card .wallet-number { font-size: 16px; font-weight: 800; color: var(--text-primary); direction: ltr; letter-spacing: 1px; }
+        .wallet-mini-card .wallet-name { font-size: 9px; color: var(--text-secondary); }
+
+        .price-row {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 8px 0; font-size: 12px;
+        }
+        .price-row .rl { color: var(--text-secondary); }
+        .price-row .rv { font-weight: 900; color: var(--primary); font-size: 20px; }
+
+        .receipt-msg {
+            font-size: 11px; color: var(--text-secondary); margin: 10px 0;
+            line-height: 1.6; padding: 10px; background: var(--bg-secondary);
+            border-radius: 12px;
+        }
+        .receipt-timer {
+            display: flex; align-items: center; justify-content: center;
+            gap: 6px; margin: 10px 0; font-size: 12px; font-weight: 600;
+            padding: 8px; background: rgba(178,34,34,0.05);
+            border-radius: 12px; color: var(--primary);
+        }
+        .receipt-timer .countdown { font-family: monospace; font-size: 15px; font-weight: 800; }
+        .receipt-help {
+            font-size: 10px; color: var(--text-secondary); margin-top: 10px;
+            padding-top: 8px; border-top: 1px solid var(--border);
+        }
+        .receipt-help strong { color: var(--primary); }
+
+        .toast {
+            position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%) translateY(20px);
+            background: #2C2C2C; color: white; padding: 10px 22px; border-radius: 30px;
+            font-size: 12px; z-index: 2000; opacity: 0; transition: all 0.3s;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+        }
+        .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+        .toast.error { background: var(--primary); }
+
+        @media (max-width: 500px) {
+            .course-card { padding: 16px 14px; }
+            .course-name { font-size: 14px; }
+            .feature-row { font-size: 10px; }
+            .stage-tab { font-size: 11px; padding: 10px 10px; }
+            .payment-modal { padding: 20px 14px; }
+        }
+    </style>
+</head>
+<body>
+
+<header class="header">
+    <div class="header-logo" onclick="window.location.href='index.html'">
+        <div class="logo-icon"><i class="fas fa-arrow-right"></i></div>
+        <div><h2>الكورسات الصيفية</h2><p>Summer Courses</p></div>
+    </div>
+</header>
+
+<main class="premium-container">
+    <div class="stage-header">
+        <h2>ENG.ISMAIL EMAD</h2>
+        <p>كورسات صيفية مكثفة للصف الأول والثاني الثانوي</p>
+    </div>
+    <div class="stage-tabs" id="stageTabs">
+        <button class="stage-tab active" data-stage="first" onclick="switchStage('first')">الصف الأول الثانوي</button>
+        <button class="stage-tab" data-stage="second" onclick="switchStage('second')">الصف الثاني الثانوي</button>
+    </div>
+    <div id="coursesContainer"></div>
+</main>
+
+<div class="modal-overlay" id="mainModal">
+    <div class="payment-modal" id="modalInner">
+        <button class="close-btn" onclick="closeModal()">&times;</button>
+        <div id="modalContent"></div>
+    </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyAgUno4QlzT1u2JWSHP20EBCT4pkxRKIBo",
+        authDomain: "ismail-emad-com.firebaseapp.com",
+        projectId: "ismail-emad-com",
+        storageBucket: "ismail-emad-com.firebasestorage.app",
+        messagingSenderId: "761535264039",
+        appId: "1:761535264039:web:d84b0d7d592696b9a0a502"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    const WORKER_URL = "https://manassa-worker.ismail-emad.workers.dev";
+    const WALLET_NUMBER = "01122104596";
+    const SUPPORT_PHONE = "01202326992";
+
+    let currentStage = 'first';
+    let countdownInterval = null;
+    let timeLeft = 3600;
+    let currentCourseData = null;
+    let registrationSaved = false;
+    let timerStartTime = null;
+
+    const coursesData = {
+        first: [
+            { id: "summer_prog_1sec", name: "تأسيس البرمجة الصيفي", desc: "للصف الأول الثانوي", icon: "fa-code", iconBg: "#E3F2FD", iconColor: "#1565C0", price: 150,
+                features: ["5 حصص أون لاين بث مباشر تفاعلية","حصة مجانية إضافية","حصص مسجلة للمراجعة","امتحان إلكتروني للتطبيق كل أسبوع","ذكاء اصطناعي خاص بالدراسة طوال الكورس","ملازم بعد كل حصة ترسل للطالب"] },
+            { id: "summer_science_1sec", name: "تأسيس علوم متكاملة الصيفي", desc: "للصف الأول الثانوي", icon: "fa-flask", iconBg: "#E8F5E9", iconColor: "#059669", price: 150,
+                features: ["5 حصص أون لاين بث مباشر تفاعلية","حصة مجانية إضافية","حصص مسجلة للمراجعة","امتحان إلكتروني للتطبيق كل أسبوع","ذكاء اصطناعي خاص بالدراسة طوال الكورس","ملازم بعد كل حصة ترسل للطالب"] }
+        ],
+        second: [
+            { id: "summer_physics_2sec", name: "تأسيس فيزياء الصيفي", desc: "للصف الثاني الثانوي", icon: "fa-atom", iconBg: "#FFF3E0", iconColor: "#E65100", price: 150,
+                features: ["5 حصص أون لاين بث مباشر تفاعلية","حصة مجانية إضافية","حصص مسجلة للمراجعة","امتحان إلكتروني للتطبيق كل أسبوع","ذكاء اصطناعي خاص بالدراسة طوال الكورس","ملازم بعد كل حصة ترسل للطالب"] },
+            { id: "summer_prog_2sec", name: "تأسيس برمجة الصيفي", desc: "للصف الثاني الثانوي", icon: "fa-code", iconBg: "#E3F2FD", iconColor: "#1565C0", price: 150,
+                features: ["5 حصص أون لاين بث مباشر تفاعلية","حصة مجانية إضافية","حصص مسجلة للمراجعة","امتحان إلكتروني للتطبيق كل أسبوع","ذكاء اصطناعي خاص بالدراسة طوال الكورس","ملازم بعد كل حصة ترسل للطالب"] }
+        ]
+    };
+
+    function showToast(message, type = 'info') {
+        const toast = document.getElementById('toast');
+        toast.className = `toast ${type}`;
+        toast.textContent = message;
+        toast.classList.add('show');
+        setTimeout(() => toast.classList.remove('show'), 3000);
+    }
+
+    function switchStage(stage) {
+        currentStage = stage;
+        document.querySelectorAll('.stage-tab').forEach(b => b.classList.remove('active'));
+        document.querySelector(`.stage-tab[data-stage="${stage}"]`).classList.add('active');
+        renderCourses();
+    }
+
+    function renderCourses() {
+        const container = document.getElementById('coursesContainer');
+        const courses = coursesData[currentStage];
+        let html = '';
+        courses.forEach(course => {
+            const featuresHtml = course.features.map(f => `<div class="feature-row"><i class="fas fa-check-circle"></i> ${f}</div>`).join('');
+            html += `
+                <div class="course-card">
+                    <div class="course-header">
+                        <div class="course-icon-box" style="background:${course.iconBg};color:${course.iconColor};"><i class="fas ${course.icon}"></i></div>
+                        <div class="course-info"><div class="course-name">${course.name}</div><div class="course-desc">${course.desc}</div></div>
+                    </div>
+                    <div class="features-list">${featuresHtml}</div>
+                    <button class="subscribe-btn" onclick="openForm('${course.id}', '${course.name.replace(/'/g, "\\'")}', ${course.price})">اشترك الآن</button>
+                </div>
+            `;
+        });
+        container.innerHTML = html;
+        restorePendingPayment();
+    }
+
+    function restorePendingPayment() {
+        const saved = sessionStorage.getItem('summer_pending');
+        if (!saved) return;
+        try {
+            const data = JSON.parse(saved);
+            const now = Date.now();
+            const elapsed = Math.floor((now - data.timerStart) / 1000);
+            const remaining = Math.max(0, 3600 - elapsed);
+            if (remaining <= 0) { sessionStorage.removeItem('summer_pending'); return; }
+
+            currentCourseData = { courseId: data.courseId, courseName: data.courseName, price: data.price };
+            timeLeft = remaining;
+            timerStartTime = data.timerStart;
+            registrationSaved = data.registrationSaved;
+
+            document.getElementById('modalContent').innerHTML = buildReceiptHTML(data.studentName, data.studentPhone);
+            document.getElementById('mainModal').classList.add('show');
+            startCountdown();
+        } catch(e) { sessionStorage.removeItem('summer_pending'); }
+    }
+
+    function savePendingState(name, phone) {
+        sessionStorage.setItem('summer_pending', JSON.stringify({
+            courseId: currentCourseData.courseId,
+            courseName: currentCourseData.courseName,
+            price: currentCourseData.price,
+            studentName: name,
+            studentPhone: phone,
+            timerStart: timerStartTime || Date.now(),
+            registrationSaved: registrationSaved
+        }));
+    }
+
+    function openForm(courseId, courseName, price) {
+        currentCourseData = { courseId, courseName, price };
+        registrationSaved = false;
+        timerStartTime = null;
+
+        document.getElementById('modalContent').innerHTML = `
+            <div class="payment-header-icon"><i class="fas fa-user-graduate"></i></div>
+            <h3>${courseName}</h3>
+            <p class="course-tag">${currentStage === 'first' ? 'الصف الأول الثانوي' : 'الصف الثاني الثانوي'}</p>
+            <input type="text" class="form-input" id="studentName" placeholder="الاسم الثلاثي">
+            <input type="tel" class="form-input ltr" id="studentPhone" placeholder="رقم الواتساب (010xxxxxxxx)" maxlength="11" inputmode="numeric">
+            <button class="submit-btn" onclick="confirmForm()">تأكيد الاشتراك</button>
+            <p style="font-size:10px;color:var(--text-secondary);margin-top:10px;">للتواصل مع تيم مهندس إسماعيل عماد: <strong>${SUPPORT_PHONE}</strong></p>
+        `;
+        document.getElementById('mainModal').classList.add('show');
+    }
+
+    function confirmForm() {
+        const name = document.getElementById('studentName').value.trim();
+        const phone = document.getElementById('studentPhone').value.trim();
+        if (!name) { showToast('يرجى إدخال الاسم', 'error'); return; }
+        if (!phone || !/^01[0-9]{9}$/.test(phone)) { showToast('يرجى إدخال رقم واتساب صحيح', 'error'); return; }
+
+        timeLeft = 3600;
+        timerStartTime = Date.now();
+        document.getElementById('modalContent').innerHTML = buildReceiptHTML(name, phone);
+        startCountdown();
+        saveRegistration(name, phone);
+    }
+
+    function buildReceiptHTML(name, phone) {
+        const { courseName, price } = currentCourseData;
+        const m = Math.floor(timeLeft / 60);
+        const s = timeLeft % 60;
+        return `
+            <div class="receipt-card">
+                <div class="receipt-top">
+                    <div class="receipt-icon"><i class="fas fa-check-circle"></i></div>
+                    <h3>${courseName}</h3>
+                    <p class="tag">${currentStage === 'first' ? 'الصف الأول الثانوي' : 'الصف الثاني الثانوي'}</p>
+                </div>
+                <div class="receipt-body">
+                    <div class="student-info-row"><span class="rl">الاسم</span><span class="rv">${name}</span></div>
+                    <div class="student-info-row"><span class="rl">الواتساب</span><span class="rv">${phone}</span></div>
+                    <div class="wallet-mini-card">
+                        <div class="wallet-icon"><i class="fas fa-wallet"></i></div>
+                        <div class="wallet-info">
+                            <div class="wallet-label">رقم المحفظة للدفع</div>
+                            <div class="wallet-number">${WALLET_NUMBER}</div>
+                            <div class="wallet-name">أ.م إسماعيل عماد</div>
+                        </div>
+                    </div>
+                    <div class="price-row"><span class="rl">قيمة الاشتراك</span><span class="rv">${price} ج.م</span></div>
+                </div>
+                <div class="receipt-msg">
+                    برجاء تحويل قيمة الاشتراك على رقم المحفظة أعلاه.<br>
+                    سيتم إرسال كود المنصة وكلمة المرور على الواتساب خلال 12 ساعة من تأكيد الدفع.
+                </div>
+                <div class="receipt-timer">
+                    <i class="fas fa-clock"></i> وقت متبقي للدفع:
+                    <span class="countdown" id="countdown">${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}</span>
+                </div>
+                <p class="receipt-help">للتواصل مع تيم مهندس إسماعيل عماد: <strong>${SUPPORT_PHONE}</strong></p>
+            </div>
+        `;
+    }
+
+    function closeModal() {
+        document.getElementById('mainModal').classList.remove('show');
+        if (countdownInterval) { clearInterval(countdownInterval); countdownInterval = null; }
+    }
+
+    function startCountdown() {
+        if (countdownInterval) clearInterval(countdownInterval);
+        const el = document.getElementById('countdown');
+        if (!el) return;
+        function update() {
+            const m = Math.floor(timeLeft / 60);
+            const s = timeLeft % 60;
+            el.textContent = `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+            if (timeLeft <= 300) el.style.color = '#B22222';
+            if (timeLeft <= 0) { clearInterval(countdownInterval); el.textContent = 'انتهى الوقت'; }
+            timeLeft--;
+        }
+        update();
+        countdownInterval = setInterval(update, 1000);
+    }
+
+    async function saveRegistration(name, phone) {
+        if (registrationSaved) return;
+        try {
+            const { courseId, courseName, price } = currentCourseData;
+            await addDoc(collection(db, "SUMMER_registrations"), {
+                courseId, courseName,
+                stage: currentStage === 'first' ? 'الصف الأول الثانوي' : 'الصف الثاني الثانوي',
+                price, studentName: name, studentPhone: phone,
+                status: 'pending', createdAt: serverTimestamp()
+            });
+            registrationSaved = true;
+            savePendingState(name, phone);
+            try {
+                const msg = `🌟 *تسجيل كورس صيفي جديد*%0A%0A📚 *الكورس:* ${courseName}%0A🏫 *المرحلة:* ${currentStage === 'first' ? 'أولى ثانوي' : 'تانية ثانوي'}%0A👤 *الاسم:* ${name}%0A📱 *الواتساب:* ${phone}%0A💰 *المبلغ:* ${price} ج.م%0A📅 *التاريخ:* ${new Date().toLocaleString('ar-EG')}`;
+                await fetch(`${WORKER_URL}/api/telegram/send`, { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({message:decodeURIComponent(msg)}) });
+            } catch(e) { console.warn('Telegram failed:', e); }
+        } catch(error) { console.error('Error:', error); }
+    }
+
+    document.getElementById('mainModal').addEventListener('click', function(e) { if (e.target === this) closeModal(); });
+
+    window.switchStage = switchStage;
+    window.openForm = openForm;
+    window.confirmForm = confirmForm;
+    window.closeModal = closeModal;
+
+    renderCourses();
+</script>
+</body>
+</html>
