@@ -1,0 +1,845 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>تسجيل الدخول - منصة الواجبات</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Tajawal:wght@300;400;500;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --crimson: #B22222;
+            --crimson-light: #C53030;
+            --crimson-dark: #8B1A1A;
+            --crimson-gradient: linear-gradient(135deg, #B22222 0%, #C53030 50%, #8B1A1A 100%);
+            --bg-primary: #FAFAF9;
+            --bg-card: #FFFFFF;
+            --bg-secondary: #F5F4F1;
+            --bg-hover: #F0EDE8;
+            --bg-dark: #1A1A2E;
+            --text-heading: #1C1917;
+            --text-body: #57534E;
+            --text-muted: #8C8882;
+            --border: #E7E5E2;
+            --border-light: rgba(0,0,0,0.04);
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.03);
+            --shadow-md: 0 4px 12px rgba(0,0,0,0.06), 0 2px 4px rgba(0,0,0,0.04);
+            --shadow-lg: 0 8px 24px rgba(0,0,0,0.08), 0 4px 8px rgba(0,0,0,0.04);
+            --shadow-xl: 0 16px 40px rgba(0,0,0,0.10), 0 8px 16px rgba(0,0,0,0.04);
+            --radius-xs: 6px;
+            --radius-sm: 10px;
+            --radius-md: 14px;
+            --radius-lg: 20px;
+            --radius-xl: 28px;
+            --radius-pill: 9999px;
+            --spacing-xs: 4px;
+            --spacing-sm: 8px;
+            --spacing-md: 12px;
+            --spacing-lg: 16px;
+            --spacing-xl: 20px;
+            --spacing-2xl: 24px;
+            --spacing-3xl: 32px;
+            --spacing-4xl: 40px;
+            --spacing-5xl: 48px;
+            --transition-fast: 150ms ease-out;
+            --transition-base: 250ms ease-out;
+            --transition-slow: 350ms ease-out;
+            --font-display: 'Cormorant Garamond', serif;
+            --font-body: 'Tajawal', sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-body);
+            background-color: var(--bg-primary);
+            color: var(--text-body);
+            min-height: 100vh;
+            min-height: 100dvh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow-x: hidden;
+            -webkit-tap-highlight-color: transparent;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            position: relative;
+        }
+
+        /* Animated Background Shapes */
+        .bg-decoration {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .bg-shape {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.07;
+            animation: floatShape 20s ease-in-out infinite;
+        }
+
+        .bg-shape.shape-1 {
+            width: 280px;
+            height: 280px;
+            background: var(--crimson);
+            top: -10%;
+            left: -20%;
+            animation-delay: 0s;
+        }
+
+        .bg-shape.shape-2 {
+            width: 220px;
+            height: 220px;
+            background: var(--crimson-light);
+            bottom: -5%;
+            right: -15%;
+            animation-delay: -7s;
+            animation-duration: 24s;
+        }
+
+        .bg-shape.shape-3 {
+            width: 180px;
+            height: 180px;
+            background: var(--crimson-dark);
+            top: 60%;
+            left: 10%;
+            animation-delay: -14s;
+            animation-duration: 18s;
+        }
+
+        @keyframes floatShape {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            25% { transform: translate(30px, -40px) scale(1.05); }
+            50% { transform: translate(-20px, 30px) scale(0.95); }
+            75% { transform: translate(-40px, -20px) scale(1.03); }
+        }
+
+        /* Main Container */
+        .auth-wrapper {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            max-width: 420px;
+            padding: var(--spacing-xl);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: var(--spacing-3xl);
+        }
+
+        /* Brand Section */
+        .brand-section {
+            text-align: center;
+            animation: fadeInDown 0.6s ease-out;
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-16px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .brand-icon-wrapper {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 72px;
+            height: 72px;
+            border-radius: var(--radius-lg);
+            background: var(--crimson-gradient);
+            box-shadow: 0 8px 28px rgba(178, 34, 34, 0.25), 0 2px 8px rgba(178, 34, 34, 0.15);
+            margin-bottom: var(--spacing-xl);
+            position: relative;
+        }
+
+        .brand-icon-wrapper::after {
+            content: '';
+            position: absolute;
+            inset: -6px;
+            border-radius: inherit;
+            background: rgba(178, 34, 34, 0.08);
+            z-index: -1;
+            animation: pulseGlow 2.5s ease-in-out infinite;
+        }
+
+        @keyframes pulseGlow {
+            0%, 100% { transform: scale(1); opacity: 0.6; }
+            50% { transform: scale(1.12); opacity: 0; }
+        }
+
+        .brand-icon-svg {
+            width: 36px;
+            height: 36px;
+        }
+
+        .brand-name {
+            font-family: var(--font-display);
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--text-heading);
+            letter-spacing: -0.02em;
+            line-height: 1.2;
+            margin-bottom: var(--spacing-xs);
+        }
+
+        .brand-tagline {
+            font-size: 13px;
+            font-weight: 400;
+            color: var(--text-muted);
+            letter-spacing: 0.01em;
+        }
+
+        /* Card */
+        .auth-card {
+            width: 100%;
+            background: var(--bg-card);
+            border-radius: var(--radius-xl);
+            padding: var(--spacing-3xl) var(--spacing-2xl);
+            box-shadow: var(--shadow-xl);
+            border: 1px solid var(--border);
+            animation: fadeInUp 0.6s ease-out 0.1s both;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(16px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .auth-card-header {
+            text-align: center;
+            margin-bottom: var(--spacing-3xl);
+        }
+
+        .auth-card-title {
+            font-family: var(--font-body);
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--text-heading);
+            margin-bottom: var(--spacing-xs);
+        }
+
+        .auth-card-subtitle {
+            font-size: 13px;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+
+        /* Toggle */
+        .toggle-container {
+            display: flex;
+            background: var(--bg-secondary);
+            border-radius: var(--radius-pill);
+            padding: 4px;
+            margin-bottom: var(--spacing-2xl);
+            position: relative;
+        }
+
+        .toggle-option {
+            flex: 1;
+            padding: 10px 16px;
+            text-align: center;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-muted);
+            border: none;
+            background: transparent;
+            border-radius: var(--radius-pill);
+            cursor: pointer;
+            transition: all var(--transition-base);
+            position: relative;
+            z-index: 1;
+            white-space: nowrap;
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
+        }
+
+        .toggle-option.active {
+            background: var(--bg-card);
+            color: var(--crimson);
+            font-weight: 600;
+            box-shadow: var(--shadow-sm);
+        }
+
+        /* Form */
+        .form-group {
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .form-group.hidden {
+            display: none;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-heading);
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .input-container {
+            position: relative;
+        }
+
+        .input-icon-left {
+            position: absolute;
+            top: 50%;
+            right: 14px;
+            transform: translateY(-50%);
+            width: 20px;
+            height: 20px;
+            color: var(--text-muted);
+            pointer-events: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .form-input {
+            width: 100%;
+            height: 48px;
+            padding: 0 42px 0 16px;
+            font-family: var(--font-body);
+            font-size: 15px;
+            font-weight: 400;
+            color: var(--text-heading);
+            background: var(--bg-primary);
+            border: 1.5px solid var(--border);
+            border-radius: var(--radius-md);
+            transition: all var(--transition-base);
+            outline: none;
+            -webkit-appearance: none;
+            appearance: none;
+        }
+
+        .form-input:focus {
+            border-color: var(--crimson);
+            box-shadow: 0 0 0 4px rgba(178, 34, 34, 0.06);
+            background: var(--bg-card);
+        }
+
+        .form-input::placeholder {
+            color: var(--text-muted);
+            opacity: 0.6;
+        }
+
+        .password-toggle-btn {
+            position: absolute;
+            top: 50%;
+            left: 10px;
+            transform: translateY(-50%);
+            width: 36px;
+            height: 36px;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: var(--radius-sm);
+            color: var(--text-muted);
+            transition: all var(--transition-fast);
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .password-toggle-btn:active {
+            background: var(--bg-hover);
+        }
+
+        /* Error Message */
+        .error-message {
+            display: none;
+            align-items: center;
+            gap: var(--spacing-sm);
+            padding: var(--spacing-md) var(--spacing-lg);
+            background: #FEF2F2;
+            border: 1px solid #FECACA;
+            border-radius: var(--radius-sm);
+            margin-bottom: var(--spacing-lg);
+            font-size: 13px;
+            color: #991B1B;
+            animation: shake 0.4s ease-out;
+        }
+
+        .error-message.visible {
+            display: flex;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20% { transform: translateX(-6px); }
+            40% { transform: translateX(6px); }
+            60% { transform: translateX(-4px); }
+            80% { transform: translateX(4px); }
+        }
+
+        .error-icon {
+            width: 18px;
+            height: 18px;
+            flex-shrink: 0;
+        }
+
+        /* Submit Button */
+        .submit-btn {
+            width: 100%;
+            height: 48px;
+            font-family: var(--font-body);
+            font-size: 15px;
+            font-weight: 600;
+            color: #FFFFFF;
+            background: var(--crimson-gradient);
+            border: none;
+            border-radius: var(--radius-pill);
+            cursor: pointer;
+            transition: all var(--transition-base);
+            box-shadow: 0 4px 14px rgba(178, 34, 34, 0.25);
+            -webkit-tap-highlight-color: transparent;
+            position: relative;
+            overflow: hidden;
+            margin-top: var(--spacing-sm);
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 20px rgba(178, 34, 34, 0.30);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 8px rgba(178, 34, 34, 0.20);
+            transition: all 0.05s ease-out;
+        }
+
+        .submit-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+
+        .submit-btn .spinner {
+            display: none;
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-top-color: #FFFFFF;
+            border-radius: 50%;
+            animation: spin 0.6s linear infinite;
+            margin: 0 auto;
+        }
+
+        .submit-btn.loading .btn-text { display: none; }
+        .submit-btn.loading .spinner { display: block; }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Footer */
+        .auth-footer {
+            text-align: center;
+            font-size: 12px;
+            color: var(--text-muted);
+            animation: fadeInUp 0.6s ease-out 0.2s both;
+        }
+
+        .auth-footer span {
+            color: var(--crimson);
+            font-weight: 500;
+        }
+
+        /* Reduced Motion */
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Animated Background -->
+    <div class="bg-decoration">
+        <div class="bg-shape shape-1"></div>
+        <div class="bg-shape shape-2"></div>
+        <div class="bg-shape shape-3"></div>
+    </div>
+
+    <!-- Main Wrapper -->
+    <main class="auth-wrapper">
+        
+        <!-- Brand -->
+        <div class="brand-section">
+            <div class="brand-icon-wrapper">
+                <svg class="brand-icon-svg" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M6 18L12 24L24 8" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M30 12L30 24L18 24" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/>
+                </svg>
+            </div>
+            <h1 class="brand-name">مدرسة الجيل الجديد الخاصة</h1>
+            <p class="brand-tagline">مستر إسماعيل</p>
+        </div>
+
+        <!-- Auth Card -->
+        <div class="auth-card" id="authCard">
+            <div class="auth-card-header">
+                <h2 class="auth-card-title">تسجيل الدخول</h2>
+                <p class="auth-card-subtitle">أدخل بياناتك للوصول إلى واجباتك</p>
+            </div>
+
+            <!-- Toggle: New vs Returning -->
+            <div class="toggle-container" id="userToggle">
+                <button class="toggle-option active" data-type="returning" id="toggleReturning">
+                    مستخدم سابق
+                </button>
+                <button class="toggle-option" data-type="new" id="toggleNew">
+                    أول مرة
+                </button>
+            </div>
+
+            <!-- Error -->
+            <div class="error-message" id="errorBox">
+                <svg class="error-icon" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
+                </svg>
+                <span id="errorText"></span>
+            </div>
+
+            <!-- Form -->
+            <form id="loginForm" autocomplete="off" novalidate>
+                
+                <!-- Full Name (new users only) -->
+                <div class="form-group hidden" id="nameGroup">
+                    <label class="form-label" for="fullName">الاسم الثلاثي</label>
+                    <div class="input-container">
+                        <span class="input-icon-left">
+                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                                <circle cx="10" cy="6" r="4" stroke="currentColor" stroke-width="1.5" opacity="0.5"/>
+                                <path d="M2 18C2 14.6863 5.58172 12 10 12C14.4183 12 18 14.6863 18 18" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" opacity="0.5"/>
+                            </svg>
+                        </span>
+                        <input 
+                            type="text" 
+                            id="fullName" 
+                            class="form-input" 
+                            placeholder="أدخل اسمك الثلاثي" 
+                            autocomplete="off"
+                            maxlength="50"
+                        >
+                    </div>
+                </div>
+
+                <!-- Code -->
+                <div class="form-group">
+                    <label class="form-label" for="studentCode">كود الطالب</label>
+                    <div class="input-container">
+                        <span class="input-icon-left">
+                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                                <rect x="3" y="4" width="14" height="12" rx="2" stroke="currentColor" stroke-width="1.5" opacity="0.5"/>
+                                <line x1="7" y1="9" x2="13" y2="9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" opacity="0.5"/>
+                                <line x1="7" y1="11" x2="13" y2="11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" opacity="0.5"/>
+                            </svg>
+                        </span>
+                        <input 
+                            type="text" 
+                            id="studentCode" 
+                            class="form-input" 
+                            placeholder="مثال: 12345" 
+                            maxlength="5" 
+                            inputmode="numeric" 
+                            pattern="[0-9]*"
+                            autocomplete="off"
+                            required
+                        >
+                    </div>
+                </div>
+
+                <!-- Password -->
+                <div class="form-group">
+                    <label class="form-label" for="password">كلمة المرور</label>
+                    <div class="input-container">
+                        <span class="input-icon-left">
+                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                                <rect x="3" y="8" width="14" height="10" rx="2" stroke="currentColor" stroke-width="1.5" opacity="0.5"/>
+                                <path d="M7 8V5C7 3.34315 8.34315 2 10 2C11.6569 2 13 3.34315 13 5V8" stroke="currentColor" stroke-width="1.5" opacity="0.5"/>
+                            </svg>
+                        </span>
+                        <input 
+                            type="password" 
+                            id="password" 
+                            class="form-input" 
+                            placeholder="••••••" 
+                            maxlength="6" 
+                            inputmode="numeric" 
+                            pattern="[0-9]*"
+                            autocomplete="off"
+                            required
+                        >
+                        <button type="button" class="password-toggle-btn" id="togglePasswordBtn" aria-label="إظهار كلمة المرور">
+                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" id="eyeOffIcon">
+                                <path d="M2 10C2 10 5 4 10 4C15 4 18 10 18 10C18 10 15 16 10 16C5 16 2 10 2 10Z" stroke="currentColor" stroke-width="1.5"/>
+                                <circle cx="10" cy="10" r="2.5" stroke="currentColor" stroke-width="1.5"/>
+                            </svg>
+                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" id="eyeOnIcon" style="display:none;">
+                                <path d="M2 10C2 10 5 4 10 4C15 4 18 10 18 10C18 10 15 16 10 16C5 16 2 10 2 10Z" stroke="currentColor" stroke-width="1.5"/>
+                                <circle cx="10" cy="10" r="2.5" stroke="currentColor" stroke-width="1.5"/>
+                                <line x1="3" y1="3" x2="17" y2="17" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Submit -->
+                <button type="submit" class="submit-btn" id="submitBtn">
+                    <span class="btn-text">دخول</span>
+                    <span class="spinner"></span>
+                </button>
+            </form>
+        </div>
+
+        <!-- Footer -->
+        <p class="auth-footer">منصة <span>الواجبات الإلكترونية</span> © ٢٠٢٦</p>
+    </main>
+
+    <!-- Firebase SDK -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-app.js";
+        import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDFO3F3E4vie6WA8fCA00rmRp_0_2CPq5I",
+            authDomain: "exam-1fd4a.firebaseapp.com",
+            projectId: "exam-1fd4a",
+            storageBucket: "exam-1fd4a.firebasestorage.app",
+            messagingSenderId: "861838351458",
+            appId: "1:861838351458:web:58087fe82ad951b9bac53b",
+            measurementId: "G-Q05JBNZJ3V"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // DOM Elements
+        const toggleReturning = document.getElementById('toggleReturning');
+        const toggleNew = document.getElementById('toggleNew');
+        const nameGroup = document.getElementById('nameGroup');
+        const fullNameInput = document.getElementById('fullName');
+        const studentCodeInput = document.getElementById('studentCode');
+        const passwordInput = document.getElementById('password');
+        const loginForm = document.getElementById('loginForm');
+        const submitBtn = document.getElementById('submitBtn');
+        const errorBox = document.getElementById('errorBox');
+        const errorText = document.getElementById('errorText');
+        const togglePasswordBtn = document.getElementById('togglePasswordBtn');
+        const eyeOffIcon = document.getElementById('eyeOffIcon');
+        const eyeOnIcon = document.getElementById('eyeOnIcon');
+
+        let isNewUser = false;
+
+        // Toggle Logic
+        toggleReturning.addEventListener('click', () => {
+            isNewUser = false;
+            toggleReturning.classList.add('active');
+            toggleNew.classList.remove('active');
+            nameGroup.classList.add('hidden');
+            fullNameInput.removeAttribute('required');
+            fullNameInput.value = '';
+            hideError();
+        });
+
+        toggleNew.addEventListener('click', () => {
+            isNewUser = true;
+            toggleNew.classList.add('active');
+            toggleReturning.classList.remove('active');
+            nameGroup.classList.remove('hidden');
+            fullNameInput.setAttribute('required', '');
+            hideError();
+        });
+
+        // Password Toggle
+        togglePasswordBtn.addEventListener('click', () => {
+            const isPassword = passwordInput.type === 'password';
+            passwordInput.type = isPassword ? 'text' : 'password';
+            eyeOffIcon.style.display = isPassword ? 'none' : 'block';
+            eyeOnIcon.style.display = isPassword ? 'block' : 'none';
+        });
+
+        // Error Helpers
+        function showError(message) {
+            errorText.textContent = message;
+            errorBox.classList.add('visible');
+            errorBox.style.animation = 'none';
+            errorBox.offsetHeight;
+            errorBox.style.animation = 'shake 0.4s ease-out';
+        }
+
+        function hideError() {
+            errorBox.classList.remove('visible');
+        }
+
+        // Loading State
+        function setLoading(loading) {
+            if (loading) {
+                submitBtn.classList.add('loading');
+                submitBtn.disabled = true;
+            } else {
+                submitBtn.classList.remove('loading');
+                submitBtn.disabled = false;
+            }
+        }
+
+        // Validate Code (must be exactly 5 digits)
+        function isValidCode(code) {
+            return /^\d{5}$/.test(code);
+        }
+
+        // Validate Password (must be exactly 6 digits)
+        function isValidPassword(password) {
+            return /^\d{6}$/.test(password);
+        }
+
+        // Validate Full Name (at least 6 characters, Arabic letters and spaces)
+        function isValidFullName(name) {
+            const trimmed = name.trim();
+            return trimmed.length >= 6 && /^[\u0600-\u06FF\s]+$/.test(trimmed);
+        }
+
+        // Form Submit
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            hideError();
+
+            const code = studentCodeInput.value.trim();
+            const password = passwordInput.value.trim();
+            const fullName = fullNameInput.value.trim();
+
+            // Validation
+            if (!code) {
+                showError('الرجاء إدخال كود الطالب');
+                studentCodeInput.focus();
+                return;
+            }
+            if (!isValidCode(code)) {
+                showError('كود الطالب يجب أن يكون 5 أرقام');
+                studentCodeInput.focus();
+                return;
+            }
+            if (!password) {
+                showError('الرجاء إدخال كلمة المرور');
+                passwordInput.focus();
+                return;
+            }
+            if (!isValidPassword(password)) {
+                showError('كلمة المرور يجب أن تكون 6 أرقام');
+                passwordInput.focus();
+                return;
+            }
+            if (isNewUser) {
+                if (!fullName) {
+                    showError('الرجاء إدخال الاسم الثلاثي');
+                    fullNameInput.focus();
+                    return;
+                }
+                if (!isValidFullName(fullName)) {
+                    showError('الرجاء إدخال اسم ثلاثي صحيح بالعربية (6 أحرف على الأقل)');
+                    fullNameInput.focus();
+                    return;
+                }
+            }
+
+            setLoading(true);
+
+            try {
+                const studentDocRef = doc(db, 'students', code);
+                const studentDoc = await getDoc(studentDocRef);
+
+                if (!studentDoc.exists()) {
+                    showError('الكود غير صحيح. تأكد من بياناتك أو تواصل مع مستر إسماعيل');
+                    setLoading(false);
+                    return;
+                }
+
+                const studentData = studentDoc.data();
+
+                // Verify password
+                if (studentData.password !== password) {
+                    showError('كلمة المرور غير صحيحة');
+                    setLoading(false);
+                    return;
+                }
+
+                // Case: New User - needs to set name
+                if (isNewUser) {
+                    if (studentData.fullName && studentData.fullName.trim() !== '') {
+                        showError('هذا الحساب مسجل بالفعل. اختر "مستخدم سابق" للدخول');
+                        setLoading(false);
+                        return;
+                    }
+                    // Set the full name
+                    await setDoc(studentDocRef, { 
+                        fullName: fullName,
+                        code: code,
+                        password: password
+                    }, { merge: true });
+                }
+
+                // Case: Returning User - check if name exists
+                if (!isNewUser && (!studentData.fullName || studentData.fullName.trim() === '')) {
+                    showError('لم تكمل تسجيلك بعد. اختر "أول مرة" وأدخل اسمك الثلاثي');
+                    setLoading(false);
+                    return;
+                }
+
+                // Success - Redirect to dashboard
+                sessionStorage.setItem('studentCode', code);
+                window.location.href = 'dashboard.html';
+
+            } catch (error) {
+                console.error('Login error:', error);
+                showError('حدث خطأ في الاتصال. حاول مرة أخرى');
+                setLoading(false);
+            }
+        });
+
+        // Auto-focus
+        studentCodeInput.focus();
+
+        // Prevent zoom on double tap
+        document.addEventListener('dblclick', function(e) {
+            if (e.target.tagName === 'INPUT') {
+                e.preventDefault();
+            }
+        }, { passive: false });
+    </script>
+</body>
+</html>
