@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
+  <title>الامتحان البرمجي | ENG. Ismail Emad</title>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-app.js";
+    import { getFirestore, collection, addDoc, serverTimestamp, query, where, getDocs } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyDFO3F3E4vie6WA8fCA00rmRp_0_2CPq5I",
+      authDomain: "exam-1fd4a.firebaseapp.com",
+      projectId: "exam-1fd4a",
+      storageBucket: "exam-1fd4a.firebasestorage.app",
+      messagingSenderId: "861838351458",
+      appId: "1:861838351458:web:58087fe82ad951b9bac53b",
+      measurementId: "G-Q05JBNZJ3V"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    window.firebaseDB = db;
+    window.firebaseCol = collection;
+    window.firebaseAdd = addDoc;
+    window.firebaseTime = serverTimestamp;
+    window.firebaseQuery = query;
+    window.firebaseWhere = where;
+    window.firebaseGet = getDocs;
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&family=Changa:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Cairo', 'Changa', sans-serif;
+      background: #f5f5f0;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 12px;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: 
+        linear-gradient(#e0e0d5 1px, transparent 1px),
+        linear-gradient(90deg, #e0e0d5 1px, transparent 1px);
+      background-size: 40px 40px;
+      opacity: 0.4;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 650px;
+      background: #ffffff;
+      border-radius: 16px;
+      box-shadow: 
+        0 4px 24px rgba(0,0,0,0.06),
+        0 1px 3px rgba(0,0,0,0.04);
+      padding: 24px 14px;
+      position: relative;
+      z-index: 2;
+      border: 1px solid #e8e8e0;
+    }
+
+    .exam-header {
+      text-align: center;
+      margin-bottom: 20px;
+      position: relative;
+    }
+
+    .engineer-name {
+      font-family: 'Changa', 'Cairo', sans-serif;
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: #2c2c2c;
+      letter-spacing: 1px;
+      margin-bottom: 2px;
+      line-height: 1.2;
+    }
+
+    .subtitle {
+      color: #888;
+      font-weight: 400;
+      font-size: 0.75rem;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+    }
+
+    .divider {
+      width: 50px;
+      height: 2px;
+      background: #d4af37;
+      margin: 10px auto;
+    }
+
+    .login-card {
+      background: #fafaf7;
+      border-radius: 12px;
+      padding: 20px 16px;
+      border: 1px solid #e8e8e0;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      align-items: center;
+    }
+
+    .login-card h3 {
+      color: #555;
+      font-weight: 600;
+      font-size: 1rem;
+      letter-spacing: 0.5px;
+    }
+
+    .input-group {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .input-group label {
+      font-weight: 600;
+      color: #666;
+      font-size: 0.78rem;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+
+    .input-group input {
+      padding: 12px 14px;
+      border-radius: 10px;
+      border: 1.5px solid #e0e0d5;
+      background: #fff;
+      color: #333;
+      font-family: 'Cairo', sans-serif;
+      font-size: 0.9rem;
+      outline: none;
+      transition: all 0.25s ease;
+    }
+
+    .input-group input::placeholder {
+      color: #bbb;
+      font-size: 0.8rem;
+    }
+
+    .input-group input:focus {
+      border-color: #d4af37;
+      box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.08);
+    }
+
+    .btn {
+      border: none;
+      color: #fff;
+      font-family: 'Cairo', sans-serif;
+      font-weight: 700;
+      font-size: 0.95rem;
+      padding: 13px 24px;
+      border-radius: 10px;
+      width: 100%;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      background: #2c2c2c;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.1);
+    }
+
+    .btn:hover:not(:disabled) {
+      background: #1a1a1a;
+      transform: translateY(-1px);
+      box-shadow: 0 8px 22px rgba(0,0,0,0.15);
+    }
+
+    .btn:disabled {
+      background: #ccc;
+      color: #888;
+      box-shadow: none;
+      cursor: not-allowed;
+    }
+
+    .questions-container {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+
+    .question-card {
+      background: #fafaf7;
+      border-radius: 10px;
+      padding: 14px 14px;
+      border: 1px solid #e8e8e0;
+      transition: all 0.2s ease;
+    }
+
+    .question-card:hover {
+      border-color: #d4af37;
+    }
+
+    .q-number {
+      color: #d4af37;
+      font-weight: 700;
+      font-size: 0.95rem;
+      margin-bottom: 4px;
+    }
+
+    .q-text {
+      font-weight: 500;
+      font-size: 0.85rem;
+      color: #444;
+      margin-bottom: 10px;
+      line-height: 1.6;
+    }
+
+    .options {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .option-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: #fff;
+      padding: 10px 14px;
+      border-radius: 8px;
+      transition: all 0.2s ease;
+      cursor: pointer;
+      border: 1.5px solid #e8e8e0;
+    }
+
+    .option-item:hover {
+      background: #f9f9f5;
+      border-color: #d4af37;
+    }
+
+    .option-item input[type="radio"] {
+      appearance: none;
+      width: 18px;
+      height: 18px;
+      border: 2px solid #ccc;
+      border-radius: 50%;
+      margin: 0;
+      display: grid;
+      place-content: center;
+      cursor: pointer;
+      transition: 0.15s;
+      flex-shrink: 0;
+    }
+
+    .option-item input[type="radio"]::before {
+      content: "";
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      transform: scale(0);
+      transition: 0.15s ease;
+      background: #2c2c2c;
+    }
+
+    .option-item input[type="radio"]:checked {
+      border-color: #2c2c2c;
+    }
+
+    .option-item input[type="radio"]:checked::before {
+      transform: scale(1);
+    }
+
+    .option-item label {
+      font-size: 0.82rem;
+      color: #555;
+      cursor: pointer;
+      font-weight: 500;
+      line-height: 1.4;
+    }
+
+    .option-item:has(input:checked) {
+      background: #f5f5f0;
+      border-color: #2c2c2c;
+    }
+
+    .option-item:has(input:checked) label {
+      color: #1a1a1a;
+      font-weight: 600;
+    }
+
+    .result-panel {
+      margin-top: 18px;
+      background: #fafaf7;
+      border-radius: 12px;
+      padding: 20px;
+      text-align: center;
+      border: 2px solid #d4af37;
+    }
+
+    .score {
+      font-size: 2rem;
+      font-weight: 800;
+      color: #2c2c2c;
+      font-family: 'Changa', sans-serif;
+    }
+
+    .score-text {
+      color: #777;
+      font-weight: 400;
+      margin-top: 4px;
+      font-size: 0.85rem;
+    }
+
+    .lock-message {
+      color: #999;
+      font-weight: 500;
+      margin-top: 8px;
+      font-size: 0.78rem;
+    }
+
+    @media (max-width: 400px) {
+      .container {
+        padding: 16px 10px;
+        border-radius: 12px;
+      }
+      .engineer-name {
+        font-size: 1.3rem;
+      }
+      .q-text {
+        font-size: 0.78rem;
+      }
+      .option-item label {
+        font-size: 0.75rem;
+      }
+      .btn {
+        font-size: 0.85rem;
+        padding: 11px 18px;
+      }
+      .input-group input {
+        padding: 10px 12px;
+        font-size: 0.82rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container" id="mainContainer">
+    <div class="exam-header">
+      <div class="engineer-name">ENG. Ismail Emad</div>
+      <div class="subtitle">Programming Logic Exam</div>
+      <div class="divider"></div>
+    </div>
+
+    <div id="loginPage">
+      <div class="login-card">
+        <h3>🔐 بيانات الدخول</h3>
+        <div class="input-group">
+          <label>الاسم الكامل</label>
+          <input type="text" id="studentName" placeholder="أدخل اسمك الكامل" autocomplete="off">
+        </div>
+        <div class="input-group">
+          <label>رقم الهاتف</label>
+          <input type="tel" id="studentPhone" placeholder=": 
+" autocomplete="off">
+        </div>
+        <button class="btn" id="enterExamBtn">دخول الامتحان</button>
+      </div>
+    </div>
+
+    <div id="examPage" style="display: none;">
+      <div class="questions-container" id="questionsWrapper"></div>
+      <button class="btn" id="submitExamBtn">إرسال الإجابات</button>
+      <div id="resultArea" style="display: none;" class="result-panel"></div>
+    </div>
+  </div>
+
+  <script type="module">
+    window.addEventListener('load', async () => {
+      const db = window.firebaseDB;
+      const colRef = window.firebaseCol;
+      const addDocFunc = window.firebaseAdd;
+      const serverTime = window.firebaseTime;
+      const queryFunc = window.firebaseQuery;
+      const whereFunc = window.firebaseWhere;
+      const getDocsFunc = window.firebaseGet;
+
+      const COLLECTION_NAME = "eng_ismail_emad_exam_v2";
+
+      const correctAnswers = {
+        1: 'ب', 2: 'أ', 3: 'ب', 4: 'ب', 5: 'ب',
+        6: 'أ', 7: 'ب', 8: 'أ', 9: 'ب', 10: 'ب',
+        11: 'ب', 12: 'ب', 13: 'ب', 14: 'أ', 15: 'ب',
+        16: 'ب', 17: 'ب', 18: 'ب', 19: 'ب', 20: 'أ'
+      };
+
+      const questionsData = [
+        { id:1, text:"إذا أردتِ تعليم روبوت 'صنع كوب شاي'، وقمتِ بترتيب الخطوات كالتالي: (شرب الشاي -> صب الماء -> وضع الكيس). هل هذه الخوارزمية صحيحة؟", options:["نعم، المهم أن كل الخطوات موجودة.","لا، لأن الترتيب المنطقي للخطوات مفقود.","نعم، فالكمبيوتر سيصحح الترتيب تلقائياً."], letters:['أ','ب','ج'] },
+        { id:2, text:"لماذا نكتب التعليمات للكمبيوتر بترتيب محدد؟", options:["لأن الكمبيوتر ينفذ الخطوات كما هي بالضبط بالترتيب.","لكي يختار الكمبيوتر الخطوة الأسهل أولاً.","الترتيب لا يهم، الكمبيوتر يفهم الهدف النهائي."], letters:['أ','ب','ج'] },
+        { id:3, text:"في نشاط 'أنت الكمبيوتر'، إذا أعطيتِ زميلكِ تعليمات ناقصة، ماذا سيحدث؟", options:["سيكمل الزميل الخطوات الناقصة من تلقاء نفسه.","سيتوقف الزميل أو ينفذها بشكل خاطئ لأن التعليمات غير مكتملة.","سيقوم الكمبيوتر برفض التعليمات تماماً."], letters:['أ','ب','ج'] },
+        { id:4, text:"أي مما يلي يصف عمل الكمبيوتر بشكل صحيح؟", options:["الكمبيوتر يفكر ويبتكر حلولاً جديدة.","الكمبيوتر ينفذ ما يُطلب منه حرفياً دون أي تفكير ذاتي.","الكمبيوتر يقوم بتصحيح أخطاء الإنسان دائماً."], letters:['أ','ب','ج'] },
+        { id:5, text:"إذا كان لدينا شرط: 'إذا كانت الغرفة مظلمة، افتح المصباح'. ماذا يحدث لو كانت الغرفة مضيئة؟", options:["سيفتح الكمبيوتر المصباح أيضاً.","لن ينفذ الكمبيوتر أمر فتح المصباح.","سيقوم الكمبيوتر بإغلاق الغرفة."], letters:['أ','ب','ج'] },
+        { id:6, text:"الكمبيوتر يستخدم 'الشرط' لكي:", options:["يتخذ قراراً مختلفاً بناءً على الحالة (نعم أو لا).","يكرر الخطوات مرات كثيرة.","يحفظ البيانات في صناديق."], letters:['أ','ب','ج'] },
+        { id:7, text:"إذا كان 'فهمان' أمام باب، والشرط يقول: 'إذا كان الباب مغلقاً، اطرق الباب'. ماذا يفعل فهمان إذا كان الباب مفتوحاً؟", options:["يطرق الباب بكل الأحوال.","لا يفعل شيئاً (يستمر في طريقه).","يغلق الباب أولاً ثم يطرقه."], letters:['أ','ب','ج'] },
+        { id:8, text:"ما الذي نحتاجه دائماً لكي يتخذ الكمبيوتر قراراً صحيحاً؟", options:["مدخلات حقيقية أو حالة معينة (معطيات) ليقارن بها.","أن يقوم الكمبيوتر بالتفكير في النتيجة.","أن نغير التعليمات في كل مرة."], letters:['أ','ب','ج'] },
+        { id:9, text:"لماذا نستخدم التكرار في البرمجة؟", options:["لنجعل الكود أطول وأكثر تعقيداً.","لننفذ نفس المهمة عدة مرات بأقل عدد من التعليمات.","لنجعل الكمبيوتر أسرع في التفكير."], letters:['أ','ب','ج'] },
+        { id:10, text:"ما هو الهدف من 'شرط التوقف' داخل الحلقة التكرارية؟", options:["لكي يستمر الكمبيوتر في التكرار للأبد.","لكي يعرف الكمبيوتر متى يتوقف عن التكرار ولا يقع في حلقة لا نهائية.","لكي يسرع الكمبيوتر عملية التكرار."], letters:['أ','ب','ج'] },
+        { id:11, text:"ماذا يحدث لو نسينا وضع 'شرط توقف' في حلقة تكرارية؟", options:["الكمبيوتر يتوقف عن العمل تلقائياً.","البرنامج يتجمد (يعلق) لأن الكمبيوتر لا يعرف متى ينتهي.","الكمبيوتر ينفذ الحلقة مرة واحدة فقط."], letters:['أ','ب','ج'] },
+        { id:12, text:"أي جملة تعبر عن 'التكرار' بشكل صحيح؟", options:["'اذهب للامام، ثم قف'.","'طالما لم تصل للهدف، استمر في المشي'.","'اذهب لليمين فقط'."], letters:['أ','ب','ج'] },
+        { id:13, text:"إذا كانت الخوارزمية تحتوي على خطأ في الترتيب، فماذا تسمى النتيجة؟", options:["نجاح مؤكد.","نتيجة غير صحيحة أو فشل المهمة.","خطأ لا يهم الكمبيوتر."], letters:['أ','ب','ج'] },
+        { id:14, text:"'المتغير' هو بمثابة صندوق، لماذا نستخدمه؟", options:["لنخزن فيه معلومة نريد استخدامها أو تغييرها لاحقاً.","لكي نجعل الكمبيوتر يبدو أذكى.","لنضع فيه التعليمات فقط."], letters:['أ','ب','ج'] },
+        { id:15, text:"إذا قلتِ للكمبيوتر: 'طالما كان الصندوق فارغاً، ضع فيه كرة'. ماذا يحدث بعد وضع الكرة؟", options:["يضع كرة ثانية فوراً.","يتوقف الكمبيوتر (لأن الصندوق لم يعد فارغاً).","يفرغ الصندوق مرة أخرى."], letters:['أ','ب','ج'] },
+        { id:16, text:"ما هو تعريف 'الحلقة اللانهائية'؟", options:["حلقة لها نهاية واضحة.","حلقة لا تجد شرطاً يجعلها تتوقف.","حلقة نستخدمها لمرة واحدة."], letters:['أ','ب','ج'] },
+        { id:17, text:"إذا طلبتِ من صديقكِ أن يرسم 10 دوائر، هل هذا يعتبر 'تكراراً'؟", options:["لا، لأنه لم يستخدم الكمبيوتر.","نعم، لأنها مهمة واحدة تتكرر 10 مرات.","لا، لأنه كان يجب أن يرسم مربعاً واحداً فقط."], letters:['أ','ب','ج'] },
+        { id:18, text:"البرمجة تعتمد بشكل أساسي على:", options:["ذكاء الكمبيوتر.","دقة ووضوح التعليمات البشرية.","سرعة كتابة الكلمات."], letters:['أ','ب','ج'] },
+        { id:19, text:"إذا أردنا للكمبيوتر أن يختار بين طريقين، ماذا نستخدم؟", options:["التكرار.","الشرط (IF).","المتغيرات فقط."], letters:['أ','ب','ج'] },
+        { id:20, text:"ما هي 'القاعدة الذهبية' التي تعلمناها في المنهج؟", options:["الكمبيوتر لا يعرف الترتيب الصحيح من تلقاء نفسه، بل ينفذ ما نكتبه له.","يمكننا ترك خطوات ناقصة والكمبيوتر سيفهمها.","التكرار يسبب الأخطاء دائماً."], letters:['أ','ب','ج'] }
+      ];
+
+      const loginPage = document.getElementById('loginPage');
+      const examPage = document.getElementById('examPage');
+      const studentNameInput = document.getElementById('studentName');
+      const studentPhoneInput = document.getElementById('studentPhone');
+      const enterExamBtn = document.getElementById('enterExamBtn');
+      const questionsWrapper = document.getElementById('questionsWrapper');
+      const submitBtn = document.getElementById('submitExamBtn');
+      const resultArea = document.getElementById('resultArea');
+
+      let currentStudentName = '';
+      let currentStudentPhone = '';
+
+      function renderQuestions() {
+        let html = '';
+        questionsData.forEach(q => {
+          html += `<div class="question-card">
+            <div class="q-number">${q.id}.</div>
+            <div class="q-text">${q.text}</div>
+            <div class="options">`;
+          q.options.forEach((opt, idx) => {
+            const letter = q.letters[idx];
+            html += `
+              <div class="option-item">
+                <input type="radio" name="q${q.id}" id="q${q.id}_${letter}" value="${letter}">
+                <label for="q${q.id}_${letter}">${letter}) ${opt}</label>
+              </div>`;
+          });
+          html += `</div></div>`;
+        });
+        questionsWrapper.innerHTML = html;
+      }
+
+      async function hasAlreadySubmitted(phone) {
+        try {
+          const q = queryFunc(colRef(db, COLLECTION_NAME), whereFunc("phone", "==", phone));
+          const snapshot = await getDocsFunc(q);
+          return !snapshot.empty;
+        } catch (e) {
+          console.warn("Firebase check error:", e);
+          return false;
+        }
+      }
+
+      async function saveToFirebase(name, phone, score, answers) {
+        try {
+          await addDocFunc(colRef(db, COLLECTION_NAME), {
+            studentName: name,
+            phone: phone,
+            score: score,
+            total: 20,
+            answers: answers,
+            submittedAt: serverTime()
+          });
+          return true;
+        } catch (error) {
+          console.error("Firebase save error:", error);
+          return false;
+        }
+      }
+
+      function calculateScore() {
+        let score = 0;
+        const userAnswers = {};
+        for (let i = 1; i <= 20; i++) {
+          const selected = document.querySelector(`input[name="q${i}"]:checked`);
+          if (selected) {
+            userAnswers[i] = selected.value;
+            if (selected.value === correctAnswers[i]) score++;
+          } else {
+            userAnswers[i] = null;
+          }
+        }
+        return { score, userAnswers };
+      }
+
+      function allQuestionsAnswered() {
+        for (let i = 1; i <= 20; i++) {
+          if (!document.querySelector(`input[name="q${i}"]:checked`)) return false;
+        }
+        return true;
+      }
+
+      enterExamBtn.addEventListener('click', async () => {
+        const name = studentNameInput.value.trim();
+        const phone = studentPhoneInput.value.trim();
+        if (!name || !phone) {
+          alert('يرجى إدخال الاسم ورقم الهاتف.');
+          return;
+        }
+        if (!/^[0-9]{10,12}$/.test(phone)) {
+          alert('يرجى إدخال رقم هاتف صحيح.');
+          return;
+        }
+
+        enterExamBtn.disabled = true;
+        enterExamBtn.textContent = 'جارٍ التحقق...';
+
+        const alreadyDone = await hasAlreadySubmitted(phone);
+        if (alreadyDone) {
+          alert('تم استلام إجاباتك مسبقاً. لا يمكنك دخول الامتحان مرة أخرى.');
+          enterExamBtn.disabled = false;
+          enterExamBtn.textContent = 'دخول الامتحان';
+          return;
+        }
+
+        currentStudentName = name;
+        currentStudentPhone = phone;
+        loginPage.style.display = 'none';
+        examPage.style.display = 'block';
+        renderQuestions();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+
+      submitBtn.addEventListener('click', async () => {
+        if (!allQuestionsAnswered()) {
+          alert('يرجى الإجابة على جميع الأسئلة قبل الإرسال.');
+          return;
+        }
+
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'جاري التقييم...';
+
+        const { score, userAnswers } = calculateScore();
+        const saved = await saveToFirebase(currentStudentName, currentStudentPhone, score, userAnswers);
+
+        resultArea.style.display = 'block';
+        resultArea.innerHTML = `
+          <div class="score">${score} / 20</div>
+          <div class="score-text">${score >= 15 ? 'أداء ممتاز!' : score >=10 ? 'أداء جيد' : 'يحتاج إلى مراجعة'}</div>
+          <div class="lock-message">${saved ? '✓ تم تسجيل النتيجة بنجاح' : '⚠ تم التصحيح ولكن تعذر الحفظ السحابي'}</div>
+        `;
+
+        examPage.style.opacity = '0.5';
+        examPage.style.pointerEvents = 'none';
+        submitBtn.style.display = 'none';
+      });
+    });
+  </script>
+</body>
+</html>
