@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
+  <title>لوحة التحكم | مدرسة المدينة المنورة الخاصة</title>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-app.js";
+    import { 
+      getFirestore, collection, query, orderBy, 
+      deleteDoc, doc, getDoc, setDoc, getDocs 
+    } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyBysr4ZEHTY_ojej_onmso3d09sz6uU65A",
+      authDomain: "infinity-ai-bd879.firebaseapp.com",
+      projectId: "infinity-ai-bd879",
+      storageBucket: "infinity-ai-bd879.firebasestorage.app",
+      messagingSenderId: "391390244727",
+      appId: "1:391390244727:web:7cc77f13f3ed0e4221fb72",
+      measurementId: "G-XGW87N67WZ"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    
+    window.db = db;
+    window.collection = collection;
+    window.query = query;
+    window.orderBy = orderBy;
+    window.deleteDoc = deleteDoc;
+    window.doc = doc;
+    window.getDoc = getDoc;
+    window.setDoc = setDoc;
+    window.getDocs = getDocs;
+    
+    console.log("✅ Dashboard Ready - Al Madinah Al Munawwarah Private Schools");
+  </script>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary-green: #1B5E20;
+      --green-light: #4CAF50;
+      --green-dark: #0D3B0F;
+      --white: #FFFFFF;
+      --cream: #F5F3EE;
+      --gold: #D4AF37;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: linear-gradient(180deg, #f0f8f0 0%, var(--cream) 30%, #f8f6f0 100%);
+      font-family: 'Cairo', 'Tajawal', sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      min-height: 100vh;
+      padding: 10px;
+      direction: rtl;
+      color: var(--primary-green);
+    }
+
+    .dashboard {
+      width: 100%;
+      max-width: 650px;
+      background: var(--white);
+      border-radius: 20px;
+      box-shadow: 0 12px 35px rgba(27, 94, 32, 0.12);
+      padding: 20px 14px 24px;
+      border: 2px solid #c8e6c9;
+    }
+
+    .dash-header {
+      text-align: center;
+      margin-bottom: 16px;
+      padding-bottom: 12px;
+      border-bottom: 2px solid #c8e6c9;
+    }
+
+    .dash-header h1 { 
+      font-size: 20px; 
+      font-weight: 800; 
+      color: var(--primary-green); 
+    }
+    
+    .dash-header .subtitle { 
+      font-size: 11px; 
+      color: #6b7280; 
+      font-weight: 600; 
+    }
+
+    .school-badge {
+      display: inline-block;
+      background: var(--primary-green);
+      color: var(--white);
+      padding: 4px 14px;
+      border-radius: 14px;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      margin-bottom: 8px;
+    }
+
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+
+    .stat-box {
+      background: linear-gradient(135deg, #f0f8f0, #c8e6c9);
+      border-radius: 12px;
+      padding: 12px 4px;
+      text-align: center;
+      border: 1px solid #a5d6a7;
+    }
+
+    .stat-value { 
+      font-size: 24px; 
+      font-weight: 900; 
+      color: var(--primary-green); 
+    }
+    
+    .stat-value.green { color: #1E7045; }
+    .stat-value.gold { color: #b8860b; }
+    
+    .stat-label { 
+      font-size: 9px; 
+      color: #6b7280; 
+      font-weight: 700; 
+      margin-top: 2px;
+    }
+
+    .tabs {
+      display: flex; 
+      gap: 4px; 
+      margin-bottom: 12px;
+      background: #f5faf5; 
+      padding: 4px; 
+      border-radius: 12px;
+    }
+
+    .tab-btn {
+      flex: 1; 
+      padding: 9px 8px; 
+      border: none; 
+      background: transparent;
+      border-radius: 10px; 
+      font-size: 10px; 
+      font-weight: 700;
+      color: #6b7280; 
+      cursor: pointer; 
+      font-family: inherit;
+    }
+
+    .tab-btn.active { 
+      background: var(--white); 
+      color: var(--primary-green); 
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05); 
+      border: 1px solid #a5d6a7;
+    }
+
+    .refresh-row {
+      display: flex; 
+      justify-content: space-between; 
+      align-items: center;
+      margin-bottom: 10px; 
+      font-size: 10px; 
+      color: #6b7280;
+    }
+
+    .refresh-btn {
+      padding: 8px 14px; 
+      background: var(--primary-green); 
+      color: white;
+      border: none; 
+      border-radius: 10px; 
+      font-weight: 700;
+      font-size: 10px; 
+      cursor: pointer; 
+      font-family: inherit;
+      transition: all 0.2s;
+    }
+
+    .refresh-btn:hover { background: #2E7D32; }
+    .refresh-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+
+    .list-container {
+      display: flex; 
+      flex-direction: column; 
+      gap: 8px;
+      max-height: 50vh; 
+      overflow-y: auto;
+      padding-left: 2px;
+    }
+
+    .student-card {
+      background: var(--white); 
+      border-radius: 12px; 
+      padding: 12px 14px;
+      border: 1px solid #c8e6c9; 
+      border-right: 4px solid var(--primary-green);
+      animation: fadeIn 0.2s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .card-header {
+      display: flex; 
+      justify-content: space-between;
+      align-items: flex-start; 
+      margin-bottom: 6px;
+    }
+
+    .student-name { 
+      font-weight: 700; 
+      font-size: 14px; 
+      color: var(--primary-green); 
+    }
+    
+    .card-time { 
+      font-size: 9px; 
+      color: #9ca3af; 
+      font-weight: 500;
+      white-space: nowrap;
+    }
+
+    .card-details { 
+      display: flex; 
+      flex-direction: column; 
+      gap: 3px; 
+    }
+    
+    .detail-row { 
+      display: flex; 
+      align-items: center; 
+      gap: 5px; 
+      font-size: 11px; 
+      color: #4a4a4a; 
+    }
+    
+    .detail-label { 
+      font-weight: 600; 
+      color: #6b7280; 
+      font-size: 9px; 
+      min-width: 35px; 
+    }
+    
+    .detail-value { 
+      font-weight: 600; 
+      color: var(--primary-green); 
+    }
+
+    .grade-badge {
+      display: inline-block;
+      background: #e8f5e9;
+      color: var(--primary-green);
+      padding: 2px 10px;
+      border-radius: 8px;
+      font-size: 10px;
+      font-weight: 700;
+      margin-top: 2px;
+    }
+
+    .grade-badge.first-secondary {
+      background: #fef3c7;
+      color: #92400e;
+    }
+
+    .card-actions { 
+      display: flex; 
+      gap: 5px; 
+      margin-top: 8px; 
+      flex-wrap: wrap;
+    }
+    
+    .btn-action {
+      padding: 6px 11px; 
+      border-radius: 8px; 
+      font-size: 10px;
+      font-weight: 700; 
+      cursor: pointer; 
+      font-family: inherit; 
+      border: none;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      transition: all 0.15s;
+    }
+
+    .btn-wa { background: #e8f5e9; color: #2e7d32; }
+    .btn-wa:hover { background: #c8e6c9; }
+    .btn-copy { background: #e3f2fd; color: #1565c0; }
+    .btn-copy:hover { background: #bbdefb; }
+    .btn-del { background: #fce4ec; color: #c62828; }
+    .btn-del:hover { background: #f8bbd0; }
+
+    .empty-state { 
+      text-align: center; 
+      padding: 40px 16px; 
+      color: #9ca3af; 
+    }
+    
+    .empty-state .icon { font-size: 45px; margin-bottom: 10px; }
+    .empty-state p { font-size: 14px; font-weight: 600; }
+
+    .modal-overlay {
+      display: none; 
+      position: fixed; 
+      top: 0; left: 0;
+      width: 100%; height: 100%; 
+      background: rgba(27, 94, 32, 0.6);
+      z-index: 1000; 
+      justify-content: center; 
+      align-items: center;
+      padding: 16px;
+      backdrop-filter: blur(4px);
+    }
+
+    .modal-overlay.active { display: flex; }
+
+    .modal-box {
+      background: white; 
+      border-radius: 16px; 
+      padding: 24px 18px;
+      max-width: 360px; 
+      width: 90%; 
+      text-align: center;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+      animation: slideUp 0.3s ease;
+    }
+
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .modal-icon { font-size: 40px; margin-bottom: 8px; }
+    .modal-title { font-size: 18px; font-weight: 800; color: var(--primary-green); margin-bottom: 6px; }
+    .modal-text { font-size: 12px; color: #6b7280; margin-bottom: 12px; }
+    .modal-name { font-weight: 800; color: #1a1a2e; font-size: 14px; margin-bottom: 14px; }
+
+    .modal-actions { display: flex; gap: 8px; justify-content: center; }
+    .modal-btn {
+      padding: 10px 20px; 
+      border-radius: 10px; 
+      font-weight: 700;
+      border: none; 
+      cursor: pointer; 
+      font-family: inherit;
+      font-size: 13px;
+    }
+
+    .modal-btn-cancel { background: #f3f4f6; color: #6b7280; }
+    .modal-btn-cancel:hover { background: #e5e7eb; }
+    .modal-btn-danger { background: #dc2626; color: white; }
+    .modal-btn-danger:hover { background: #b91c1c; }
+    .modal-btn-danger:disabled { opacity: 0.6; cursor: not-allowed; }
+
+    .list-container::-webkit-scrollbar { width: 4px; }
+    .list-container::-webkit-scrollbar-track { background: #f5faf5; border-radius: 8px; }
+    .list-container::-webkit-scrollbar-thumb { background: #a5d6a7; border-radius: 8px; }
+
+    @media (max-width: 500px) {
+      .stats-row { grid-template-columns: repeat(2, 1fr); gap: 6px; }
+      .tab-btn { font-size: 9px; padding: 7px 5px; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="modal-overlay" id="deleteModal">
+    <div class="modal-box">
+      <div class="modal-icon">⚠️</div>
+      <div class="modal-title">تأكيد الحذف</div>
+      <div class="modal-text">هل أنت متأكد من حذف هذا التسجيل؟</div>
+      <div class="modal-name" id="modalItemName">---</div>
+      <div class="modal-text" style="font-size:10px;color:#dc2626;">لا يمكن التراجع عن هذا الإجراء</div>
+      <div class="modal-actions">
+        <button class="modal-btn modal-btn-cancel" id="cancelBtn">إلغاء</button>
+        <button class="modal-btn modal-btn-danger" id="confirmBtn">حذف</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="dashboard">
+    <div class="dash-header">
+      <div class="school-badge">AMAMPS</div>
+      <h1>📋 لوحة تحكم - مدرسة المدينة المنورة الخاصة</h1>
+      <div class="subtitle">Al Madinah Al Munawwarah Private Schools | Programming Course</div>
+    </div>
+
+    <!-- إحصائيات -->
+    <div class="stats-row">
+      <div class="stat-box">
+        <div class="stat-value" id="statVisitors">-</div>
+        <div class="stat-label">👁️ زوار</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-value" id="statTotal">-</div>
+        <div class="stat-label">📋 تسجيلات</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-value green" id="statToday">-</div>
+        <div class="stat-label">📅 اليوم</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-value gold" id="statFirstSecondary">-</div>
+        <div class="stat-label">🚀 أولى ثانوي</div>
+      </div>
+    </div>
+
+    <!-- تبويبات -->
+    <div class="tabs">
+      <button class="tab-btn active" data-tab="all">الكل</button>
+      <button class="tab-btn" data-tab="firstSecondary">🚀 أولى ثانوي</button>
+    </div>
+
+    <div class="refresh-row">
+      <span>آخر تحديث: <span id="lastUpdate">---</span></span>
+      <button class="refresh-btn" id="refreshBtn">🔄 تحديث الآن</button>
+    </div>
+
+    <div class="tab-content active" id="tab-all">
+      <div class="list-container" id="listAll"></div>
+    </div>
+    <div class="tab-content" id="tab-firstSecondary">
+      <div class="list-container" id="listFS"></div>
+    </div>
+  </div>
+
+  <script>
+    (function() {
+      window.addEventListener('load', () => {
+        if (!window.db) { setTimeout(initDashboard, 600); return; }
+        initDashboard();
+      });
+
+      function initDashboard() {
+        const db = window.db;
+        const col = window.collection;
+        const q = window.query;
+        const order = window.orderBy;
+        const delDoc = window.deleteDoc;
+        const docR = window.doc;
+        const getD = window.getDoc;
+        const getDocs = window.getDocs;
+
+        // الكوليكشنز الخاصة بمدرسة المدينة المنورة
+        const REG_COL = "registrations_madinah_school";
+        const STATS_DOC = docR(db, "statistics_madinah_school", "counters");
+
+        const els = {
+          statVisitors: document.getElementById('statVisitors'),
+          statTotal: document.getElementById('statTotal'),
+          statToday: document.getElementById('statToday'),
+          statFirstSecondary: document.getElementById('statFirstSecondary'),
+          lastUpdate: document.getElementById('lastUpdate'),
+          refreshBtn: document.getElementById('refreshBtn'),
+          listAll: document.getElementById('listAll'),
+          listFS: document.getElementById('listFS'),
+          modal: document.getElementById('deleteModal'),
+          modalItemName: document.getElementById('modalItemName'),
+          cancelBtn: document.getElementById('cancelBtn'),
+          confirmBtn: document.getElementById('confirmBtn'),
+        };
+
+        let allRegs = [];
+        let deleteTarget = null;
+        let activeTab = 'all';
+
+        // تبويبات
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+          btn.addEventListener('click', function() {
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+            activeTab = this.dataset.tab;
+            document.querySelectorAll('.tab-content').forEach(tc => tc.classList.remove('active'));
+            document.getElementById(`tab-${activeTab}`).classList.add('active');
+          });
+        });
+
+        // تحميل البيانات
+        async function loadData() {
+          els.refreshBtn.disabled = true;
+          els.refreshBtn.textContent = '⏳ جاري...';
+
+          try {
+            const regQ = q(col(db, REG_COL), order("submittedAt", "desc"));
+            const snap = await getDocs(regQ);
+            
+            allRegs = [];
+            snap.forEach(doc => {
+              allRegs.push({ id: doc.id, ...doc.data() });
+            });
+
+            // جلب الإحصائيات
+            const statsSnap = await getD(STATS_DOC);
+            if (statsSnap.exists()) {
+              const d = statsSnap.data();
+              els.statVisitors.textContent = d.totalVisitors || 0;
+              els.statTotal.textContent = d.totalRegistrations || 0;
+              els.statToday.textContent = d.todayRegistrations || 0;
+            } else {
+              els.statVisitors.textContent = '0';
+              els.statTotal.textContent = '0';
+              els.statToday.textContent = '0';
+            }
+
+            const firstSec = allRegs.filter(r => r.gradeLevel === 'الأول الثانوي').length;
+            els.statFirstSecondary.textContent = firstSec;
+
+            renderLists();
+            els.lastUpdate.textContent = new Date().toLocaleTimeString('ar-EG', { 
+              hour: '2-digit', minute: '2-digit' 
+            });
+            
+            console.log(`✅ تم تحميل ${allRegs.length} تسجيل - مدرسة المدينة المنورة`);
+            
+          } catch (e) {
+            console.error('❌ خطأ:', e);
+            alert('حدث خطأ في تحميل البيانات');
+          }
+
+          els.refreshBtn.disabled = false;
+          els.refreshBtn.textContent = '🔄 تحديث الآن';
+        }
+
+        els.refreshBtn.addEventListener('click', loadData);
+
+        function renderLists() {
+          renderList(els.listAll, allRegs);
+          renderList(els.listFS, allRegs.filter(r => r.gradeLevel === 'الأول الثانوي'));
+        }
+
+        function renderList(container, regs) {
+          if (regs.length === 0) {
+            container.innerHTML = `
+              <div class="empty-state">
+                <div class="icon">📋</div>
+                <p>لا توجد تسجيلات</p>
+                <p style="font-size:11px;margin-top:4px;">اضغط "تحديث الآن" لعرض البيانات</p>
+              </div>
+            `;
+            return;
+          }
+
+          container.innerHTML = regs.map((r, i) => {
+            let timeDisplay = 'غير محدد';
+            if (r.submittedAt) {
+              const d = r.submittedAt.toDate ? r.submittedAt.toDate() : new Date(r.submittedAt);
+              timeDisplay = d.toLocaleDateString('ar-EG', { 
+                day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' 
+              });
+            }
+            
+            const isFirstSecondary = r.gradeLevel === 'الأول الثانوي';
+            const phone = r.phoneNumber || '';
+
+            return `
+              <div class="student-card" style="animation-delay:${i*0.02}s">
+                <div class="card-header">
+                  <span class="student-name">${r.studentName || 'غير محدد'}</span>
+                  <span class="card-time">${timeDisplay}</span>
+                </div>
+                <div class="card-details">
+                  <div class="detail-row">
+                    <span class="detail-label">📱</span>
+                    <span class="detail-value" dir="ltr">${phone || 'غير محدد'}</span>
+                  </div>
+                  <div>
+                    <span class="grade-badge ${isFirstSecondary ? 'first-secondary' : ''}">
+                      ${r.gradeLevel || 'غير محدد'}
+                      ${isFirstSecondary ? ' 🚀' : ''}
+                    </span>
+                  </div>
+                </div>
+                <div class="card-actions">
+                  ${phone ? `
+                    <button class="btn-action btn-wa" onclick="window.open('https://wa.me/2${phone.replace(/^0/,'')}','_blank')">
+                      💬 واتساب
+                    </button>
+                    <button class="btn-action btn-copy" onclick="copyPhone('${phone}')">
+                      📋 نسخ
+                    </button>
+                  ` : ''}
+                  <button class="btn-action btn-del" data-id="${r.id}" data-name="${r.studentName || 'غير محدد'}">
+                    🗑️ حذف
+                  </button>
+                </div>
+              </div>
+            `;
+          }).join('');
+
+          // ربط أزرار الحذف
+          container.querySelectorAll('.btn-del').forEach(b => {
+            b.addEventListener('click', function(e) {
+              e.stopPropagation();
+              deleteTarget = this.dataset.id;
+              els.modalItemName.textContent = this.dataset.name;
+              els.modal.classList.add('active');
+              els.confirmBtn.disabled = false;
+              els.confirmBtn.textContent = 'حذف';
+            });
+          });
+        }
+
+        // نسخ الرقم
+        window.copyPhone = function(phone) {
+          navigator.clipboard.writeText(phone).then(() => {
+            alert('📋 تم نسخ الرقم!');
+          });
+        };
+
+        // مودال الحذف
+        els.cancelBtn.addEventListener('click', () => {
+          els.modal.classList.remove('active');
+          deleteTarget = null;
+        });
+
+        els.modal.addEventListener('click', (e) => {
+          if (e.target === els.modal) {
+            els.modal.classList.remove('active');
+            deleteTarget = null;
+          }
+        });
+
+        els.confirmBtn.addEventListener('click', async () => {
+          if (!deleteTarget) return;
+          els.confirmBtn.disabled = true;
+          els.confirmBtn.textContent = 'جاري...';
+          
+          try {
+            await delDoc(docR(db, REG_COL, deleteTarget));
+            allRegs = allRegs.filter(r => r.id !== deleteTarget);
+            renderLists();
+            
+            // تحديث الإحصائيات
+            const firstSec = allRegs.filter(r => r.gradeLevel === 'الأول الثانوي').length;
+            els.statTotal.textContent = allRegs.length;
+            els.statFirstSecondary.textContent = firstSec;
+            
+            els.modal.classList.remove('active');
+            deleteTarget = null;
+            console.log('✅ تم الحذف بنجاح');
+            
+          } catch (err) {
+            console.error('❌ خطأ:', err);
+            alert('حدث خطأ أثناء الحذف');
+            els.confirmBtn.disabled = false;
+            els.confirmBtn.textContent = 'حذف';
+          }
+        });
+
+        document.addEventListener('keydown', (e) => {
+          if (e.key === 'Escape' && els.modal.classList.contains('active')) {
+            els.modal.classList.remove('active');
+            deleteTarget = null;
+          }
+        });
+
+        // بدء التشغيل
+        loadData();
+        console.log('✅ لوحة التحكم جاهزة - مدرسة المدينة المنورة الخاصة');
+      }
+    })();
+  </script>
+</body>
+</html>
