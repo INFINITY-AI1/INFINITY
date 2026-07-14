@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>الواجبات - مدرسة الجيل الجديد الخاصة</title>
+    <title>الواجبات - مدرسة ابن خلدون الخاصة</title>
     
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -15,19 +15,19 @@
     
     <style>
         :root {
-            --crimson: #B22222;
-            --crimson-light: #C53030;
-            --crimson-dark: #8B1A1A;
-            --crimson-gradient: linear-gradient(135deg, #B22222 0%, #C53030 50%, #8B1A1A 100%);
-            --bg-primary: #FAFAF9;
+            --primary: #1A3A6B;
+            --primary-light: #2A5A9B;
+            --primary-dark: #0F2850;
+            --primary-gradient: linear-gradient(135deg, #1A3A6B 0%, #2A5A9B 50%, #0F2850 100%);
+            --bg-primary: #F5F8FC;
             --bg-card: #FFFFFF;
-            --bg-secondary: #F5F4F1;
-            --bg-hover: #F0EDE8;
-            --bg-dark: #1A1A2E;
-            --text-heading: #1C1917;
-            --text-body: #57534E;
-            --text-muted: #8C8882;
-            --border: #E7E5E2;
+            --bg-secondary: #EEF2F7;
+            --bg-hover: #E4EAF2;
+            --bg-dark: #0F1A2E;
+            --text-heading: #0F1A2E;
+            --text-body: #3D4F6B;
+            --text-muted: #6B7F99;
+            --border: #D6DFE8;
             --shadow-sm: 0 1px 3px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.03);
             --shadow-md: 0 4px 12px rgba(0,0,0,0.06), 0 2px 4px rgba(0,0,0,0.04);
             --shadow-lg: 0 8px 24px rgba(0,0,0,0.08), 0 4px 8px rgba(0,0,0,0.04);
@@ -88,7 +88,7 @@
         
         .header-logo {
             width: 32px; height: 32px;
-            background: var(--crimson-gradient);
+            background: var(--primary-gradient);
             border-radius: var(--radius-xs);
             display: flex; align-items: center; justify-content: center;
             color: white; font-size: 14px;
@@ -103,7 +103,7 @@
             display: flex; align-items: center; gap: 6px;
             background: var(--bg-secondary); padding: 6px 14px;
             border-radius: var(--radius-pill); font-size: 14px;
-            font-weight: 700; color: var(--crimson);
+            font-weight: 700; color: var(--primary);
         }
 
         .bottom-nav {
@@ -126,11 +126,11 @@
         
         .nav-item.active::before {
             content: ''; position: absolute; top: -2px; left: 50%; transform: translateX(-50%);
-            width: 6px; height: 6px; background: var(--crimson-light); border-radius: 50%;
+            width: 6px; height: 6px; background: var(--primary-light); border-radius: 50%;
         }
 
         .nav-badge {
-            background: var(--crimson); color: white; font-size: 10px; font-weight: 700;
+            background: var(--primary); color: white; font-size: 10px; font-weight: 700;
             min-width: 18px; height: 18px; border-radius: 9px;
             display: flex; align-items: center; justify-content: center; padding: 0 5px;
         }
@@ -146,9 +146,9 @@
         }
 
         .welcome-hero {
-            background: var(--crimson-gradient); border-radius: var(--radius-xl);
+            background: var(--primary-gradient); border-radius: var(--radius-xl);
             padding: var(--spacing-2xl) var(--spacing-xl); color: white;
-            margin-bottom: var(--spacing-2xl); box-shadow: 0 12px 32px rgba(178,34,34,0.25);
+            margin-bottom: var(--spacing-2xl); box-shadow: 0 12px 32px rgba(26, 58, 107, 0.25);
             position: relative; overflow: hidden;
         }
 
@@ -180,7 +180,7 @@
         .assignment-card:active { transform: scale(0.985); transition: transform 0.1s ease-out; }
         .assignment-card.late { border-right: 3px solid #D97706; }
         .assignment-card.completed { border-right: 3px solid #16A34A; opacity: 0.85; }
-        .assignment-card.new { border-right: 3px solid var(--crimson); }
+        .assignment-card.new { border-right: 3px solid var(--primary); }
 
         .assignment-type-badge {
             display: inline-flex; align-items: center; gap: 4px;
@@ -188,7 +188,7 @@
             font-size: 11px; font-weight: 600; margin-bottom: var(--spacing-sm);
         }
 
-        .badge-homework { background: #EFF6FF; color: #2563EB; }
+        .badge-homework { background: #EBF0F8; color: var(--primary); }
         .badge-exam { background: #FEF2F2; color: #B22222; }
 
         .assignment-title { font-size: 16px; font-weight: 700; color: var(--text-heading); margin-bottom: var(--spacing-xs); }
@@ -199,7 +199,7 @@
             display: inline-flex; align-items: center; gap: 4px;
             background: var(--bg-secondary); padding: 6px 12px;
             border-radius: var(--radius-pill); font-size: 13px;
-            font-weight: 600; color: var(--crimson); margin-top: var(--spacing-sm);
+            font-weight: 600; color: var(--primary); margin-top: var(--spacing-sm);
         }
 
         .assignment-status { position: absolute; top: var(--spacing-lg); left: var(--spacing-lg); font-size: 20px; }
@@ -222,9 +222,9 @@
             font-size: 14px; flex-shrink: 0;
         }
 
-        .notification-icon.warning { background: #FFFBEB; color: #D97706; }
-        .notification-icon.info { background: #EFF6FF; color: #2563EB; }
-        .notification-icon.success { background: #F0FDF4; color: #16A34A; }
+        .notification-icon.warning { background: #FFF8EB; color: #D97706; }
+        .notification-icon.info { background: #EBF0F8; color: var(--primary); }
+        .notification-icon.success { background: #E8F5ED; color: #16A34A; }
         .notification-content { flex: 1; }
         .notification-text { font-size: 14px; color: var(--text-body); line-height: 1.5; }
         .notification-time { font-size: 11px; color: var(--text-muted); margin-top: 4px; }
@@ -241,7 +241,7 @@
         .quiz-info { display: flex; gap: var(--spacing-lg); font-size: 13px; color: var(--text-muted); flex-wrap: wrap; }
 
         .quiz-late-warning {
-            background: #FFFBEB; border: 1px solid #FDE68A; border-radius: var(--radius-md);
+            background: #FFF8EB; border: 1px solid #FDE68A; border-radius: var(--radius-md);
             padding: var(--spacing-md) var(--spacing-lg); margin-bottom: var(--spacing-lg);
             font-size: 13px; color: #92400E; display: flex; align-items: center; gap: var(--spacing-sm);
         }
@@ -254,7 +254,7 @@
 
         .question-number {
             display: inline-flex; align-items: center; justify-content: center;
-            width: 28px; height: 28px; background: var(--crimson-gradient);
+            width: 28px; height: 28px; background: var(--primary-gradient);
             color: white; border-radius: 50%; font-size: 13px;
             font-weight: 700; margin-bottom: var(--spacing-md);
         }
@@ -281,8 +281,8 @@
         .option-item-quiz:active { transform: scale(0.985); }
         
         .option-item-quiz.selected {
-            border-color: var(--crimson); background: #FEF2F2;
-            color: var(--crimson); font-weight: 500;
+            border-color: var(--primary); background: #EBF0F8;
+            color: var(--primary); font-weight: 500;
         }
 
         .option-radio-quiz {
@@ -292,7 +292,7 @@
             transition: all var(--transition-fast);
         }
 
-        .option-item-quiz.selected .option-radio-quiz { border-color: var(--crimson); background: var(--crimson); }
+        .option-item-quiz.selected .option-radio-quiz { border-color: var(--primary); background: var(--primary); }
         .option-item-quiz.selected .option-radio-quiz::after {
             content: ''; width: 6px; height: 6px; background: white; border-radius: 50%;
         }
@@ -304,7 +304,7 @@
             border-radius: var(--radius-md); resize: vertical; outline: none;
         }
 
-        .essay-textarea:focus { border-color: var(--crimson); box-shadow: 0 0 0 3px rgba(178,34,34,0.06); }
+        .essay-textarea:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(26, 58, 107, 0.06); }
 
         .truefalse-options { display: flex; gap: var(--spacing-md); }
         
@@ -316,7 +316,7 @@
             transition: all var(--transition-fast); text-align: center;
         }
 
-        .truefalse-btn.selected { border-color: var(--crimson); background: #FEF2F2; color: var(--crimson); }
+        .truefalse-btn.selected { border-color: var(--primary); background: #EBF0F8; color: var(--primary); }
 
         .ordering-list { list-style: none; display: flex; flex-direction: column; gap: var(--spacing-sm); }
         
@@ -330,14 +330,14 @@
         .ordering-handle { color: var(--text-muted); cursor: grab; }
 
         .submit-quiz-btn {
-            width: 100%; height: 52px; background: var(--crimson-gradient);
+            width: 100%; height: 52px; background: var(--primary-gradient);
             color: white; border: none; border-radius: var(--radius-pill);
             font-family: var(--font-body); font-size: 16px; font-weight: 700;
             cursor: pointer; transition: all var(--transition-base);
-            box-shadow: 0 6px 20px rgba(178,34,34,0.25); margin-top: var(--spacing-xl);
+            box-shadow: 0 6px 20px rgba(26, 58, 107, 0.25); margin-top: var(--spacing-xl);
         }
 
-        .submit-quiz-btn:active { transform: scale(0.97); box-shadow: 0 2px 8px rgba(178,34,34,0.2); }
+        .submit-quiz-btn:active { transform: scale(0.97); box-shadow: 0 2px 8px rgba(26, 58, 107, 0.2); }
         .submit-quiz-btn:disabled { opacity: 0.4; pointer-events: none; }
 
         .quiz-result {
@@ -352,7 +352,7 @@
         
         .quiz-result-bonus {
             display: inline-flex; align-items: center; gap: 6px;
-            background: #F0FDF4; color: #16A34A; padding: 6px 16px;
+            background: #E8F5ED; color: #16A34A; padding: 6px 16px;
             border-radius: var(--radius-pill); font-size: 14px; font-weight: 600; margin-bottom: var(--spacing-xl);
         }
 
@@ -367,21 +367,21 @@
 
         .review-card.correct { border-right: 4px solid #16A34A; }
         .review-card.wrong { border-right: 4px solid #B22222; }
-        .review-card.pending { border-right: 4px solid #2563EB; }
+        .review-card.pending { border-right: 4px solid var(--primary); }
 
         .review-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: var(--spacing-sm); }
         .review-number { font-weight: 700; color: var(--text-heading); }
         .review-status { font-size: 13px; font-weight: 600; }
         .review-status.correct { color: #16A34A; }
         .review-status.wrong { color: #B22222; }
-        .review-status.pending { color: #2563EB; }
+        .review-status.pending { color: var(--primary); }
         .review-question-text { font-size: 15px; font-weight: 500; color: var(--text-heading); margin-bottom: var(--spacing-md); }
         .review-answer-row { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: var(--spacing-xs); font-size: 13px; }
         .review-label { color: var(--text-muted); font-weight: 500; }
         .review-value { font-weight: 600; max-width: 60%; text-align: left; }
         .review-value.correct-answer { color: #16A34A; }
         .review-value.wrong-answer { color: #B22222; }
-        .review-value.pending-answer { color: #2563EB; }
+        .review-value.pending-answer { color: var(--primary); }
 
         .leaderboard-item {
             display: flex; align-items: center; gap: var(--spacing-lg);
@@ -397,16 +397,16 @@
         }
 
         .rank-1 { background: #FFF7E0; color: #B45309; font-size: 18px; }
-        .rank-2 { background: #F5F4F1; color: #57534E; font-size: 17px; }
+        .rank-2 { background: #EEF2F7; color: #3D4F6B; font-size: 17px; }
         .rank-3 { background: #FEF2F2; color: #B22222; font-size: 16px; }
         .rank-other { background: var(--bg-secondary); color: var(--text-muted); }
 
         .leaderboard-info { flex: 1; }
         .leaderboard-name { font-size: 15px; font-weight: 600; color: var(--text-heading); }
         .leaderboard-code { font-size: 12px; color: var(--text-muted); }
-        .leaderboard-points { font-size: 16px; font-weight: 800; color: var(--crimson); }
+        .leaderboard-points { font-size: 16px; font-weight: 800; color: var(--primary); }
 
-        .leaderboard-mine { background: #FEF2F2; border: 1.5px solid var(--crimson); box-shadow: var(--shadow-md); }
+        .leaderboard-mine { background: #EBF0F8; border: 1.5px solid var(--primary); box-shadow: var(--shadow-md); }
 
         .toast {
             position: fixed; bottom: 100px; left: 50%;
@@ -425,7 +425,7 @@
         .spinner {
             width: 40px; height: 40px;
             border: 3px solid var(--border);
-            border-top-color: var(--crimson);
+            border-top-color: var(--primary);
             border-radius: 50%;
             animation: spin 0.7s linear infinite;
             margin: 0 auto;
@@ -446,9 +446,9 @@
     <header class="header">
         <div class="header-brand">
             <div class="header-logo"><i class="fa-solid fa-graduation-cap"></i></div>
-            <span class="header-school">الجيل الجديد</span>
+            <span class="header-school">ابن خلدون</span>
         </div>
-        <div class="header-points" id="headerPoints">
+        <div class="header-points">
             <i class="fa-solid fa-star"></i> <span id="headerPointsValue">0</span>
         </div>
     </header>
@@ -510,6 +510,10 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
+        // 🏫 مدرسة ابن خلدون - كوليكشنات منفصلة
+        const STUDENTS_COLLECTION = 'ibn_khaldoun_students';
+        const ASSIGNMENTS_COLLECTION = 'ibn_khaldoun_assignments';
+
         let currentStudentCode = null;
         let currentStudentData = null;
         let allAssignments = [];
@@ -517,7 +521,7 @@
         let currentQuizAssignment = null;
         let quizAnswers = [];
         let isQuizLate = false;
-        let isSubmitting = false; // ★ منع التسليم المزدوج
+        let isSubmitting = false;
 
         function init() {
             currentStudentCode = sessionStorage.getItem('studentCode');
@@ -558,37 +562,31 @@
 
         async function loadStudentData() {
             try {
-                const docSnap = await getDoc(doc(db, 'students', currentStudentCode));
+                const docSnap = await getDoc(doc(db, STUDENTS_COLLECTION, currentStudentCode));
                 if (!docSnap.exists()) { sessionStorage.removeItem('studentCode'); window.location.href = 'index.html'; return; }
                 currentStudentData = docSnap.data();
-                
-                // ★★★ إصلاح النقاط المتكررة ★★★
                 await fixDuplicatePoints();
-                
-                // إعادة تحميل البيانات بعد الإصلاح
-                const refreshedDoc = await getDoc(doc(db, 'students', currentStudentCode));
+                const refreshedDoc = await getDoc(doc(db, STUDENTS_COLLECTION, currentStudentCode));
                 currentStudentData = refreshedDoc.data();
                 updateUI();
             } catch (error) { console.error('Error loading student:', error); }
         }
 
-        // ★★★ دالة حذف النقاط المتكررة ★★★
         async function fixDuplicatePoints() {
             try {
-                const assignmentsSnap = await getDocs(collection(db, 'assignments'));
+                const assignmentsSnap = await getDocs(collection(db, ASSIGNMENTS_COLLECTION));
                 let calculatedTotal = 0;
                 
                 for (const assignmentDoc of assignmentsSnap.docs) {
-                    const subDoc = await getDoc(doc(db, 'assignments', assignmentDoc.id, 'submissions', currentStudentCode));
+                    const subDoc = await getDoc(doc(db, ASSIGNMENTS_COLLECTION, assignmentDoc.id, 'submissions', currentStudentCode));
                     if (subDoc.exists()) {
                         const subData = subDoc.data();
                         calculatedTotal += (subData.totalEarned || 0);
                     }
                 }
                 
-                // لو النقاط المحسوبة مختلفة عن المخزنة، نصلحها
                 if (calculatedTotal !== (currentStudentData.totalPoints || 0)) {
-                    await updateDoc(doc(db, 'students', currentStudentCode), {
+                    await updateDoc(doc(db, STUDENTS_COLLECTION, currentStudentCode), {
                         totalPoints: calculatedTotal
                     });
                     console.log(`✅ تم إصلاح النقاط: ${currentStudentData.totalPoints} → ${calculatedTotal}`);
@@ -619,7 +617,7 @@
 
         async function loadAssignments() {
             try {
-                const q = query(collection(db, 'assignments'), orderBy('order', 'asc'));
+                const q = query(collection(db, ASSIGNMENTS_COLLECTION), orderBy('order', 'asc'));
                 const snapshot = await getDocs(q);
                 allAssignments = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
             } catch (error) { allAssignments = []; }
@@ -629,7 +627,7 @@
             submissionsMap = {};
             try {
                 for (const assignment of allAssignments) {
-                    const subDoc = await getDoc(doc(db, 'assignments', assignment.id, 'submissions', currentStudentCode));
+                    const subDoc = await getDoc(doc(db, ASSIGNMENTS_COLLECTION, assignment.id, 'submissions', currentStudentCode));
                     if (subDoc.exists()) { submissionsMap[assignment.id] = { id: assignment.id, ...subDoc.data() }; }
                 }
             } catch (error) { console.error('Error loading submissions:', error); }
@@ -693,11 +691,9 @@
                     const assignmentId = card.dataset.assignmentId;
                     const assignment = allAssignments.find(a => a.id === assignmentId);
                     
-                    // ★★★ لو مكتمل، افتح المراجعة فقط ★★★
                     if (assignment && submissionsMap[assignmentId]) {
                         showPastResult(assignmentId);
                     } 
-                    // ★★★ لو مش مكتمل، افتح الحل ★★★
                     else if (assignment && !submissionsMap[assignmentId]) {
                         startQuiz(assignment);
                     }
@@ -726,13 +722,11 @@
         }
 
         window.startQuiz = function(assignment) {
-            // ★★★ منع مزدوج: لو فيه واجب مفتوح بالفعل ★★★
             if (currentQuizAssignment) {
                 showToast('لديك واجب مفتوح بالفعل. أكمله أولاً.');
                 return;
             }
             
-            // ★★★ لو متسلمش من قبل، سمح بالحل ★★★
             if (submissionsMap[assignment.id]) {
                 showToast('لقد قمت بتسليم هذا الواجب بالفعل');
                 showPastResult(assignment.id);
@@ -834,13 +828,11 @@
         async function handleQuizSubmit(e) {
             e.preventDefault();
             
-            // ★★★ منع التسليم المزدوج ★★★
             if (isSubmitting) {
                 showToast('جاري التسليم بالفعل...');
                 return;
             }
             
-            // ★★★ التحقق من عدم وجود تسليم سابق ★★★
             if (currentQuizAssignment && submissionsMap[currentQuizAssignment.id]) {
                 showToast('لقد قمت بتسليم هذا الواجب بالفعل');
                 showPastResult(currentQuizAssignment.id);
@@ -932,15 +924,13 @@
             };
 
             try {
-                // ★★★ حفظ التسليم ★★★
-                const subRef = doc(db, 'assignments', a.id, 'submissions', currentStudentCode);
+                const subRef = doc(db, ASSIGNMENTS_COLLECTION, a.id, 'submissions', currentStudentCode);
                 await setDoc(subRef, submissionData);
 
-                // ★★★ إعادة حساب النقاط بدل الإضافة المباشرة ★★★
                 let calculatedTotal = 0;
                 for (const assignment of allAssignments) {
                     if (assignment.id === a.id) {
-                        calculatedTotal += totalEarned; // النقاط الجديدة
+                        calculatedTotal += totalEarned;
                     } else {
                         const existingSub = submissionsMap[assignment.id];
                         if (existingSub) {
@@ -949,8 +939,7 @@
                     }
                 }
 
-                // ★★★ تحديث النقاط بالقيمة المحسوبة ★★★
-                await updateDoc(doc(db, 'students', currentStudentCode), {
+                await updateDoc(doc(db, STUDENTS_COLLECTION, currentStudentCode), {
                     totalPoints: calculatedTotal
                 });
 
@@ -1073,7 +1062,7 @@
             if (!hasUnread) return;
             const updatedNotifications = currentStudentData.notifications.map(n => ({ ...n, read: true }));
             try {
-                await updateDoc(doc(db, 'students', currentStudentCode), { notifications: updatedNotifications });
+                await updateDoc(doc(db, STUDENTS_COLLECTION, currentStudentCode), { notifications: updatedNotifications });
                 currentStudentData.notifications = updatedNotifications;
                 updateUI();
             } catch (error) { console.error('Error marking notifications:', error); }
@@ -1082,7 +1071,7 @@
         async function loadLeaderboard() {
             const container = document.getElementById('leaderboardList');
             try {
-                const q = query(collection(db, 'students'), orderBy('totalPoints', 'desc'));
+                const q = query(collection(db, STUDENTS_COLLECTION), orderBy('totalPoints', 'desc'));
                 const snapshot = await getDocs(q);
                 const students = snapshot.docs.map(d => ({ code: d.id, ...d.data() })).filter(s => s.fullName && s.fullName.trim() !== '');
                 if (students.length === 0) {
