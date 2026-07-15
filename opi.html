@@ -1,0 +1,1168 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>استطلاع رأي - كورس البرمجة</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Tajawal:wght@300;400;500;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <style>
+        :root {
+            --crimson: #B22222;
+            --crimson-light: #C53030;
+            --crimson-dark: #8B1A1A;
+            --crimson-gradient: linear-gradient(135deg, #B22222 0%, #C53030 50%, #8B1A1A 100%);
+            --gold: #D4A853;
+            --gold-light: #F0D68A;
+            --gold-gradient: linear-gradient(135deg, #D4A853 0%, #F0D68A 50%, #C49B3F 100%);
+            --bg-primary: #FAFAF9;
+            --bg-card: #FFFFFF;
+            --bg-secondary: #F5F4F1;
+            --bg-hover: #F0EDE8;
+            --bg-dark: #1A1A2E;
+            --bg-soft-cream: #FFFBF5;
+            --text-heading: #1C1917;
+            --text-body: #57534E;
+            --text-muted: #8C8882;
+            --border: #E7E5E2;
+            --border-gold: #E8D5B0;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.03);
+            --shadow-md: 0 4px 12px rgba(0,0,0,0.06), 0 2px 4px rgba(0,0,0,0.04);
+            --shadow-lg: 0 8px 24px rgba(0,0,0,0.08), 0 4px 8px rgba(0,0,0,0.04);
+            --shadow-xl: 0 16px 40px rgba(0,0,0,0.10), 0 8px 16px rgba(0,0,0,0.04);
+            --shadow-gold: 0 8px 32px rgba(212,168,83,0.20);
+            --radius-xs: 6px;
+            --radius-sm: 10px;
+            --radius-md: 14px;
+            --radius-lg: 20px;
+            --radius-xl: 28px;
+            --radius-pill: 9999px;
+            --spacing-xs: 4px;
+            --spacing-sm: 8px;
+            --spacing-md: 12px;
+            --spacing-lg: 16px;
+            --spacing-xl: 20px;
+            --spacing-2xl: 24px;
+            --spacing-3xl: 32px;
+            --spacing-4xl: 40px;
+            --spacing-5xl: 48px;
+            --spacing-6xl: 64px;
+            --transition-fast: 150ms ease-out;
+            --transition-base: 250ms ease-out;
+            --transition-slow: 350ms ease-out;
+            --font-display: 'Cormorant Garamond', serif;
+            --font-body: 'Tajawal', sans-serif;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: var(--font-body);
+            background: linear-gradient(180deg, #FFFBF5 0%, #FAFAF9 30%, #F5F4F1 100%);
+            color: var(--text-body);
+            min-height: 100vh;
+            min-height: 100dvh;
+            -webkit-tap-highlight-color: transparent;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Decorative Background */
+        .bg-decoration {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none; z-index: 0; overflow: hidden;
+        }
+
+        .bg-circle {
+            position: absolute; border-radius: 50%;
+            filter: blur(100px); opacity: 0.06;
+        }
+
+        .bg-circle.c1 {
+            width: 350px; height: 350px;
+            background: var(--crimson);
+            top: -8%; right: -15%;
+            animation: floatCircle 25s ease-in-out infinite;
+        }
+
+        .bg-circle.c2 {
+            width: 280px; height: 280px;
+            background: var(--gold);
+            bottom: -5%; left: -12%;
+            animation: floatCircle 30s ease-in-out infinite reverse;
+        }
+
+        .bg-circle.c3 {
+            width: 200px; height: 200px;
+            background: var(--crimson-light);
+            top: 50%; left: 20%;
+            animation: floatCircle 22s ease-in-out infinite;
+            animation-delay: -8s;
+        }
+
+        @keyframes floatCircle {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            25% { transform: translate(40px, -50px) scale(1.08); }
+            50% { transform: translate(-30px, 20px) scale(0.94); }
+            75% { transform: translate(-50px, -30px) scale(1.04); }
+        }
+
+        /* Main Container */
+        .container {
+            position: relative; z-index: 1;
+            max-width: 520px; margin: 0 auto;
+            padding: var(--spacing-2xl) var(--spacing-xl) var(--spacing-6xl);
+        }
+
+        /* Hero Section */
+        .hero {
+            text-align: center;
+            margin-bottom: var(--spacing-3xl);
+            animation: fadeInDown 0.7s ease-out;
+        }
+
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .hero-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 80px; height: 80px;
+            background: var(--gold-gradient);
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-gold);
+            margin-bottom: var(--spacing-xl);
+            position: relative;
+        }
+
+        .hero-icon::after {
+            content: '';
+            position: absolute;
+            inset: -8px;
+            border-radius: inherit;
+            background: rgba(212,168,83,0.10);
+            z-index: -1;
+            animation: pulseGlow 2.5s ease-in-out infinite;
+        }
+
+        @keyframes pulseGlow {
+            0%, 100% { transform: scale(1); opacity: 0.5; }
+            50% { transform: scale(1.15); opacity: 0; }
+        }
+
+        .hero-icon i {
+            font-size: 34px;
+            color: white;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.15));
+        }
+
+        .hero-school {
+            font-family: var(--font-display);
+            font-size: 30px;
+            font-weight: 700;
+            color: var(--text-heading);
+            letter-spacing: -0.02em;
+            line-height: 1.3;
+            margin-bottom: var(--spacing-xs);
+        }
+
+        .hero-school span {
+            background: var(--gold-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-subtitle {
+            font-size: 15px;
+            color: var(--text-muted);
+            font-weight: 400;
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: var(--bg-soft-cream);
+            border: 1px solid var(--border-gold);
+            padding: 8px 18px;
+            border-radius: var(--radius-pill);
+            font-size: 13px;
+            font-weight: 500;
+            color: #8B6914;
+        }
+
+        .hero-badge i { color: var(--gold); }
+
+        /* Progress Bar */
+        .progress-container {
+            margin-bottom: var(--spacing-3xl);
+            animation: fadeInUp 0.7s ease-out 0.15s both;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(16px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .progress-steps {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: var(--spacing-sm);
+            position: relative;
+        }
+
+        .progress-steps::before {
+            content: '';
+            position: absolute;
+            top: 14px; left: 10%; right: 10%;
+            height: 2px;
+            background: var(--border);
+            z-index: 0;
+        }
+
+        .progress-step {
+            width: 28px; height: 28px;
+            border-radius: 50%;
+            background: var(--bg-card);
+            border: 2px solid var(--border);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 12px; font-weight: 700;
+            color: var(--text-muted);
+            position: relative; z-index: 1;
+            transition: all var(--transition-base);
+        }
+
+        .progress-step.completed {
+            background: var(--gold-gradient);
+            border-color: transparent;
+            color: white;
+        }
+
+        .progress-step.active {
+            border-color: var(--gold);
+            color: var(--gold);
+            box-shadow: 0 0 0 4px rgba(212,168,83,0.12);
+        }
+
+        .progress-bar-outer {
+            width: 100%; height: 6px;
+            background: var(--bg-secondary);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .progress-bar-inner {
+            height: 100%;
+            background: var(--gold-gradient);
+            border-radius: 3px;
+            transition: width 0.5s ease-out;
+            width: 0%;
+        }
+
+        /* Cards */
+        .section-card {
+            background: var(--bg-card);
+            border-radius: var(--radius-xl);
+            padding: var(--spacing-2xl) var(--spacing-xl);
+            box-shadow: var(--shadow-lg);
+            border: 1px solid var(--border);
+            margin-bottom: var(--spacing-2xl);
+            animation: fadeInUp 0.7s ease-out 0.2s both;
+        }
+
+        .section-card.intro-card {
+            border-top: 3px solid var(--gold);
+        }
+
+        .section-card.question-card {
+            border-top: 3px solid var(--crimson);
+        }
+
+        .section-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text-heading);
+            margin-bottom: var(--spacing-xs);
+        }
+
+        .section-subtitle {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-bottom: var(--spacing-2xl);
+        }
+
+        /* Form Elements */
+        .form-group {
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .form-label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-heading);
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .form-label .required {
+            color: var(--crimson);
+            margin-right: 2px;
+        }
+
+        .form-input, .form-textarea {
+            width: 100%;
+            padding: 14px 18px;
+            font-family: var(--font-body);
+            font-size: 15px;
+            color: var(--text-heading);
+            background: var(--bg-primary);
+            border: 1.5px solid var(--border);
+            border-radius: var(--radius-md);
+            transition: all var(--transition-base);
+            outline: none;
+            -webkit-appearance: none;
+            appearance: none;
+        }
+
+        .form-input:focus, .form-textarea:focus {
+            border-color: var(--gold);
+            box-shadow: 0 0 0 4px rgba(212,168,83,0.08);
+            background: var(--bg-card);
+        }
+
+        .form-input::placeholder, .form-textarea::placeholder {
+            color: var(--text-muted);
+            opacity: 0.5;
+        }
+
+        .form-textarea {
+            resize: vertical;
+            min-height: 120px;
+            line-height: 1.7;
+        }
+
+        .input-icon-wrapper {
+            position: relative;
+        }
+
+        .input-icon-left {
+            position: absolute;
+            top: 50%;
+            right: 16px;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            pointer-events: none;
+            font-size: 16px;
+        }
+
+        .input-icon-wrapper .form-input {
+            padding-right: 46px;
+        }
+
+        /* Radio / Checkbox Group */
+        .options-group {
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-sm);
+        }
+
+        .option-card {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-md);
+            padding: var(--spacing-md) var(--spacing-lg);
+            background: var(--bg-primary);
+            border: 1.5px solid var(--border);
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            font-size: 14px;
+            color: var(--text-body);
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .option-card:hover {
+            border-color: var(--border-gold);
+        }
+
+        .option-card:active {
+            transform: scale(0.985);
+        }
+
+        .option-card.selected {
+            border-color: var(--gold);
+            background: #FFFDF7;
+            color: #8B6914;
+            font-weight: 500;
+        }
+
+        .option-radio-custom {
+            width: 22px; height: 22px;
+            border-radius: 50%;
+            border: 2px solid var(--border);
+            display: flex; align-items: center; justify-content: center;
+            flex-shrink: 0;
+            transition: all var(--transition-fast);
+        }
+
+        .option-card.selected .option-radio-custom {
+            border-color: var(--gold);
+            background: var(--gold);
+        }
+
+        .option-card.selected .option-radio-custom::after {
+            content: '';
+            width: 8px; height: 8px;
+            background: white;
+            border-radius: 50%;
+        }
+
+        .option-card .option-icon {
+            font-size: 20px;
+            flex-shrink: 0;
+        }
+
+        .option-card .option-text {
+            flex: 1;
+        }
+
+        /* Rating Stars */
+        .rating-group {
+            display: flex;
+            gap: var(--spacing-sm);
+            justify-content: center;
+        }
+
+        .rating-star {
+            font-size: 36px;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            color: var(--border);
+        }
+
+        .rating-star.active {
+            color: var(--gold);
+            transform: scale(1.1);
+        }
+
+        .rating-star:hover {
+            transform: scale(1.15);
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--spacing-sm);
+            padding: 14px 28px;
+            font-family: var(--font-body);
+            font-size: 15px;
+            font-weight: 700;
+            border: none;
+            border-radius: var(--radius-pill);
+            cursor: pointer;
+            transition: all var(--transition-base);
+            white-space: nowrap;
+            height: 52px;
+            text-decoration: none;
+            width: 100%;
+        }
+
+        .btn-primary {
+            background: var(--gold-gradient);
+            color: #5C3D00;
+            box-shadow: 0 6px 20px rgba(212,168,83,0.30);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 28px rgba(212,168,83,0.35);
+        }
+
+        .btn-primary:active {
+            transform: scale(0.97);
+            box-shadow: 0 2px 8px rgba(212,168,83,0.20);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.4;
+            pointer-events: none;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1.5px solid var(--border);
+            color: var(--text-body);
+        }
+
+        .btn-outline:hover {
+            background: var(--bg-hover);
+        }
+
+        /* Error */
+        .error-message {
+            display: none;
+            align-items: center;
+            gap: var(--spacing-sm);
+            padding: var(--spacing-md) var(--spacing-lg);
+            background: #FEF2F2;
+            border: 1px solid #FECACA;
+            border-radius: var(--radius-sm);
+            margin-bottom: var(--spacing-lg);
+            font-size: 13px;
+            color: #991B1B;
+            animation: shake 0.4s ease-out;
+        }
+
+        .error-message.show { display: flex; }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20% { transform: translateX(-6px); }
+            40% { transform: translateX(6px); }
+            60% { transform: translateX(-4px); }
+            80% { transform: translateX(4px); }
+        }
+
+        /* Success Screen */
+        .success-screen {
+            text-align: center;
+            padding: var(--spacing-4xl) var(--spacing-xl);
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        .success-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 100px; height: 100px;
+            background: var(--gold-gradient);
+            border-radius: 50%;
+            margin-bottom: var(--spacing-2xl);
+            font-size: 44px;
+            color: white;
+            box-shadow: var(--shadow-gold);
+        }
+
+        .success-title {
+            font-family: var(--font-display);
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--text-heading);
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .success-subtitle {
+            font-size: 15px;
+            color: var(--text-muted);
+            line-height: 1.6;
+        }
+
+        .confetti {
+            position: fixed;
+            pointer-events: none;
+            z-index: 10;
+            animation: confettiFall 3s ease-out forwards;
+        }
+
+        @keyframes confettiFall {
+            0% { transform: translateY(-100vh) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(110vh) rotate(720deg); opacity: 0; }
+        }
+
+        /* Toast */
+        .toast {
+            position: fixed;
+            bottom: 24px; left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: var(--bg-dark);
+            color: white;
+            padding: var(--spacing-md) var(--spacing-xl);
+            border-radius: var(--radius-pill);
+            font-size: 14px; font-weight: 500;
+            box-shadow: var(--shadow-xl);
+            z-index: 999;
+            transition: transform var(--transition-base);
+            white-space: nowrap;
+        }
+
+        .toast.show { transform: translateX(-50%) translateY(0); }
+        .toast.success { background: #16A34A; }
+        .toast.error { background: #B22222; }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            font-size: 12px;
+            color: var(--text-muted);
+            padding-top: var(--spacing-2xl);
+        }
+
+        .footer span { color: var(--gold); font-weight: 500; }
+
+        /* Hidden */
+        .hidden { display: none !important; }
+
+        /* Animations */
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Background Decoration -->
+    <div class="bg-decoration">
+        <div class="bg-circle c1"></div>
+        <div class="bg-circle c2"></div>
+        <div class="bg-circle c3"></div>
+    </div>
+
+    <!-- Main Container -->
+    <div class="container">
+        
+        <!-- Hero -->
+        <div class="hero">
+            <div class="hero-icon">
+                <i class="fa-solid fa-star"></i>
+            </div>
+            <h1 class="hero-school">مدرسة <span>الجيل الجديد</span> الخاصة</h1>
+            <p class="hero-subtitle">استطلاع رأي - كورس البرمجة</p>
+            <div class="hero-badge">
+                <i class="fa-solid fa-graduation-cap"></i>
+                <span>مستر إسماعيل</span>
+            </div>
+        </div>
+
+        <!-- Progress -->
+        <div class="progress-container">
+            <div class="progress-steps" id="progressSteps">
+                <div class="progress-step active" data-step="0">1</div>
+                <div class="progress-step" data-step="1">2</div>
+                <div class="progress-step" data-step="2">3</div>
+                <div class="progress-step" data-step="3">4</div>
+            </div>
+            <div class="progress-bar-outer">
+                <div class="progress-bar-inner" id="progressBar"></div>
+            </div>
+        </div>
+
+        <!-- FORM SCREENS -->
+        <form id="feedbackForm" autocomplete="off" novalidate>
+
+            <!-- SCREEN 0: Personal Info -->
+            <div class="section-card intro-card" id="screen-0">
+                <h2 class="section-title">👤 بياناتك</h2>
+                <p class="section-subtitle">أدخل بياناتك الشخصية للمشاركة في الاستطلاع</p>
+
+                <div class="error-message" id="errorBox0">
+                    <i class="fa-solid fa-circle-exclamation"></i>
+                    <span id="errorText0"></span>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">الاسم الثلاثي <span class="required">*</span></label>
+                    <div class="input-icon-wrapper">
+                        <span class="input-icon-left"><i class="fa-solid fa-user"></i></span>
+                        <input type="text" class="form-input" id="fullName" placeholder="أدخل اسمك الثلاثي بالكامل" maxlength="50" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">رقم الواتساب <span class="required">*</span></label>
+                    <div class="input-icon-wrapper">
+                        <span class="input-icon-left"><i class="fa-brands fa-whatsapp"></i></span>
+                        <input type="tel" class="form-input" id="whatsapp" placeholder="مثال: 01012345678" maxlength="15" inputmode="numeric" required>
+                    </div>
+                    <span class="text-muted" style="font-size:11px;color:var(--text-muted);margin-top:4px;display:block;">لن يتم مشاركة رقمك مع أي جهة أخرى</span>
+                </div>
+
+                <button type="button" class="btn btn-primary" onclick="nextScreen()">
+                    ابدأ الاستطلاع <i class="fa-solid fa-arrow-left"></i>
+                </button>
+            </div>
+
+            <!-- SCREEN 1: Open-ended Questions -->
+            <div class="section-card question-card hidden" id="screen-1">
+                <h2 class="section-title">💭 أسئلة تقييمية</h2>
+                <p class="section-subtitle">شاركنا رأيك بصراحة - إجاباتك تهمنا جداً</p>
+
+                <div class="error-message" id="errorBox1">
+                    <i class="fa-solid fa-circle-exclamation"></i>
+                    <span id="errorText1"></span>
+                </div>
+
+                <!-- Q1 -->
+                <div class="form-group">
+                    <label class="form-label">١. إيه رأيك في فكرة كورس البرمجة وإنها تتطبق في المدرسة لأول مرة؟ <span class="required">*</span></label>
+                    <textarea class="form-textarea" id="q1" placeholder="اكتب رأيك هنا بكل صراحة..."></textarea>
+                </div>
+
+                <!-- Q2 -->
+                <div class="form-group">
+                    <label class="form-label">٢. إيه رأيك في مستوى الشرح والأمور اللي الأستاذ بيعرضها أثناء الكورس؟ <span class="required">*</span></label>
+                    <textarea class="form-textarea" id="q2" placeholder="اكتب رأيك هنا..."></textarea>
+                </div>
+
+                <!-- Q3 -->
+                <div class="form-group">
+                    <label class="form-label">٣. إيه هي التوقعات اللي كانت في بالك قبل ما تبدأ الكورس وما لقيتهاش؟ وإيه اللي ما كنتش متوقعه وظهر في الكورس؟ <span class="required">*</span></label>
+                    <textarea class="form-textarea" id="q3" placeholder="احكيلنا عن توقعاتك ومفاجآت الكورس..."></textarea>
+                </div>
+
+                <div style="display:flex;gap:12px;">
+                    <button type="button" class="btn btn-outline" onclick="prevScreen()" style="flex:1;">
+                        <i class="fa-solid fa-arrow-right"></i> السابق
+                    </button>
+                    <button type="button" class="btn btn-primary" onclick="nextScreen()" style="flex:2;">
+                        التالي <i class="fa-solid fa-arrow-left"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- SCREEN 2: Suggestion + Yes/No -->
+            <div class="section-card question-card hidden" id="screen-2">
+                <h2 class="section-title">💡 اقتراحاتك</h2>
+                <p class="section-subtitle">رأيك هو اللي هيطور الكورس للأفضل</p>
+
+                <div class="error-message" id="errorBox2">
+                    <i class="fa-solid fa-circle-exclamation"></i>
+                    <span id="errorText2"></span>
+                </div>
+
+                <!-- Q4 -->
+                <div class="form-group">
+                    <label class="form-label">٤. إيه اللي لو حصل في الكورس هيخليك تتحمس أكتر للمادة وتساعدك تتقدم في البرمجة؟ <span class="required">*</span></label>
+                    <textarea class="form-textarea" id="q4" placeholder="اقترح أي حاجة تخلي الكورس أفضل..."></textarea>
+                </div>
+
+                <!-- Q5 -->
+                <div class="form-group">
+                    <label class="form-label">٥. من تجربتك في الكورس، هل هتحب تكمل فيه بعد كده؟ <span class="required">*</span></label>
+                    <div class="options-group" id="q5Options">
+                        <div class="option-card" data-value="continue">
+                            <div class="option-radio-custom"></div>
+                            <span class="option-icon">🚀</span>
+                            <span class="option-text">أنا ناوي أكمل إن شاء الله</span>
+                        </div>
+                        <div class="option-card" data-value="just_trying">
+                            <div class="option-radio-custom"></div>
+                            <span class="option-icon">🔍</span>
+                            <span class="option-text">بجرب كتجربة ولسه مش متأكد</span>
+                        </div>
+                        <div class="option-card" data-value="no">
+                            <div class="option-radio-custom"></div>
+                            <span class="option-icon">👋</span>
+                            <span class="option-text">لا، مش هكمل</span>
+                        </div>
+                    </div>
+                    <input type="hidden" id="q5" value="">
+                </div>
+
+                <!-- Q6 -->
+                <div class="form-group">
+                    <label class="form-label">٦. هل أنت ناوي تكمل خلال المدرسة نفسها ولا خلال الإجازة بس؟ <span class="required">*</span></label>
+                    <div class="options-group" id="q6Options">
+                        <div class="option-card" data-value="school">
+                            <div class="option-radio-custom"></div>
+                            <span class="option-icon">🏫</span>
+                            <span class="option-text">خلال المدرسة نفسها</span>
+                        </div>
+                        <div class="option-card" data-value="vacation">
+                            <div class="option-radio-custom"></div>
+                            <span class="option-icon">🏖️</span>
+                            <span class="option-text">خلال الإجازة بس</span>
+                        </div>
+                        <div class="option-card" data-value="both">
+                            <div class="option-radio-custom"></div>
+                            <span class="option-icon">📅</span>
+                            <span class="option-text">الاتنين - المدرسة والإجازة</span>
+                        </div>
+                    </div>
+                    <input type="hidden" id="q6" value="">
+                </div>
+
+                <div style="display:flex;gap:12px;">
+                    <button type="button" class="btn btn-outline" onclick="prevScreen()" style="flex:1;">
+                        <i class="fa-solid fa-arrow-right"></i> السابق
+                    </button>
+                    <button type="button" class="btn btn-primary" onclick="nextScreen()" style="flex:2;">
+                        التالي <i class="fa-solid fa-arrow-left"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- SCREEN 3: Review & Submit -->
+            <div class="section-card hidden" id="screen-3" style="border-top: 3px solid #16A34A;">
+                <h2 class="section-title">✅ مراجعة وتأكيد</h2>
+                <p class="section-subtitle">تأكد من إجاباتك قبل الإرسال</p>
+
+                <div id="reviewContent" style="font-size:13px;line-height:1.8;color:var(--text-body);"></div>
+
+                <div style="display:flex;gap:12px;margin-top:var(--spacing-2xl);">
+                    <button type="button" class="btn btn-outline" onclick="prevScreen()" style="flex:1;">
+                        <i class="fa-solid fa-arrow-right"></i> السابق
+                    </button>
+                    <button type="submit" class="btn btn-primary" id="submitBtn" style="flex:2;background:linear-gradient(135deg,#16A34A 0%,#22C55E 50%,#15803D 100%);box-shadow:0 6px 20px rgba(22,163,74,0.25);">
+                        <i class="fa-solid fa-paper-plane"></i> إرسال الإجابات
+                    </button>
+                </div>
+            </div>
+
+        </form>
+
+        <!-- Success Screen (hidden initially) -->
+        <div class="section-card hidden" id="successScreen" style="text-align:center;border-top:3px solid #16A34A;">
+            <div class="success-icon">
+                <i class="fa-solid fa-check"></i>
+            </div>
+            <h2 class="success-title">تم الإرسال بنجاح! 🎉</h2>
+            <p class="success-subtitle">
+                شكراً لمشاركتك في استطلاع الرأي.<br>
+                رأيك مهم جداً لتطوير كورس البرمجة.<br><br>
+                <strong>مستر إسماعيل</strong><br>
+                <span style="font-size:13px;color:var(--text-muted);">مدرسة الجيل الجديد الخاصة</span>
+            </p>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            © ٢٠٢٦ · <span>مدرسة الجيل الجديد الخاصة</span> · استطلاع رأي
+        </div>
+    </div>
+
+    <!-- Toast -->
+    <div class="toast" id="toast"></div>
+
+    <!-- Firebase -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-app.js";
+        import { getFirestore, collection, doc, setDoc, Timestamp } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDFO3F3E4vie6WA8fCA00rmRp_0_2CPq5I",
+            authDomain: "exam-1fd4a.firebaseapp.com",
+            projectId: "exam-1fd4a",
+            storageBucket: "exam-1fd4a.firebasestorage.app",
+            messagingSenderId: "861838351458",
+            appId: "1:861838351458:web:58087fe82ad951b9bac53b",
+            measurementId: "G-Q05JBNZJ3V"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // ────────────────────────────────────────
+        // GLOBAL STATE
+        // ────────────────────────────────────────
+        let currentScreen = 0;
+        const totalScreens = 4; // 0,1,2,3
+
+        // ────────────────────────────────────────
+        // OPTION CARD CLICK HANDLERS
+        // ────────────────────────────────────────
+        function setupOptionCards(groupId, hiddenInputId) {
+            const cards = document.querySelectorAll(`#${groupId} .option-card`);
+            cards.forEach(card => {
+                card.addEventListener('click', () => {
+                    cards.forEach(c => c.classList.remove('selected'));
+                    card.classList.add('selected');
+                    document.getElementById(hiddenInputId).value = card.dataset.value;
+                });
+            });
+        }
+
+        setupOptionCards('q5Options', 'q5');
+        setupOptionCards('q6Options', 'q6');
+
+        // ────────────────────────────────────────
+        // SCREEN NAVIGATION
+        // ────────────────────────────────────────
+        function showScreen(index) {
+            for (let i = 0; i < totalScreens; i++) {
+                const screen = document.getElementById(`screen-${i}`);
+                if (screen) screen.classList.add('hidden');
+            }
+            const target = document.getElementById(`screen-${index}`);
+            if (target) target.classList.remove('hidden');
+
+            // Update progress
+            currentScreen = index;
+            updateProgress();
+            
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+
+            // If review screen, populate review
+            if (index === 3) populateReview();
+        }
+
+        function updateProgress() {
+            const steps = document.querySelectorAll('.progress-step');
+            const bar = document.getElementById('progressBar');
+            
+            steps.forEach((step, i) => {
+                step.classList.remove('completed', 'active');
+                if (i < currentScreen) step.classList.add('completed');
+                if (i === currentScreen) step.classList.add('active');
+            });
+            
+            const progress = Math.min((currentScreen / (totalScreens - 1)) * 100, 100);
+            bar.style.width = `${progress}%`;
+        }
+
+        function hideAllErrors() {
+            for (let i = 0; i < totalScreens; i++) {
+                const errorBox = document.getElementById(`errorBox${i}`);
+                if (errorBox) errorBox.classList.remove('show');
+            }
+        }
+
+        function showError(screenIndex, message) {
+            const errorBox = document.getElementById(`errorBox${screenIndex}`);
+            const errorText = document.getElementById(`errorText${screenIndex}`);
+            if (errorBox && errorText) {
+                errorText.textContent = message;
+                errorBox.classList.add('show');
+            }
+        }
+
+        // ────────────────────────────────────────
+        // VALIDATION
+        // ────────────────────────────────────────
+        function validateScreen0() {
+            const fullName = document.getElementById('fullName').value.trim();
+            const whatsapp = document.getElementById('whatsapp').value.trim();
+
+            if (!fullName || fullName.length < 6) {
+                showError(0, 'الرجاء إدخال اسم ثلاثي صحيح (6 أحرف على الأقل)');
+                return false;
+            }
+            if (!/^[\u0600-\u06FF\s]+$/.test(fullName)) {
+                showError(0, 'الرجاء كتابة الاسم باللغة العربية');
+                return false;
+            }
+            if (!whatsapp || !/^\d{10,15}$/.test(whatsapp.replace(/[\s\-\(\)]/g, ''))) {
+                showError(0, 'الرجاء إدخال رقم واتساب صحيح');
+                return false;
+            }
+            return true;
+        }
+
+        function validateScreen1() {
+            const q1 = document.getElementById('q1').value.trim();
+            const q2 = document.getElementById('q2').value.trim();
+            const q3 = document.getElementById('q3').value.trim();
+
+            if (!q1 || q1.length < 5) {
+                showError(1, 'الرجاء الإجابة على السؤال الأول (5 أحرف على الأقل)');
+                return false;
+            }
+            if (!q2 || q2.length < 5) {
+                showError(1, 'الرجاء الإجابة على السؤال الثاني (5 أحرف على الأقل)');
+                return false;
+            }
+            if (!q3 || q3.length < 5) {
+                showError(1, 'الرجاء الإجابة على السؤال الثالث (5 أحرف على الأقل)');
+                return false;
+            }
+            return true;
+        }
+
+        function validateScreen2() {
+            const q4 = document.getElementById('q4').value.trim();
+            const q5 = document.getElementById('q5').value;
+            const q6 = document.getElementById('q6').value;
+
+            if (!q4 || q4.length < 5) {
+                showError(2, 'الرجاء الإجابة على السؤال الرابع (5 أحرف على الأقل)');
+                return false;
+            }
+            if (!q5) {
+                showError(2, 'الرجاء اختيار إجابة السؤال الخامس');
+                return false;
+            }
+            if (!q6) {
+                showError(2, 'الرجاء اختيار إجابة السؤال السادس');
+                return false;
+            }
+            return true;
+        }
+
+        // ────────────────────────────────────────
+        // NAVIGATION FUNCTIONS
+        // ────────────────────────────────────────
+        window.nextScreen = function() {
+            hideAllErrors();
+
+            if (currentScreen === 0 && !validateScreen0()) return;
+            if (currentScreen === 1 && !validateScreen1()) return;
+            if (currentScreen === 2 && !validateScreen2()) return;
+
+            if (currentScreen < totalScreens - 1) {
+                showScreen(currentScreen + 1);
+            }
+        };
+
+        window.prevScreen = function() {
+            hideAllErrors();
+            if (currentScreen > 0) {
+                showScreen(currentScreen - 1);
+            }
+        };
+
+        // ────────────────────────────────────────
+        // POPULATE REVIEW
+        // ────────────────────────────────────────
+        function populateReview() {
+            const fullName = document.getElementById('fullName').value.trim();
+            const whatsapp = document.getElementById('whatsapp').value.trim();
+            const q1 = document.getElementById('q1').value.trim();
+            const q2 = document.getElementById('q2').value.trim();
+            const q3 = document.getElementById('q3').value.trim();
+            const q4 = document.getElementById('q4').value.trim();
+            const q5 = document.getElementById('q5').value;
+            const q6 = document.getElementById('q6').value;
+
+            const q5Labels = {
+                'continue': '🚀 أنا ناوي أكمل إن شاء الله',
+                'just_trying': '🔍 بجرب كتجربة ولسه مش متأكد',
+                'no': '👋 لا، مش هكمل'
+            };
+            const q6Labels = {
+                'school': '🏫 خلال المدرسة نفسها',
+                'vacation': '🏖️ خلال الإجازة بس',
+                'both': '📅 الاتنين - المدرسة والإجازة'
+            };
+
+            const content = `
+                <p><strong>👤 الاسم:</strong> ${fullName}</p>
+                <p><strong>📱 الواتساب:</strong> ${whatsapp}</p>
+                <hr style="border:none;border-top:1px solid var(--border);margin:12px 0;">
+                <p><strong>١.</strong> ${q1.substring(0, 80)}${q1.length > 80 ? '...' : ''}</p>
+                <p><strong>٢.</strong> ${q2.substring(0, 80)}${q2.length > 80 ? '...' : ''}</p>
+                <p><strong>٣.</strong> ${q3.substring(0, 80)}${q3.length > 80 ? '...' : ''}</p>
+                <p><strong>٤.</strong> ${q4.substring(0, 80)}${q4.length > 80 ? '...' : ''}</p>
+                <p><strong>٥.</strong> ${q5Labels[q5] || q5}</p>
+                <p><strong>٦.</strong> ${q6Labels[q6] || q6}</p>
+            `;
+            
+            document.getElementById('reviewContent').innerHTML = content;
+        }
+
+        // ────────────────────────────────────────
+        // FORM SUBMIT
+        // ────────────────────────────────────────
+        document.getElementById('feedbackForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const submitBtn = document.getElementById('submitBtn');
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<span style="display:inline-block;width:20px;height:20px;border:2px solid rgba(255,255,255,0.3);border-top-color:white;border-radius:50%;animation:spin 0.6s linear infinite;"></span> جاري الإرسال...';
+
+            const feedbackData = {
+                fullName: document.getElementById('fullName').value.trim(),
+                whatsapp: document.getElementById('whatsapp').value.trim().replace(/[\s\-\(\)]/g, ''),
+                answers: {
+                    q1: document.getElementById('q1').value.trim(),
+                    q2: document.getElementById('q2').value.trim(),
+                    q3: document.getElementById('q3').value.trim(),
+                    q4: document.getElementById('q4').value.trim(),
+                    q5: document.getElementById('q5').value,
+                    q6: document.getElementById('q6').value
+                },
+                submittedAt: Timestamp.now()
+            };
+
+            try {
+                // Auto-generated document ID
+                const docRef = doc(collection(db, 'feedback'));
+                await setDoc(docRef, feedbackData);
+
+                // Show success
+                document.getElementById('screen-3').classList.add('hidden');
+                document.getElementById('successScreen').classList.remove('hidden');
+                document.getElementById('progressSteps').style.display = 'none';
+                document.querySelector('.progress-bar-outer').style.display = 'none';
+                
+                // Confetti!
+                spawnConfetti();
+                
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+
+            } catch (error) {
+                console.error('Error submitting feedback:', error);
+                showToast('❌ حدث خطأ. حاول مرة أخرى.');
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> إرسال الإجابات';
+            }
+        });
+
+        // ────────────────────────────────────────
+        // CONFETTI
+        // ────────────────────────────────────────
+        function spawnConfetti() {
+            const colors = ['#D4A853', '#B22222', '#16A34A', '#2563EB', '#F0D68A', '#7C3AED', '#EA580C'];
+            const emojis = ['🎉', '⭐', '💫', '✨', '🌟', '🎊', '💛'];
+            
+            for (let i = 0; i < 40; i++) {
+                setTimeout(() => {
+                    const confetti = document.createElement('div');
+                    confetti.className = 'confetti';
+                    confetti.style.left = `${Math.random() * 100}%`;
+                    confetti.style.top = `-${Math.random() * 20}%`;
+                    confetti.style.fontSize = `${Math.random() * 20 + 14}px`;
+                    confetti.style.animationDuration = `${Math.random() * 2 + 2.5}s`;
+                    confetti.style.animationDelay = `${Math.random() * 0.5}s`;
+                    confetti.textContent = Math.random() > 0.5 ? '✦' : emojis[Math.floor(Math.random() * emojis.length)];
+                    confetti.style.color = colors[Math.floor(Math.random() * colors.length)];
+                    document.body.appendChild(confetti);
+                    
+                    setTimeout(() => confetti.remove(), 3500);
+                }, i * 60);
+            }
+        }
+
+        // ────────────────────────────────────────
+        // TOAST
+        // ────────────────────────────────────────
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.className = `toast ${type} show`;
+            clearTimeout(toast._timeout);
+            toast._timeout = setTimeout(() => toast.classList.remove('show'), 3000);
+        }
+
+        // ────────────────────────────────────────
+        // INIT
+        // ────────────────────────────────────────
+        showScreen(0);
+        updateProgress();
+
+        // Auto-focus first input
+        setTimeout(() => {
+            document.getElementById('fullName')?.focus();
+        }, 500);
+    </script>
+</body>
+</html>
