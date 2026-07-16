@@ -1,0 +1,981 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مدرسة الجيل الجديد الخاصة - منصة الامتحانات</title>
+
+    <!-- Firebase SDKs -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-analytics.js";
+        import { getFirestore, collection, addDoc, query, where, getDocs, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyAgUno4QlzT1u2JWSHP20EBCT4pkxRKIBo",
+            authDomain: "ismail-emad-com.firebaseapp.com",
+            projectId: "ismail-emad-com",
+            storageBucket: "ismail-emad-com.firebasestorage.app",
+            messagingSenderId: "761535264039",
+            appId: "1:761535264039:web:d84b0d7d592696b9a0a502",
+            measurementId: "G-RL326CK7C2"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const analytics = getAnalytics(app);
+        const db = getFirestore(app);
+        window.db = db;
+        window.collection = collection;
+        window.addDoc = addDoc;
+        window.query = query;
+        window.where = where;
+        window.getDocs = getDocs;
+        window.serverTimestamp = serverTimestamp;
+    </script>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 15px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 18px;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.4);
+            padding: 30px;
+            max-width: 750px;
+            width: 100%;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(25px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .school-header {
+            text-align: center;
+            margin-bottom: 25px;
+            border-bottom: 3px solid #2c5364;
+            padding-bottom: 18px;
+        }
+
+        .school-header h1 {
+            color: #2c5364;
+            font-size: 26px;
+            margin-bottom: 4px;
+        }
+
+        .school-header .subtitle {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .step {
+            display: none;
+        }
+
+        .step.active {
+            display: block;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 6px;
+            color: #333;
+            font-size: 14px;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            font-size: 15px;
+            transition: all 0.3s;
+            background: #fafafa;
+            text-align: right;
+            direction: rtl;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: #2c5364;
+            box-shadow: 0 0 0 4px rgba(44, 83, 100, 0.1);
+            background: white;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 14px;
+            font-size: 16px;
+            font-weight: bold;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            color: white;
+            background: linear-gradient(135deg, #2c5364, #203a43);
+            margin-top: 8px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(44, 83, 100, 0.4);
+        }
+
+        .btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .stage-options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 18px;
+        }
+
+        .stage-card {
+            border: 3px solid #ddd;
+            border-radius: 14px;
+            padding: 22px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: #fafafa;
+        }
+
+        .stage-card:hover {
+            border-color: #2c5364;
+            background: #eef6f9;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+        }
+
+        .stage-card.selected {
+            border-color: #2c5364;
+            background: #d4eaf3;
+            box-shadow: 0 0 0 4px rgba(44, 83, 100, 0.2);
+        }
+
+        .stage-card .icon {
+            font-size: 45px;
+            margin-bottom: 8px;
+        }
+
+        .stage-card .stage-name {
+            font-size: 18px;
+            font-weight: bold;
+            color: #2c5364;
+        }
+
+        .error-msg {
+            color: #e74c3c;
+            font-size: 12px;
+            margin-top: 4px;
+            display: none;
+        }
+
+        .error-msg.show {
+            display: block;
+        }
+
+        .question-box {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 16px;
+            border-right: 4px solid #2c5364;
+        }
+
+        .question-box h3 {
+            color: #2c5364;
+            margin-bottom: 12px;
+            font-size: 15px;
+            line-height: 1.5;
+        }
+
+        .option {
+            display: block;
+            padding: 10px 14px;
+            margin: 5px 0;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            background: white;
+            font-size: 14px;
+            text-align: right;
+            direction: rtl;
+        }
+
+        .option:hover {
+            background: #eef6f9;
+            border-color: #2c5364;
+        }
+
+        .option.selected {
+            background: #2c5364;
+            color: white;
+            border-color: #2c5364;
+        }
+
+        .result-box {
+            text-align: center;
+            padding: 25px;
+            background: #f8f9fa;
+            border-radius: 14px;
+            margin: 18px 0;
+        }
+
+        .score-circle {
+            width: 130px;
+            height: 130px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #2c5364, #203a43);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 42px;
+            font-weight: bold;
+            margin: 18px auto;
+            box-shadow: 0 8px 25px rgba(44, 83, 100, 0.4);
+        }
+
+        .score-text {
+            font-size: 16px;
+            color: #333;
+            margin: 8px 0;
+        }
+
+        .warning-box {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            border-radius: 10px;
+            padding: 16px;
+            margin: 18px 0;
+            text-align: center;
+        }
+
+        .warning-box .warning-icon {
+            font-size: 35px;
+            margin-bottom: 8px;
+        }
+
+        .warning-box p {
+            color: #856404;
+            font-size: 14px;
+            font-weight: 600;
+            line-height: 1.5;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 35px;
+        }
+
+        .spinner {
+            width: 45px;
+            height: 45px;
+            border: 4px solid #ddd;
+            border-top-color: #2c5364;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin: 0 auto 12px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .alert {
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-bottom: 12px;
+            font-weight: 600;
+            text-align: center;
+            font-size: 14px;
+        }
+
+        .alert-error {
+            background: #ffeaea;
+            color: #c0392b;
+            border: 1px solid #e74c3c;
+        }
+
+        .alert-success {
+            background: #eafaf1;
+            color: #27ae60;
+            border: 1px solid #2ecc71;
+        }
+
+        .timer {
+            text-align: center;
+            font-size: 18px;
+            font-weight: bold;
+            color: #e74c3c;
+            margin-bottom: 12px;
+            background: #ffeaea;
+            padding: 8px;
+            border-radius: 8px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: #ddd;
+            border-radius: 3px;
+            margin-bottom: 18px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #2c5364, #27ae60);
+            transition: width 0.4s;
+            border-radius: 3px;
+        }
+
+        h2 {
+            font-size: 20px;
+        }
+
+        h3 {
+            font-size: 16px;
+        }
+
+        @media (max-width: 600px) {
+            .container { padding: 18px; }
+            .stage-options { grid-template-columns: 1fr; }
+            .school-header h1 { font-size: 20px; }
+            .score-circle { width: 110px; height: 110px; font-size: 34px; }
+            .question-box h3 { font-size: 14px; }
+            .option { font-size: 13px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+
+        <!-- رأس الصفحة -->
+        <div class="school-header">
+            <h1>🏫 مدرسة الجيل الجديد الخاصة</h1>
+            <p class="subtitle">منصة الامتحانات الإلكترونية</p>
+        </div>
+
+        <!-- الخطوة 1: اختيار المرحلة -->
+        <div class="step active" id="step1">
+            <h2 style="text-align:center; margin-bottom:18px; color:#2c5364;">اختر المرحلة الدراسية</h2>
+            <div class="stage-options">
+                <div class="stage-card" onclick="selectStage('primary')" id="card-primary">
+                    <div class="icon">🎒</div>
+                    <div class="stage-name">المرحلة الابتدائية</div>
+                </div>
+                <div class="stage-card" onclick="selectStage('preparatory')" id="card-preparatory">
+                    <div class="icon">📘</div>
+                    <div class="stage-name">المرحلة الإعدادية</div>
+                </div>
+            </div>
+            <div id="stageError" class="error-msg">⚠️ من فضلك اختر المرحلة أولاً</div>
+            <button class="btn" onclick="goToStep2()">التالي ←</button>
+        </div>
+
+        <!-- الخطوة 2: إدخال البيانات -->
+        <div class="step" id="step2">
+            <h2 style="text-align:center; margin-bottom:18px; color:#2c5364;">بيانات الدخول</h2>
+            <div class="form-group">
+                <label>👤 اسم الطالب</label>
+                <input type="text" id="studentName" placeholder="أدخل اسمك الكامل">
+                <div id="nameError" class="error-msg">⚠️ من فضلك أدخل اسمك</div>
+            </div>
+            <div class="form-group">
+                <label>🔢 الكود (5 أرقام)</label>
+                <input type="text" id="studentCode" placeholder="أدخل الكود المكون من 5 أرقام" maxlength="5" inputmode="numeric" pattern="[0-9]*">
+                <div id="codeError" class="error-msg">⚠️ الكود يجب أن يكون 5 أرقام</div>
+            </div>
+            <div class="form-group">
+                <label>🔐 كلمة السر (6 أرقام)</label>
+                <input type="password" id="studentPassword" placeholder="أدخل كلمة السر المكونة من 6 أرقام" maxlength="6" inputmode="numeric" pattern="[0-9]*">
+                <div id="passwordError" class="error-msg">⚠️ كلمة السر يجب أن تكون 6 أرقام</div>
+            </div>
+            <div id="loginError" class="alert alert-error" style="display:none;"></div>
+            <div style="display:flex; gap:8px;">
+                <button class="btn" onclick="goToStep1()" style="background:#666;">→ العودة</button>
+                <button class="btn" onclick="verifyAndStart()" id="startBtn">بدء الامتحان 🚀</button>
+            </div>
+        </div>
+
+        <!-- الخطوة 3: جاري التحميل -->
+        <div class="step" id="step3">
+            <div class="loading">
+                <div class="spinner"></div>
+                <p style="color:#2c5364; font-size:16px;">جاري التحقق من البيانات...</p>
+            </div>
+        </div>
+
+        <!-- الخطوة 4: الامتحان -->
+        <div class="step" id="step4">
+            <div class="timer" id="timerDisplay">⏱ الوقت المتبقي: 30:00</div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill" style="width: 0%;"></div>
+            </div>
+            <h3 style="color:#2c5364; margin-bottom:12px; text-align:center;" id="examTitle"></h3>
+            <div id="questionsContainer"></div>
+            <div id="examError" class="error-msg" style="text-align:center; margin:8px 0;">⚠️ من فضلك أجب على جميع الأسئلة</div>
+            <button class="btn" onclick="submitExam()">تسليم الامتحان ✅</button>
+        </div>
+
+        <!-- الخطوة 5: النتيجة -->
+        <div class="step" id="step5">
+            <h2 style="text-align:center; color:#2c5364;">🎉 تم تسليم الامتحان</h2>
+            <div class="result-box">
+                <p class="score-text">نتيجتك:</p>
+                <div class="score-circle" id="finalScore">0</div>
+                <p style="font-size:18px; color:#2c5364;">من 20</p>
+            </div>
+            <div class="warning-box">
+                <div class="warning-icon">📸</div>
+                <p>
+                    ⚠️ هام جداً:<br>
+                    يرجى أخذ <strong>Screenshot</strong> (لقطة شاشة) لهذه النتيجة<br>
+                    وإرسالها إلى <strong>مستر إسماعيل</strong> 📱<br><br>
+                    أياً كانت الدرجة التي حصلت عليها
+                </p>
+            </div>
+            <button class="btn" onclick="location.reload()">إنهاء 🔚</button>
+        </div>
+
+        <!-- الخطوة 6: امتحان مكتمل سابقاً -->
+        <div class="step" id="step6">
+            <div class="warning-box" style="background:#ffe0e0; border-color:#e74c3c;">
+                <div class="warning-icon">🚫</div>
+                <p style="color:#c0392b;">
+                    <strong>عفواً!</strong><br>
+                    لقد قمت بأداء الامتحان مسبقاً بهذا الكود.<br>
+                    لا يمكن دخول الامتحان مرة أخرى.<br><br>
+                    إذا كان لديك استفسار، يرجى التواصل مع <strong>مستر إسماعيل</strong>.
+                </p>
+            </div>
+            <button class="btn" onclick="location.reload()">العودة للصفحة الرئيسية ↩</button>
+        </div>
+
+    </div>
+
+    <script>
+        // ==================== الأكواد المسموح بها - الجيل الجديد ====================
+        const allowedCodes = [
+            // الجيل الجديد
+            { code: "58147", password: "924638" },
+            { code: "30725", password: "681594" },
+            { code: "89416", password: "275381" },
+            { code: "46289", password: "713905" },
+            { code: "15834", password: "840271" },
+            { code: "72941", password: "596182" },
+            { code: "31587", password: "928461" },
+            { code: "64023", password: "175839" },
+            { code: "98275", password: "463120" },
+            { code: "27468", password: "815394" },
+            { code: "53192", password: "704681" },
+            { code: "86714", password: "259370" },
+            { code: "41836", password: "970521" },
+            { code: "79502", password: "386147" },
+            { code: "24681", password: "539802" },
+            { code: "90357", password: "614295" },
+            { code: "67248", password: "850371" },
+            { code: "13975", password: "427680" },
+            { code: "58429", password: "761305" },
+            { code: "82163", password: "908472" },
+            { code: "35740", password: "294861" },
+            { code: "74812", password: "570934" },
+            { code: "26539", password: "813640" },
+            { code: "91648", password: "352701" },
+            { code: "48127", password: "694158" },
+            { code: "73054", password: "281963" },
+            { code: "19284", password: "745310" },
+            { code: "56801", password: "932476" },
+            { code: "84376", password: "107594" },
+            { code: "32591", password: "684230" },
+            { code: "67925", password: "518407" },
+            { code: "14086", password: "793261" },
+            { code: "95431", password: "260845" },
+            { code: "28173", password: "947510" },
+            { code: "50762", password: "384129" },
+            { code: "89215", password: "671358" },
+            { code: "36480", password: "925703" },
+            { code: "71549", password: "438620" },
+            { code: "23617", password: "801574" },
+            { code: "98124", password: "650319" },
+            { code: "45238", password: "174926" },
+            { code: "80615", password: "539418" },
+            { code: "12769", password: "860245" },
+            { code: "69384", password: "215780" },
+            { code: "57021", password: "946138" },
+            { code: "34816", password: "721495" },
+            { code: "91473", password: "580264" },
+            { code: "26580", password: "317948" },
+            { code: "78135", password: "694820" },
+            { code: "43927", password: "852671" },
+            { code: "61804", password: "203957" },
+            { code: "17582", password: "764310" },
+            { code: "85037", password: "491628" },
+            { code: "29461", password: "837150" },
+            { code: "73218", password: "540286" },
+            { code: "46825", password: "913704" },
+            { code: "10973", password: "682541" },
+            { code: "58716", password: "305892" },
+            { code: "84152", password: "976430" },
+            { code: "37649", password: "251807" },
+            { code: "92084", password: "648315" },
+            { code: "24395", password: "780421" },
+            { code: "65413", password: "129568" },
+            { code: "81720", password: "534976" },
+            { code: "38167", password: "895210" },
+            { code: "74603", password: "270581" },
+            { code: "15892", password: "643870" },
+            { code: "50348", password: "917264" },
+            { code: "87241", password: "386590" },
+            { code: "26915", password: "724138" },
+            { code: "93470", password: "561824" },
+            { code: "41758", password: "208693" },
+            { code: "68024", password: "945371" },
+            { code: "19537", password: "470825" },
+            { code: "75861", password: "813249" },
+            { code: "32470", password: "690518" },
+            { code: "84193", password: "257406" },
+            { code: "56218", password: "974130" },
+            { code: "21746", password: "583972" },
+            { code: "90381", password: "146825" },
+            { code: "47852", password: "720639" },
+            { code: "73519", password: "894251" },
+            { code: "18643", password: "351780" },
+            { code: "65027", password: "908413" },
+            { code: "29483", password: "627105" },
+            { code: "81734", password: "540918" },
+            { code: "36195", password: "874260" },
+            { code: "72840", password: "193657" },
+            { code: "15476", password: "682903" },
+            { code: "98512", password: "407351" },
+            { code: "24368", password: "791524" },
+            { code: "57084", password: "368290" },
+            { code: "81629", password: "945780" },
+            { code: "43715", password: "120864" },
+            { code: "69253", password: "871305" },
+            { code: "30871", password: "564982" },
+            { code: "95468", password: "237140" },
+            { code: "12695", password: "780346" },
+            { code: "74183", password: "915628" },
+            { code: "58320", password: "462791" },
+            // الجيل الجديد - إضافات
+            { code: "51538", password: "229900" },
+            { code: "12131", password: "116600" },
+            { code: "14151", password: "116600" },
+            // دار الفكر
+            { code: "41267", password: "835194" },
+            { code: "95821", password: "470362" },
+            { code: "13684", password: "729518" },
+            { code: "78340", password: "194625" },
+            { code: "52091", password: "681743" },
+            { code: "86415", password: "250938" },
+            { code: "24753", password: "914670" },
+            { code: "69128", password: "573841" },
+            { code: "30846", password: "126985" },
+            { code: "97514", password: "842307" },
+            { code: "15493", password: "390761" },
+            { code: "82760", password: "615428" },
+            { code: "46381", password: "978250" },
+            { code: "70935", password: "241683" },
+            { code: "28617", password: "534902" },
+            { code: "91842", password: "760315" },
+            { code: "34169", password: "182947" },
+            { code: "65273", password: "845106" },
+            { code: "19758", password: "623874" },
+            { code: "87431", password: "509216" },
+            { code: "43092", password: "751368" },
+            { code: "76518", password: "294850" },
+            { code: "28164", password: "937541" },
+            { code: "50379", password: "468192" },
+            { code: "84620", password: "175904" },
+            { code: "31285", password: "890673" },
+            { code: "95406", password: "527381" },
+            { code: "12873", password: "346720" },
+            { code: "68754", password: "901845" },
+            { code: "24590", password: "618257" },
+            { code: "79136", password: "453980" },
+            { code: "56412", password: "807341" },
+            { code: "83927", password: "215496" },
+            { code: "37068", password: "984152" },
+            { code: "91605", password: "730264" },
+            { code: "14258", password: "569873" },
+            { code: "65831", password: "342705" },
+            { code: "28497", password: "816539" },
+            { code: "70314", password: "195628" },
+            { code: "87562", password: "640381" },
+            { code: "43176", password: "928154" },
+            { code: "96740", password: "513692" },
+            { code: "25084", password: "781430" },
+            { code: "61429", password: "357218" },
+            { code: "18965", password: "864507" },
+            { code: "74281", password: "230946" },
+            { code: "39817", password: "675821" },
+            { code: "82154", password: "149638" },
+            { code: "57603", password: "908472" },
+            { code: "94328", password: "426715" },
+            { code: "16740", password: "852963" },
+            { code: "63495", password: "701284" },
+            { code: "28051", password: "394176" },
+            { code: "71582", password: "968530" },
+            { code: "45936", password: "241795" },
+            { code: "80247", password: "637419" },
+            { code: "19482", password: "580326" },
+            { code: "68310", password: "912754" },
+            { code: "53769", password: "468031" },
+            { code: "92175", password: "305847" },
+            // الدفعة الثالثة
+            { code: "49275", password: "368149" },
+            { code: "83610", password: "952743" },
+            { code: "27493", password: "610852" },
+            { code: "65184", password: "473920" },
+            { code: "90362", password: "284617" },
+            { code: "31758", password: "591306" },
+            { code: "74291", password: "826453" },
+            { code: "58436", password: "175928" },
+            { code: "16904", password: "934865" },
+            { code: "42857", password: "602314" },
+            { code: "95138", password: "347061" },
+            { code: "20647", password: "815932" },
+            { code: "63915", password: "492708" },
+            { code: "87240", password: "256819" },
+            { code: "35826", password: "741093" },
+            { code: "59471", password: "183526" },
+            { code: "14783", password: "629470" },
+            { code: "76309", password: "905184" },
+            { code: "48512", password: "367245" },
+            { code: "29168", password: "514397" }
+        ];
+
+        // ==================== أسئلة المرحلة الابتدائية ====================
+        const primaryQuestions = [
+            { q: "ما وظيفة HTML؟", options: ["إضافة الحركة", "بناء هيكل الصفحة", "تلوين الصفحة", "تشغيل الألعاب"], answer: 1 },
+            { q: "ما وظيفة CSS؟", options: ["بناء الصفحة", "تغيير شكل وألوان الصفحة", "اتخاذ القرارات", "تخزين البيانات"], answer: 1 },
+            { q: "ما وظيفة JavaScript؟", options: ["إضافة التفاعل والحركة للصفحة", "تغيير الألوان فقط", "كتابة النصوص فقط", "رسم الصور"], answer: 0 },
+            { q: "صفحة الويب تشبه:", options: ["سيارة", "منزل يتكون من HTML وCSS وJavaScript", "كتاب", "حقيبة"], answer: 1 },
+            { q: "أي لغة تجعل الصفحة تتفاعل مع المستخدم؟", options: ["HTML", "CSS", "JavaScript", "Paint"], answer: 2 },
+            { q: "المتغير يشبه:", options: ["صندوق نخزن فيه البيانات", "كرة", "شاشة", "باب"], answer: 0 },
+            { q: "هل يمكن تغيير قيمة المتغير؟", options: ["نعم", "لا", "", ""], answer: 0 },
+            { q: "الشرط (IF) يساعد الكمبيوتر على:", options: ["اتخاذ قرار", "الرسم", "تشغيل الفيديو", "كتابة القصص"], answer: 0 },
+            { q: "إذا كان الشرط صحيحًا فإن الكمبيوتر:", options: ["ينفذ الأمر المطلوب", "يتوقف", "يغلق البرنامج", "يحذف البيانات"], answer: 0 },
+            { q: "التكرار (Loop) يعني:", options: ["تنفيذ نفس الأمر أكثر من مرة", "حذف البرنامج", "إغلاق الكمبيوتر", "تغيير لون الصفحة"], answer: 0 },
+            { q: "لماذا نستخدم التكرار؟", options: ["لتقصير الكود وتوفير الوقت", "لتكبير الشاشة", "لحذف الملفات", "لإغلاق البرنامج"], answer: 0 },
+            { q: "الحلقة اللانهائية هي:", options: ["حلقة لا تتوقف", "حلقة تعمل مرة واحدة", "حلقة تحذف الكود", "حلقة تغير الألوان"], answer: 0 },
+            { q: "لماذا تعتبر الحلقة اللانهائية مشكلة؟", options: ["لأنها قد تجعل البرنامج لا يتوقف", "لأنها تجعل البرنامج أسرع", "لأنها تحفظ الملفات", "لأنها تغير شكل الصفحة"], answer: 0 },
+            { q: "عند وجود خطأ في البرنامج يجب:", options: ["تجاهله", "البحث عنه وإصلاحه", "حذف البرنامج", "إغلاق الكمبيوتر"], answer: 1 },
+            { q: "أي من التالي يستخدم لتطوير مواقع الويب؟", options: ["JavaScript", "Word", "Paint", "Calculator"], answer: 0 },
+            { q: "أي لغة مسؤولة عن شكل الصفحة؟", options: ["HTML", "CSS", "JavaScript", "Python"], answer: 1 },
+            { q: "أي لغة مسؤولة عن هيكل الصفحة؟", options: ["CSS", "JavaScript", "HTML", "Excel"], answer: 2 },
+            { q: "إذا أردت أن تجعل الزر يستجيب عند الضغط عليه، تستخدم:", options: ["HTML", "CSS", "JavaScript", "Word"], answer: 2 },
+            { q: "من مميزات JavaScript أنها:", options: ["سريعة وسهلة التعلم", "تستخدم للطباعة فقط", "تعمل بدون متصفح فقط", "لا تضيف أي تفاعل"], answer: 0 },
+            { q: "ما الترتيب الصحيح لبناء صفحة ويب؟", options: ["HTML ← CSS ← JavaScript", "CSS ← JavaScript ← HTML", "JavaScript ← HTML ← CSS", "CSS ← HTML ← JavaScript"], answer: 0 }
+        ];
+
+        // ==================== أسئلة المرحلة الإعدادية ====================
+        const preparatoryQuestions = [
+            { q: "ما هي JavaScript؟", options: ["لغة لتصميم الصفحات فقط", "لغة لإضافة التفاعل والحركة داخل صفحات الويب", "برنامج لتصفح الإنترنت", "لغة لإنشاء الصور"], answer: 1 },
+            { q: "أي جزء من أجزاء الويب مسؤول عن شكل الصفحة وألوانها؟", options: ["HTML", "CSS", "JavaScript", "Console"], answer: 1 },
+            { q: "أي جزء من أجزاء الويب يبني هيكل الصفحة؟", options: ["CSS", "JavaScript", "HTML", "Browser"], answer: 2 },
+            { q: "JavaScript تجعل صفحة الويب:", options: ["ثابتة فقط", "أكثر ذكاءً وتفاعلاً", "تغير ألوان الشاشة فقط", "تحفظ الملفات فقط"], answer: 1 },
+            { q: "أي من التالي تستطيع JavaScript القيام به؟", options: ["التحقق من بيانات المستخدم", "طباعة الكتب", "صناعة الألعاب الورقية", "تغيير نظام التشغيل"], answer: 0 },
+            { q: "أين يمكن استخدام JavaScript؟", options: ["مواقع الويب فقط", "تطبيقات الهاتف فقط", "الألعاب فقط", "جميع ما سبق"], answer: 3 },
+            { q: "ما اسم نافذة المطور التي يستخدمها المبرمج لرؤية نتائج البرنامج؟", options: ["HTML", "CSS", "Console", "Browser"], answer: 2 },
+            { q: "الدالة المستخدمة للطباعة داخل وحدة التحكم هي:", options: ["()print", "()alert", "()console.log", "()output"], answer: 2 },
+            { q: "أين تظهر نتيجة ()console.log؟", options: ["على الصفحة مباشرة", "داخل Console", "في ملف Word", "على سطح المكتب"], answer: 1 },
+            { q: 'ماذا يطبع الكود التالي؟\n("Hello World")console.log;', options: ["Hello World", "Error", "لا شيء", "JavaScript"], answer: 0 },
+            { q: 'ماذا يطبع الكود التالي؟\n("أهلاً بك")console.log;', options: ["أهلاً بك", "Hello", "Error", "لا شيء"], answer: 0 },
+            { q: 'ماذا يحدث إذا كتبت؟\n("Hello")Console.Log;', options: ["يعمل بشكل صحيح", "يحدث خطأ - JavaScript تفرق بين الحروف الكبيرة والصغيرة", "يطبع Hello مرتين", "يفتح Console"], answer: 1 },
+            { q: "JavaScript تعتبر لغة:", options: ["لا تفرق بين الحروف", "تفرق بين الحروف الكبيرة والصغيرة", "لا تستخدم الأقواس", "لا تحتاج علامات تنصيص"], answer: 1 },
+            { q: "أي كود صحيح؟", options: ['("Hello")console.log;', '("Hello")Console.log;', '("Hello")console.Log;', '("Hello")Console.Log;'], answer: 0 },
+            { q: "ما فائدة Console؟", options: ["اكتشاف الأخطاء", "اختبار الكود", "طباعة النتائج", "جميع ما سبق"], answer: 3 },
+            { q: 'ماذا يطبع الكود التالي؟\n("محمد")console.log;\n("أحمد")console.log;', options: ["محمد ثم أحمد في سطرين", "محمد أحمد في سطر واحد", "Error", "لا شيء"], answer: 0 },
+            { q: 'ماذا يطبع الكود التالي؟\n("JavaScript")console.log;\n("أنا أتعلم")console.log;', options: ["JavaScript ثم أنا أتعلم في سطرين", "JavaScriptأنا أتعلم", "Error", "لا شيء"], answer: 0 },
+            { q: "أي عبارة صحيحة عن ()console.log؟", options: ["تغير محتوى الصفحة", "تطبع داخل Console فقط", "تحفظ الملف", "تغلق المتصفح"], answer: 1 },
+            { q: "أي من التالي ليس من استخدامات JavaScript؟", options: ["التفاعل مع المستخدم", "إنشاء تأثيرات وحركات", "التحقق من البيانات", "تغيير هيكل الصفحة باستخدام CSS فقط"], answer: 3 },
+            { q: 'ما ناتج الكود التالي؟\n("مستر إسماعيل")console.log;\n("JavaScript")console.log;\n("أول برنامج")console.log;', options: ["مستر إسماعيل ثم JavaScript ثم أول برنامج في 3 أسطر", "JavaScript فقط", "Error", "لا شيء"], answer: 0 }
+        ];
+
+        // ==================== المتغيرات العامة ====================
+        let selectedStage = null;
+        let currentQuestions = [];
+        let studentAnswers = {};
+        let timerInterval = null;
+        let timeLeft = 1800;
+        let examStarted = false;
+
+        // ==================== دوال التنقل ====================
+        function showStep(stepNumber) {
+            document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+            document.getElementById('step' + stepNumber).classList.add('active');
+        }
+
+        function goToStep1() {
+            showStep(1);
+        }
+
+        function goToStep2() {
+            if (!selectedStage) {
+                document.getElementById('stageError').classList.add('show');
+                return;
+            }
+            document.getElementById('stageError').classList.remove('show');
+            document.getElementById('loginError').style.display = 'none';
+            showStep(2);
+        }
+
+        function selectStage(stage) {
+            selectedStage = stage;
+            document.querySelectorAll('.stage-card').forEach(c => c.classList.remove('selected'));
+            document.getElementById('card-' + stage).classList.add('selected');
+            document.getElementById('stageError').classList.remove('show');
+        }
+
+        function verifyCodeAndPassword(code, password) {
+            return allowedCodes.find(entry => entry.code === code && entry.password === password);
+        }
+
+        async function checkPreviousExam(code) {
+            const db = window.db;
+            const collection = window.collection;
+            const query = window.query;
+            const where = window.where;
+            const getDocs = window.getDocs;
+
+            const examsCollection = collection(db, "completed_exams");
+            const q = query(examsCollection, where("code", "==", code), where("stage", "==", selectedStage));
+            const querySnapshot = await getDocs(q);
+            return !querySnapshot.empty;
+        }
+
+        async function verifyAndStart() {
+            const name = document.getElementById('studentName').value.trim();
+            const code = document.getElementById('studentCode').value.trim();
+            const password = document.getElementById('studentPassword').value.trim();
+
+            document.getElementById('nameError').classList.remove('show');
+            document.getElementById('codeError').classList.remove('show');
+            document.getElementById('passwordError').classList.remove('show');
+            document.getElementById('loginError').style.display = 'none';
+
+            if (!name) {
+                document.getElementById('nameError').classList.add('show');
+                return;
+            }
+            if (!code || code.length !== 5 || isNaN(code)) {
+                document.getElementById('codeError').classList.add('show');
+                return;
+            }
+            if (!password || password.length !== 6 || isNaN(password)) {
+                document.getElementById('passwordError').classList.add('show');
+                return;
+            }
+
+            const isValid = verifyCodeAndPassword(code, password);
+            if (!isValid) {
+                document.getElementById('loginError').textContent = '❌ الكود أو كلمة السر غير صحيحة. تأكد من البيانات وحاول مرة أخرى.';
+                document.getElementById('loginError').style.display = 'block';
+                return;
+            }
+
+            showStep(3);
+
+            try {
+                const hasPrevious = await checkPreviousExam(code);
+                if (hasPrevious) {
+                    showStep(6);
+                    return;
+                }
+
+                if (selectedStage === 'primary') {
+                    currentQuestions = [...primaryQuestions];
+                    document.getElementById('examTitle').textContent = '📝 امتحان المرحلة الابتدائية';
+                } else {
+                    currentQuestions = [...preparatoryQuestions];
+                    document.getElementById('examTitle').textContent = '📝 امتحان المرحلة الإعدادية';
+                }
+
+                window.studentData = { name, code, stage: selectedStage };
+                studentAnswers = {};
+                buildExamUI();
+                startTimer();
+                showStep(4);
+                examStarted = true;
+
+            } catch (error) {
+                console.error("خطأ:", error);
+                document.getElementById('loginError').textContent = '❌ حدث خطأ في الاتصال. حاول مرة أخرى.';
+                document.getElementById('loginError').style.display = 'block';
+                showStep(2);
+            }
+        }
+
+        function buildExamUI() {
+            const container = document.getElementById('questionsContainer');
+            container.innerHTML = '';
+
+            currentQuestions.forEach((question, index) => {
+                const qBox = document.createElement('div');
+                qBox.className = 'question-box';
+
+                let qHTML = `<h3>سؤال ${index + 1}: ${question.q}</h3>`;
+                const labels = ['أ', 'ب', 'ج', 'د'];
+
+                question.options.forEach((option, optIndex) => {
+                    if (option) {
+                        qHTML += `
+                            <div class="option" 
+                                 id="q${index}_opt${optIndex}" 
+                                 onclick="selectAnswer(${index}, ${optIndex})">
+                                ${labels[optIndex]}) ${option}
+                            </div>`;
+                    }
+                });
+
+                qBox.innerHTML = qHTML;
+                container.appendChild(qBox);
+            });
+
+            updateProgress();
+        }
+
+        function selectAnswer(questionIndex, optionIndex) {
+            for (let i = 0; i < 4; i++) {
+                const opt = document.getElementById(`q${questionIndex}_opt${i}`);
+                if (opt) opt.classList.remove('selected');
+            }
+
+            const selected = document.getElementById(`q${questionIndex}_opt${optionIndex}`);
+            if (selected) selected.classList.add('selected');
+
+            studentAnswers[questionIndex] = optionIndex;
+            updateProgress();
+        }
+
+        function updateProgress() {
+            const answered = Object.keys(studentAnswers).length;
+            const total = currentQuestions.length;
+            const percent = (answered / total) * 100;
+            document.getElementById('progressFill').style.width = percent + '%';
+        }
+
+        function startTimer() {
+            timeLeft = 1800;
+            updateTimerDisplay();
+
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                updateTimerDisplay();
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    submitExam();
+                }
+            }, 1000);
+        }
+
+        function updateTimerDisplay() {
+            const minutes = Math.floor(timeLeft / 60);
+            const seconds = timeLeft % 60;
+            const display = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+            document.getElementById('timerDisplay').textContent = `⏱ الوقت المتبقي: ${display}`;
+
+            if (timeLeft <= 300) {
+                document.getElementById('timerDisplay').style.background = '#ffcccc';
+                document.getElementById('timerDisplay').style.color = '#c0392b';
+            }
+        }
+
+        async function submitExam() {
+            if (!examStarted) return;
+
+            clearInterval(timerInterval);
+            examStarted = false;
+
+            const totalQuestions = currentQuestions.length;
+            const answeredQuestions = Object.keys(studentAnswers).length;
+
+            if (answeredQuestions < totalQuestions) {
+                document.getElementById('examError').classList.add('show');
+                examStarted = true;
+                timerInterval = setInterval(() => {
+                    timeLeft--;
+                    updateTimerDisplay();
+                    if (timeLeft <= 0) {
+                        clearInterval(timerInterval);
+                        submitExam();
+                    }
+                }, 1000);
+                return;
+            }
+
+            document.getElementById('examError').classList.remove('show');
+
+            let score = 0;
+            currentQuestions.forEach((question, index) => {
+                if (studentAnswers[index] === question.answer) {
+                    score++;
+                }
+            });
+
+            document.getElementById('finalScore').textContent = score;
+            showStep(5);
+
+            try {
+                const db = window.db;
+                const collection = window.collection;
+                const addDoc = window.addDoc;
+                const serverTimestamp = window.serverTimestamp;
+
+                const resultData = {
+                    studentName: window.studentData.name,
+                    code: window.studentData.code,
+                    stage: window.studentData.stage,
+                    score: score,
+                    total: totalQuestions,
+                    answers: studentAnswers,
+                    timestamp: serverTimestamp()
+                };
+
+                await addDoc(collection(db, "exam_results"), resultData);
+                await addDoc(collection(db, "completed_exams"), {
+                    code: window.studentData.code,
+                    stage: window.studentData.stage,
+                    completedAt: serverTimestamp()
+                });
+
+            } catch (error) {
+                console.error("خطأ في الحفظ:", error);
+            }
+        }
+    </script>
+
+</body>
+</html>
