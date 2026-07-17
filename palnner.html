@@ -1,0 +1,951 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover" />
+    <meta name="theme-color" content="#B22222" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="description" content="تنظيم الأسبوع الدراسي مع مواقيت الصلاة - منصة أ.م إسماعيل عماد" />
+
+    <title>منظم الأسبوع | أ.م إسماعيل عماد</title>
+
+    <!-- ===== Google Fonts ===== -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&family=El+Messiri:wght@400;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+    <!-- ===== Font Awesome (للأيقونات الأساسية فقط) ===== -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
+    <!-- ===== ملف CSS المنفصل ===== -->
+    <link rel="stylesheet" href="css/planner.css" />
+</head>
+<body>
+
+    <!-- ============================================================ -->
+    <!-- HEADER -->
+    <!-- ============================================================ -->
+    <header class="header">
+        <div class="container header__inner">
+            <div class="header__brand" onclick="window.location.href='index.html'">
+                <div class="header__logo">I</div>
+                <div class="header__title-group">
+                    <h2 class="header__title">منظم الأسبوع</h2>
+                    <span class="header__subtitle">Weekly Planner</span>
+                </div>
+            </div>
+            <div class="header__actions">
+                <button class="btn btn--ghost" onclick="window.location.href='index.html'">
+                    <i class="fas fa-home"></i>
+                    <span class="btn__label">الرئيسية</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- ============================================================ -->
+    <!-- MAIN CONTENT -->
+    <!-- ============================================================ -->
+    <main class="main">
+
+        <!-- ===== PRAYER SECTION ===== -->
+        <section class="prayer-section" aria-label="مواقيت الصلاة">
+            <div class="container">
+                <!-- عنوان القسم -->
+                <div class="prayer__header">
+                    <h2 class="prayer__title">مواقيت الصلاة</h2>
+                    <span class="prayer__city" id="prayerCity">القاهرة</span>
+                    <span class="prayer__date" id="prayerDate"></span>
+                </div>
+
+                <!-- شبكة الصلوات -->
+                <div class="prayer__grid" id="prayerGrid">
+                    <!-- سيتم ملء البيانات بواسطة JavaScript -->
+                </div>
+
+                <!-- الصلاة القادمة + العداد -->
+                <div class="prayer__next">
+                    <div class="prayer__next-info">
+                        <span class="prayer__next-label">الصلاة القادمة</span>
+                        <span class="prayer__next-name" id="nextPrayerName">--</span>
+                    </div>
+                    <div class="prayer__next-timer" id="countdownTimer">--:--:--</div>
+                </div>
+
+                <!-- حالة الاتصال -->
+                <div class="prayer__status" id="prayerStatus">
+                    <span class="prayer__status-dot"></span>
+                    <span class="prayer__status-text">جاري التحميل...</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== WELCOME CARD ===== -->
+        <section class="welcome-section">
+            <div class="container">
+                <div class="welcome-card" id="welcomeCard">
+                    <div class="welcome-card__greeting" id="greetingText">مرحباً بك</div>
+                    <div class="welcome-card__date" id="dateDisplay"></div>
+                    <div class="welcome-card__stats">
+                        <span class="stat-pill">
+                            <i class="fas fa-tasks"></i>
+                            <span id="weeklyTotal">0</span> مهام
+                        </span>
+                        <span class="stat-pill">
+                            <i class="fas fa-check-circle"></i>
+                            <span id="weeklyDone">0</span> مكتملة
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== WEEK NAVIGATION ===== -->
+        <section class="week-section">
+            <div class="container">
+                <div class="week-nav">
+                    <button class="week-nav__btn" onclick="navigateWeek(-1)" aria-label="الأسبوع السابق">
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                    <div class="week-nav__days" id="daySelector"></div>
+                    <button class="week-nav__btn" onclick="navigateWeek(1)" aria-label="الأسبوع التالي">
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== PROGRESS ===== -->
+        <section class="progress-section">
+            <div class="container">
+                <div class="progress-grid">
+                    <div class="progress-card" id="progressCard">
+                        <div class="progress-card__header">
+                            <h4 id="progressTitle">ابدأ العمل</h4>
+                            <span class="progress-card__percent" id="progressPercent">0%</span>
+                        </div>
+                        <div class="progress-card__bar">
+                            <div class="progress-card__fill" id="progressBarFill"></div>
+                        </div>
+                        <div class="progress-card__detail">
+                            <span id="doneCount">0</span> من <span id="totalCount">0</span> مهام مكتملة
+                        </div>
+                    </div>
+                    <div class="streak-badge" id="streakBadge">
+                        <span class="streak-badge__icon">🔥</span>
+                        <span class="streak-badge__number" id="streakNum">0</span>
+                        <span class="streak-badge__label">يوم متتالي</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== ADD TASK ===== -->
+        <section class="add-task-section">
+            <div class="container">
+                <div class="add-task__form">
+                    <div class="add-task__row">
+                        <select class="add-task__select" id="taskDaySelect"></select>
+                        <input type="time" class="add-task__input add-task__input--time" id="taskTime" value="08:00" />
+                        <select class="add-task__select" id="taskCourseSelect">
+                            <option value="">بدون كورس</option>
+                        </select>
+                        <div class="add-task__input-wrap">
+                            <input
+                                type="text"
+                                class="add-task__input add-task__input--text"
+                                id="taskInput"
+                                placeholder="اكتب مهمتك هنا..."
+                                maxlength="150"
+                            />
+                        </div>
+                        <button class="add-task__btn" id="addTaskBtn" onclick="addTask()">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                    </div>
+                    <div class="add-task__quick">
+                        <button class="quick-chip" onclick="quickAdd('مذاكرة الدرس')">مذاكرة</button>
+                        <button class="quick-chip" onclick="quickAdd('حل الواجب')">واجب</button>
+                        <button class="quick-chip" onclick="quickAdd('مراجعة المحاضرة')">مراجعة</button>
+                        <button class="quick-chip" onclick="quickAdd('تحضير الدرس القادم')">تحضير</button>
+                        <button class="quick-chip" onclick="quickAdd('تمارين إضافية')">تمارين</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== TASK LIST ===== -->
+        <section class="task-list-section">
+            <div class="container">
+                <div class="task-list__header">
+                    <h4 id="taskListTitle">مهام اليوم</h4>
+                    <button class="task-list__toggle" id="toggleCompletedBtn" onclick="toggleShowCompleted()">
+                        إخفاء المكتملة
+                    </button>
+                </div>
+                <div class="task-list" id="taskList">
+                    <div class="empty-state">
+                        <span class="empty-state__icon">📭</span>
+                        <p class="empty-state__title">لا توجد مهام لهذا اليوم</p>
+                        <p class="empty-state__sub">أضف مهمتك الأولى وابدأ الإنجاز</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== QUOTE ===== -->
+        <section class="quote-section">
+            <div class="container">
+                <div class="quote-card">
+                    <blockquote class="quote-card__text" id="dailyQuote">"رحلة الألف ميل تبدأ بخطوة"</blockquote>
+                    <cite class="quote-card__author" id="quoteAuthor">- لاو تزو</cite>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- ============================================================ -->
+    <!-- BOTTOM NAVIGATION -->
+    <!-- ============================================================ -->
+    <nav class="bottom-nav">
+        <button class="bottom-nav__item" onclick="window.location.href='index.html'">
+            <i class="fas fa-home"></i>
+            <span>الرئيسية</span>
+        </button>
+        <button class="bottom-nav__item" onclick="window.location.href='courses.html'">
+            <i class="fas fa-graduation-cap"></i>
+            <span>كورساتي</span>
+        </button>
+        <button class="bottom-nav__item" onclick="window.location.href='progress.html'">
+            <i class="fas fa-chart-line"></i>
+            <span>تقدمي</span>
+        </button>
+        <button class="bottom-nav__item" onclick="window.location.href='sessions.html'">
+            <i class="fas fa-clock"></i>
+            <span>جلسات</span>
+        </button>
+        <button class="bottom-nav__item bottom-nav__item--active" onclick="window.location.href='planner.html'">
+            <i class="fas fa-calendar-alt"></i>
+            <span>يومي</span>
+        </button>
+        <button class="bottom-nav__item" onclick="window.location.href='ai.html'">
+            <i class="fas fa-robot"></i>
+            <span>ذكاء</span>
+        </button>
+        <button class="bottom-nav__item" onclick="window.location.href='activate.html'">
+            <i class="fas fa-key"></i>
+            <span>تفعيل</span>
+        </button>
+    </nav>
+
+    <!-- ============================================================ -->
+    <!-- TOAST NOTIFICATION -->
+    <!-- ============================================================ -->
+    <div class="toast" id="toast"></div>
+
+    <!-- ============================================================ -->
+    <!-- EDIT MODAL -->
+    <!-- ============================================================ -->
+    <div class="modal" id="editModal" style="display:none;">
+        <div class="modal__overlay" onclick="closeEditModal()"></div>
+        <div class="modal__content">
+            <h4 class="modal__title">تعديل المهمة</h4>
+            <input type="text" class="modal__input" id="editTaskInput" maxlength="150" placeholder="عدّل المهمة..." />
+            <div class="modal__actions">
+                <button class="btn btn--cancel" onclick="closeEditModal()">إلغاء</button>
+                <button class="btn btn--save" onclick="saveEditTask()">حفظ</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SCRIPTS -->
+    <!-- ============================================================ -->
+
+    <!-- ===== PRAYER TIMES SCRIPT (يتم تحميله أولاً) ===== -->
+    <script src="js/prayer-times.js"></script>
+
+    <!-- ===== ENV (متغيرات البيئة) ===== -->
+    <script src="env.js"></script>
+
+    <!-- ===== FIREBASE (ES Module) ===== -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+        import { getFirestore, doc, getDoc, setDoc, serverTimestamp, getDocs, collection, query, orderBy, limit } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+        // ============================================================
+        // التهيئة
+        // ============================================================
+        const app = initializeApp(ENV.FIREBASE);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        let currentUser = null;
+        let weeklyTasks = {};
+        let selectedDayKey = '';
+        let weekOffset = 0;
+        let currentWeekStart = null;
+        let showCompleted = true;
+        let editingTaskId = null;
+        let editingTaskDay = null;
+        let streakCount = 0;
+        let allCourses = [];
+        let isSaving = false;
+
+        const DAYS_AR = ['السبت', 'الأحد', 'الاثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة'];
+        const DAYS_KEYS = ['saturday', 'sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday'];
+
+        const GREETINGS = [
+            { start: 5, end: 12, text: 'صباح الخير', sub: 'بداية موفقة ليوم جديد' },
+            { start: 12, end: 17, text: 'مساء الخير', sub: 'أتمنى لك وقتاً منتجاً' },
+            { start: 17, end: 21, text: 'مساء الخير', sub: 'وقت ممتاز لإنجاز المهام' },
+            { start: 21, end: 24, text: 'تصبح على خير', sub: 'راجع مهام الغد قبل النوم' },
+            { start: 0, end: 5, text: 'وقت متأخر', sub: 'خذ قسطاً من الراحة' }
+        ];
+
+        const QUOTES = [
+            { text: "رحلة الألف ميل تبدأ بخطوة", author: "لاو تزو" },
+            { text: "النجاح هو مجموع الجهود الصغيرة", author: "روبرت كولير" },
+            { text: "خطط لعملك واعمل على خطتك", author: "نابليون هيل" },
+            { text: "من فشل في التخطيط، خطط للفشل", author: "بنجامين فرانكلين" },
+            { text: "الأمس هو تاريخ، الغد هو لغز، اليوم هدية", author: "حكمة صينية" },
+            { text: "الانضباط هو الجسر بين الأهداف والإنجاز", author: "جيم رون" },
+            { text: "افعل ما تستطيع، بما تملك، حيث أنت", author: "ثيودور روزفلت" },
+            { text: "العلم في الصغر كالنقش على الحجر", author: "مثل عربي" },
+            { text: "اجعل لكل يوم هدفاً تعيش من أجله", author: "حكمة" },
+            { text: "التعليم هو جواز السفر للمستقبل", author: "مالكوم إكس" }
+        ];
+
+        // ============================================================
+        // Toast Notification
+        // ============================================================
+        function showToast(message, type = 'info') {
+            const toast = document.getElementById('toast');
+            toast.className = `toast toast--${type}`;
+            toast.innerHTML = `<i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'times-circle' : 'info-circle'}"></i> ${message}`;
+            toast.classList.add('toast--show');
+            clearTimeout(toast._timeout);
+            toast._timeout = setTimeout(() => toast.classList.remove('toast--show'), 2800);
+        }
+
+        // ============================================================
+        // Date Helpers
+        // ============================================================
+        function getRealToday() {
+            return new Date();
+        }
+
+        function getWeekStart(offset = 0) {
+            const today = getRealToday();
+            const dayOfWeek = today.getDay();
+            const diff = dayOfWeek === 0 ? 6 : dayOfWeek - 1;
+            const monday = new Date(today);
+            monday.setDate(today.getDate() - diff + (offset * 7));
+            monday.setHours(0, 0, 0, 0);
+            return monday;
+        }
+
+        function getTodayInfo() {
+            const today = getRealToday();
+            const dayIndex = today.getDay();
+            const arabicIndex = dayIndex === 0 ? 6 : dayIndex - 1;
+            return {
+                date: today,
+                dayKey: DAYS_KEYS[arabicIndex],
+                dayName: DAYS_AR[arabicIndex],
+                index: arabicIndex,
+                fullDate: today.toLocaleDateString('ar-EG', {
+                    weekday: 'long',
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                })
+            };
+        }
+
+        function getDateForDay(dayIndex) {
+            const weekStart = getWeekStart(weekOffset);
+            const date = new Date(weekStart);
+            date.setDate(weekStart.getDate() + dayIndex);
+            return date;
+        }
+
+        function isToday(dayIndex) {
+            const today = getRealToday();
+            const date = getDateForDay(dayIndex);
+            return date.toDateString() === today.toDateString();
+        }
+
+        // ============================================================
+        // Local Storage
+        // ============================================================
+        function getStorageKey() {
+            const ws = getWeekStart(weekOffset);
+            return `manassa_weekly_${ws.toISOString().split('T')[0]}`;
+        }
+
+        function resetWeeklyTasks() {
+            weeklyTasks = {};
+            DAYS_KEYS.forEach(k => { weeklyTasks[k] = []; });
+        }
+
+        function loadLocalTasks() {
+            try {
+                const stored = localStorage.getItem(getStorageKey());
+                weeklyTasks = stored ? JSON.parse(stored) : {};
+                DAYS_KEYS.forEach(k => {
+                    if (!weeklyTasks[k]) weeklyTasks[k] = [];
+                });
+            } catch {
+                resetWeeklyTasks();
+            }
+        }
+
+        function saveLocalTasks() {
+            try {
+                localStorage.setItem(getStorageKey(), JSON.stringify(weeklyTasks));
+            } catch (e) {
+                showToast('فشل الحفظ المحلي', 'error');
+            }
+        }
+
+        // ============================================================
+        // Cloud Storage (Firebase)
+        // ============================================================
+        async function loadCloudTasks() {
+            if (!currentUser) return;
+            try {
+                const weekId = getStorageKey().replace('manassa_weekly_', '');
+                const docRef = doc(db, ENV.COLLECTIONS.DAILY_PLANS, `${currentUser.uid}_week_${weekId}`);
+                const snap = await getDoc(docRef);
+                if (snap.exists()) {
+                    const cloudData = snap.data().tasks || {};
+                    weeklyTasks = mergeWeekly(weeklyTasks, cloudData);
+                    saveLocalTasks();
+                }
+            } catch {
+                // تجاهل
+            }
+        }
+
+        function mergeWeekly(local, cloud) {
+            const merged = { ...cloud };
+            DAYS_KEYS.forEach(dk => {
+                if (!merged[dk]) merged[dk] = [];
+                const cloudIds = new Set(merged[dk].map(t => t.id));
+                (local[dk] || []).forEach(t => {
+                    if (!cloudIds.has(t.id)) merged[dk].push(t);
+                });
+                merged[dk].sort((a, b) => (a.time || '00:00').localeCompare(b.time || '00:00'));
+            });
+            return merged;
+        }
+
+        async function saveCloudTasks() {
+            if (!currentUser || isSaving) return;
+            isSaving = true;
+            try {
+                const weekId = getStorageKey().replace('manassa_weekly_', '');
+                const docRef = doc(db, ENV.COLLECTIONS.DAILY_PLANS, `${currentUser.uid}_week_${weekId}`);
+                await setDoc(docRef, {
+                    userId: currentUser.uid,
+                    weekStart: weekId,
+                    tasks: weeklyTasks,
+                    updatedAt: serverTimestamp()
+                }, { merge: true });
+            } catch {
+                // تجاهل
+            } finally {
+                isSaving = false;
+            }
+        }
+
+        async function saveAll() {
+            saveLocalTasks();
+            if (currentUser) await saveCloudTasks();
+            updateAllUI();
+        }
+
+        // ============================================================
+        // Streak Calculation
+        // ============================================================
+        function calculateStreak(tasks) {
+            if (!tasks || Object.keys(tasks).length === 0) return 0;
+            const today = getRealToday();
+            today.setHours(0, 0, 0, 0);
+            let streak = 0;
+            for (let i = 0; i < 30; i++) {
+                const checkDate = new Date(today);
+                checkDate.setDate(today.getDate() - i);
+                const dayIndex = checkDate.getDay();
+                const arabicIndex = dayIndex === 0 ? 6 : dayIndex - 1;
+                const dayKey = DAYS_KEYS[arabicIndex];
+                const dayTasks = tasks[dayKey] || [];
+                if (dayTasks.length === 0) {
+                    if (i === 0) continue;
+                    break;
+                }
+                const allDone = dayTasks.every(t => t.completed === true);
+                if (allDone) {
+                    streak++;
+                } else {
+                    if (i === 0) continue;
+                    break;
+                }
+            }
+            return streak;
+        }
+
+        // ============================================================
+        // Courses
+        // ============================================================
+        async function loadCourses() {
+            try {
+                const snap = await getDocs(query(collection(db, ENV.COLLECTIONS.COURSES), orderBy('createdAt', 'desc'), limit(100)));
+                allCourses = snap.docs.map(d => ({ id: d.id, name: d.data().name || 'كورس' }));
+                updateCourseSelect();
+            } catch (e) {
+                console.warn('Could not load courses:', e);
+            }
+        }
+
+        function updateCourseSelect() {
+            const select = document.getElementById('taskCourseSelect');
+            if (!select) return;
+            const currentValue = select.value;
+            select.innerHTML = '<option value="">بدون كورس</option>';
+            allCourses.forEach(c => {
+                select.innerHTML += `<option value="${c.id}">${sanitize(c.name)}</option>`;
+            });
+            select.value = currentValue;
+        }
+
+        // ============================================================
+        // Sanitize
+        // ============================================================
+        function sanitize(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // ============================================================
+        // UI Updates
+        // ============================================================
+        function updateAllUI() {
+            updateWelcomeCard();
+            renderDaySelector();
+            renderTasks();
+            updateProgress();
+            updateStreak();
+            updateWeeklyStats();
+        }
+
+        function updateWelcomeCard() {
+            const today = getRealToday();
+            const hour = today.getHours();
+            const greeting = GREETINGS.find(g => hour >= g.start && hour < g.end) || GREETINGS[0];
+            document.getElementById('greetingText').textContent = greeting.text;
+            document.getElementById('dateDisplay').textContent = getTodayInfo().fullDate;
+        }
+
+        function updateWeeklyStats() {
+            let total = 0,
+                done = 0;
+            DAYS_KEYS.forEach(dk => {
+                const tasks = weeklyTasks[dk] || [];
+                total += tasks.length;
+                done += tasks.filter(t => t.completed).length;
+            });
+            document.getElementById('weeklyTotal').textContent = total;
+            document.getElementById('weeklyDone').textContent = done;
+        }
+
+        function updateStreak() {
+            streakCount = calculateStreak(weeklyTasks);
+            document.getElementById('streakNum').textContent = streakCount;
+        }
+
+        function updateProgress() {
+            const tasks = weeklyTasks[selectedDayKey] || [];
+            const total = tasks.length;
+            const completed = tasks.filter(t => t.completed).length;
+            const percent = total > 0 ? Math.round((completed / total) * 100) : 0;
+
+            document.getElementById('progressPercent').textContent = percent + '%';
+            document.getElementById('progressBarFill').style.width = percent + '%';
+            document.getElementById('doneCount').textContent = completed;
+            document.getElementById('totalCount').textContent = total;
+
+            const card = document.getElementById('progressCard');
+            card.classList.remove('progress-card--has-tasks', 'progress-card--all-done');
+            if (total > 0) card.classList.add('progress-card--has-tasks');
+            if (percent === 100 && total > 0) card.classList.add('progress-card--all-done');
+
+            let title;
+            if (total === 0) title = 'لا توجد مهام';
+            else if (percent === 100) title = 'كل المهام مكتملة!';
+            else if (percent >= 75) title = 'أوشكت على الانتهاء';
+            else if (percent >= 50) title = 'في منتصف الطريق';
+            else if (completed > 0) title = 'بداية جيدة';
+            else title = 'ابدأ العمل';
+            document.getElementById('progressTitle').textContent = title;
+        }
+
+        // ============================================================
+        // Day Selector
+        // ============================================================
+        function renderDaySelector() {
+            const container = document.getElementById('daySelector');
+            const todayInfo = getTodayInfo();
+            const weekStart = getWeekStart(weekOffset);
+
+            container.innerHTML = DAYS_KEYS.map((dk, i) => {
+                const date = new Date(weekStart);
+                date.setDate(weekStart.getDate() + i);
+                const dayNum = date.getDate();
+                const isTodayDate = date.toDateString() === getRealToday().toDateString();
+                const isActive = dk === selectedDayKey;
+                const tasks = weeklyTasks[dk] || [];
+                const pending = tasks.filter(t => !t.completed).length;
+                const allDone = tasks.length > 0 && tasks.every(t => t.completed);
+
+                let indicatorClass = '';
+                if (pending > 0) indicatorClass = 'day-chip__indicator';
+                if (allDone) indicatorClass = 'day-chip__indicator day-chip__indicator--done';
+
+                return `<button class="day-chip ${isActive ? 'day-chip--active' : ''} ${isTodayDate ? 'day-chip--today' : ''}" onclick="selectDay('${dk}')" data-day="${dk}">
+                    ${indicatorClass ? `<span class="${indicatorClass}"></span>` : ''}
+                    <span class="day-chip__name">${DAYS_AR[i].substring(0, 3)}</span>
+                    <span class="day-chip__date">${dayNum}</span>
+                </button>`;
+            }).join('');
+
+            const select = document.getElementById('taskDaySelect');
+            select.innerHTML = DAYS_KEYS.map((dk, i) => {
+                const isTodayDate = isToday(i);
+                return `<option value="${dk}" ${dk === selectedDayKey ? 'selected' : ''}>${DAYS_AR[i]} ${isTodayDate ? '(اليوم)' : ''}</option>`;
+            }).join('');
+
+            document.getElementById('taskListTitle').textContent = `مهام ${DAYS_AR[DAYS_KEYS.indexOf(selectedDayKey)]}`;
+        }
+
+        // ============================================================
+        // Tasks Rendering
+        // ============================================================
+        function renderTasks() {
+            const container = document.getElementById('taskList');
+            const tasks = weeklyTasks[selectedDayKey] || [];
+
+            let displayTasks = showCompleted ? tasks : tasks.filter(t => !t.completed);
+            displayTasks = [...displayTasks].sort((a, b) => {
+                if (a.completed !== b.completed) return a.completed ? 1 : -1;
+                return (a.time || '00:00').localeCompare(b.time || '00:00');
+            });
+
+            if (displayTasks.length === 0) {
+                const dayName = DAYS_AR[DAYS_KEYS.indexOf(selectedDayKey)] || '';
+                container.innerHTML = `<div class="empty-state">
+                    <span class="empty-state__icon">${tasks.length > 0 ? '✅' : '📭'}</span>
+                    <p class="empty-state__title">${tasks.length > 0 ? 'كل المهام مكتملة!' : `لا توجد مهام ليوم ${dayName}`}</p>
+                    <p class="empty-state__sub">${tasks.length > 0 ? 'أنت رائع، استمر في الإنجاز' : 'أضف مهمتك الأولى وابدأ الإنجاز'}</p>
+                </div>`;
+                return;
+            }
+
+            container.innerHTML = displayTasks.map(task => {
+                const courseName = allCourses.find(c => c.id === task.courseId)?.name || '';
+                return `<div class="task-item ${task.completed ? 'task-item--completed' : ''}">
+                    <button class="task-item__check" onclick="toggleTask('${task.id}')" title="${task.completed ? 'تراجع' : 'اكتمل'}">
+                        ${task.completed ? '<i class="fas fa-check"></i>' : ''}
+                    </button>
+                    <span class="task-item__time">${task.time}</span>
+                    ${courseName ? `<span class="task-item__course">${sanitize(courseName)}</span>` : ''}
+                    <div class="task-item__content">
+                        <div class="task-item__text">${sanitize(task.text)}</div>
+                        ${task.completed && task.completedAt ? `<div class="task-item__meta">أُنجزت ${formatTimeAgo(task.completedAt)}</div>` : ''}
+                    </div>
+                    <div class="task-item__actions">
+                        <button class="task-item__action task-item__action--session" onclick="startSessionFromTask('${task.id}')" title="بدء جلسة مذاكرة">
+                            <i class="fas fa-clock"></i>
+                        </button>
+                        <button class="task-item__action task-item__action--edit" onclick="editTask('${task.id}', '${selectedDayKey}')" title="تعديل">
+                            <i class="fas fa-pen"></i>
+                        </button>
+                        <button class="task-item__action task-item__action--delete" onclick="deleteTask('${task.id}')" title="حذف">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </div>`;
+            }).join('');
+        }
+
+        function formatTimeAgo(isoString) {
+            const now = new Date();
+            const then = new Date(isoString);
+            const diff = Math.floor((now - then) / 1000);
+            if (diff < 60) return 'الآن';
+            if (diff < 3600) return `منذ ${Math.floor(diff / 60)} د`;
+            if (diff < 86400) return `منذ ${Math.floor(diff / 3600)} س`;
+            return then.toLocaleDateString('ar-EG');
+        }
+
+        // ============================================================
+        // Task Actions (Global)
+        // ============================================================
+        window.selectDay = function(dayKey) {
+            selectedDayKey = dayKey;
+            document.getElementById('taskDaySelect').value = dayKey;
+            updateAllUI();
+        };
+
+        window.navigateWeek = function(direction) {
+            weekOffset += direction;
+            currentWeekStart = getWeekStart(weekOffset);
+            loadLocalTasks();
+            if (currentUser) loadCloudTasks();
+            const todayInfo = getTodayInfo();
+            selectedDayKey = weekOffset === 0 ? todayInfo.dayKey : DAYS_KEYS[0];
+            updateAllUI();
+        };
+
+        window.addTask = function() {
+            const input = document.getElementById('taskInput');
+            const timeInput = document.getElementById('taskTime');
+            const daySelect = document.getElementById('taskDaySelect');
+            const courseSelect = document.getElementById('taskCourseSelect');
+            const addBtn = document.getElementById('addTaskBtn');
+            const text = input.value.trim();
+            const time = timeInput.value;
+            const dayKey = daySelect.value;
+            const courseId = courseSelect.value;
+
+            if (!text) {
+                showToast('اكتب المهمة أولاً', 'warning');
+                input.focus();
+                return;
+            }
+
+            addBtn.disabled = true;
+
+            const task = {
+                id: `${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+                text,
+                time,
+                day: dayKey,
+                courseId: courseId || '',
+                completed: false,
+                createdAt: new Date().toISOString()
+            };
+
+            if (!weeklyTasks[dayKey]) weeklyTasks[dayKey] = [];
+            weeklyTasks[dayKey].push(task);
+            weeklyTasks[dayKey].sort((a, b) => (a.time || '00:00').localeCompare(b.time || '00:00'));
+
+            input.value = '';
+            timeInput.value = '08:00';
+
+            if (selectedDayKey !== dayKey) { selectedDayKey = dayKey; }
+
+            saveAll();
+            showToast('تمت الإضافة', 'success');
+            addBtn.disabled = false;
+            setTimeout(() => input.focus(), 100);
+        };
+
+        window.quickAdd = function(text) {
+            document.getElementById('taskInput').value = text;
+            document.getElementById('taskInput').focus();
+        };
+
+        window.toggleTask = async function(taskId) {
+            for (const dk of DAYS_KEYS) {
+                const tasks = weeklyTasks[dk] || [];
+                const task = tasks.find(t => t.id === taskId);
+                if (task) {
+                    task.completed = !task.completed;
+                    task.completedAt = task.completed ? new Date().toISOString() : undefined;
+                    if (!task.completed) delete task.completedAt;
+                    await saveAll();
+                    if (task.completed && (weeklyTasks[dk] || []).every(t => t.completed) && (weeklyTasks[dk] || []).length > 0) {
+                        showToast('أحسنت! أكملت كل مهام اليوم', 'success');
+                    }
+                    break;
+                }
+            }
+        };
+
+        window.deleteTask = async function(taskId) {
+            let taskToDelete = null;
+            for (const dk of DAYS_KEYS) {
+                const tasks = weeklyTasks[dk] || [];
+                taskToDelete = tasks.find(t => t.id === taskId);
+                if (taskToDelete) {
+                    if (!taskToDelete.completed) {
+                        if (!confirm(`متأكد من حذف: "${taskToDelete.text}"؟`)) return;
+                    }
+                    weeklyTasks[dk] = tasks.filter(t => t.id !== taskId);
+                    break;
+                }
+            }
+            await saveAll();
+            if (taskToDelete) showToast('تم الحذف', 'error');
+        };
+
+        window.editTask = function(taskId, dayKey) {
+            const tasks = weeklyTasks[dayKey] || [];
+            const task = tasks.find(t => t.id === taskId);
+            if (!task) return;
+            editingTaskId = taskId;
+            editingTaskDay = dayKey;
+            document.getElementById('editTaskInput').value = task.text;
+            document.getElementById('editModal').style.display = 'flex';
+            setTimeout(() => document.getElementById('editTaskInput').focus(), 200);
+        };
+
+        window.closeEditModal = function() {
+            document.getElementById('editModal').style.display = 'none';
+            editingTaskId = null;
+            editingTaskDay = null;
+        };
+
+        window.saveEditTask = async function() {
+            if (!editingTaskId || !editingTaskDay) return;
+            const newText = document.getElementById('editTaskInput').value.trim();
+            if (!newText) {
+                showToast('المهمة لا يمكن أن تكون فارغة', 'warning');
+                return;
+            }
+            const tasks = weeklyTasks[editingTaskDay] || [];
+            const task = tasks.find(t => t.id === editingTaskId);
+            if (task) {
+                task.text = newText;
+                await saveAll();
+                showToast('تم التعديل', 'success');
+            }
+            closeEditModal();
+        };
+
+        window.toggleShowCompleted = function() {
+            showCompleted = !showCompleted;
+            document.getElementById('toggleCompletedBtn').textContent = showCompleted ? 'إخفاء المكتملة' : 'إظهار الكل';
+            renderTasks();
+        };
+
+        window.startSessionFromTask = function(taskId) {
+            let task = null;
+            let dayKey = '';
+            for (const dk of DAYS_KEYS) {
+                const tasks = weeklyTasks[dk] || [];
+                const found = tasks.find(t => t.id === taskId);
+                if (found) { task = found;
+                    dayKey = dk; break; }
+            }
+            if (!task) return;
+
+            const duration = 25;
+            const time = task.time || '08:00';
+
+            const params = new URLSearchParams();
+            params.set('task', task.text);
+            params.set('duration', duration);
+            params.set('time', time);
+            if (task.courseId) params.set('course', task.courseId);
+
+            window.location.href = `sessions.html?${params.toString()}`;
+        };
+
+        // ============================================================
+        // Set Random Quote
+        // ============================================================
+        function setRandomQuote() {
+            const q = QUOTES[Math.floor(Math.random() * QUOTES.length)];
+            document.getElementById('dailyQuote').textContent = `"${q.text}"`;
+            document.getElementById('quoteAuthor').textContent = `- ${q.author}`;
+        }
+
+        // ============================================================
+        // Event Listeners
+        // ============================================================
+        document.getElementById('taskInput').addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') { e.preventDefault();
+                addTask(); }
+        });
+
+        document.getElementById('editTaskInput').addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') { e.preventDefault();
+                saveEditTask(); }
+            if (e.key === 'Escape') { closeEditModal(); }
+        });
+
+        document.getElementById('editModal').addEventListener('click', function(e) {
+            if (e.target === this) closeEditModal();
+        });
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') closeEditModal();
+        });
+
+        // ============================================================
+        // Init App
+        // ============================================================
+        function initApp() {
+            const todayInfo = getTodayInfo();
+            currentWeekStart = getWeekStart(0);
+            weekOffset = 0;
+            selectedDayKey = todayInfo.dayKey;
+
+            resetWeeklyTasks();
+            loadLocalTasks();
+
+            document.getElementById('taskDaySelect').value = selectedDayKey;
+            document.getElementById('taskTime').value = '08:00';
+
+            loadCourses();
+            updateAllUI();
+            setRandomQuote();
+        }
+
+        // ============================================================
+        // Firebase Auth
+        // ============================================================
+        onAuthStateChanged(auth, async (user) => {
+            const wasLoggedIn = !!currentUser;
+            currentUser = user;
+
+            if (user && !wasLoggedIn) {
+                loadLocalTasks();
+                await loadCloudTasks();
+                const localKey = getStorageKey();
+                const cloudData = { ...weeklyTasks };
+                try {
+                    const weekId = localKey.replace('manassa_weekly_', '');
+                    const docRef = doc(db, ENV.COLLECTIONS.DAILY_PLANS, `${user.uid}_week_${weekId}`);
+                    await setDoc(docRef, {
+                        userId: user.uid,
+                        weekStart: weekId,
+                        tasks: cloudData,
+                        updatedAt: serverTimestamp()
+                    }, { merge: true });
+                } catch (e) { console.error('Migration error:', e); }
+                updateAllUI();
+            } else if (user) {
+                await loadCloudTasks();
+                updateAllUI();
+            } else if (!user && wasLoggedIn) {
+                loadLocalTasks();
+                updateAllUI();
+            }
+            loadCourses();
+        });
+
+        // ============================================================
+        // بدء التطبيق
+        // ============================================================
+        initApp();
+    </script>
+</body>
+</html>
